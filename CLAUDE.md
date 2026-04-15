@@ -128,11 +128,8 @@ Wszystkie pliki w `public/MyImage/`:
 Navbar → Hero → About → Tech Stack → Projects → Certifications → Contact → Footer
 ```
 
-### Custom Cursor
-- Zastępuje domyślny kursor systemowy
-- Składa się z: małej świecącej kropki (6px) + większego ringu (30px) z opóźnieniem
-- Na hover nad linkami/przyciskami: ring powiększa się, kropka zmienia kolor na `#00D4FF`
-- Implementacja: CSS + Framer Motion (`useMotionValue`, `useSpring`)
+### Kursor
+- Standardowy kursor systemowy — brak custom cursora
 
 ### Page Entrance Animation
 - Krótki loader (logo/inicjały) → płynny reveal strony
@@ -166,7 +163,33 @@ Navbar → Hero → About → Tech Stack → Projects → Certifications → Con
 
 ---
 
-## 6. Wydajność i Jakość Kodu
+## 6. Responsywność (Mobile-First)
+
+Strona musi działać poprawnie na wszystkich urządzeniach.
+
+### Breakpointy (Tailwind)
+| Prefiks | Szerokość | Urządzenie |
+|---------|-----------|------------|
+| *(brak)* | 0px+ | Mobile (domyślny) |
+| `sm:` | 640px+ | Duży telefon |
+| `md:` | 768px+ | Tablet |
+| `lg:` | 1024px+ | Laptop |
+| `xl:` | 1280px+ | Desktop |
+
+### Zasady
+- Pisz **mobile-first** — style bazowe dla mobile, `md:`/`lg:` dla większych ekranów
+- **Navbar:** na mobile hamburger menu lub bottom navigation
+- **Custom Cursor:** wyłączony na urządzeniach dotykowych (`@media (pointer: coarse)`)
+- **Animacje 3D:** uproszczone lub wyłączone na mobile (wydajność)
+- **Hero:** układ kolumnowy na mobile, dwukolumnowy na `lg:`
+- **Tech Stack cloud:** na mobile — prosty grid z badgeami zamiast 3D
+- **Certifications:** single column na mobile, grid na `md:`
+- **Typografia:** skaluj rozmiary nagłówków (`text-3xl md:text-5xl`)
+- Testuj na: iPhone SE (375px), iPhone 14 (390px), iPad (768px), Desktop (1280px+)
+
+---
+
+## 6b. Wydajność i Jakość Kodu
 
 - Komponenty 3D i ciężkie animacje ładowane przez `next/dynamic` (lazy loading)
 - Cel: **Lighthouse 100/100** na wszystkich metrykach

@@ -5,7 +5,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Lenis from "lenis";
 import "./globals.css";
 import data from "@/config/data";
-import CustomCursor from "@/components/ui/CustomCursor";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -68,7 +67,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <CustomCursor />
         {children}
       </body>
     </html>

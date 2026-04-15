@@ -117,11 +117,8 @@ Gradient tekst (hero name):
 
 ## Specyfikacje Komponentów
 
-### Custom Cursor
-- Dwa elementy: `dot` (6px, kolor `#00D4FF`, `border-radius: 50%`) + `ring` (30px, border `1.5px solid #00D4FF`, opacity 0.6)
-- `ring` śledzi mysz z opóźnieniem (spring: `stiffness: 150, damping: 15`)
-- Na hover nad elementem interaktywnym: `ring` skaluje się do 50px, `dot` znika, ring wypełnia się `rgba(0,212,255,0.1)`
-- Implementacja: Framer Motion `useMotionValue` + `useSpring`
+### Kursor
+- Standardowy systemowy kursor — brak custom cursora (decyzja użytkownika)
 
 ### Navbar
 - Glassmorphism: `backdrop-blur-xl`, `bg-[#0F0F0F]/60`, `border-b border-white/5`
