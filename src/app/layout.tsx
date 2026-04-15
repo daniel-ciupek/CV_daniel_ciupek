@@ -54,6 +54,8 @@ export default function RootLayout({
   return (
     <html lang="pl" className="scroll-smooth">
       <head>
+        <link rel="icon" href="/logo-ciupas.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo-ciupas.png" />
         <title>{`${data.personal.name} — ${data.personal.title}`}</title>
         <meta name="description" content={data.personal.bio || `Portfolio ${data.personal.name} — ${data.personal.title}`} />
         <meta property="og:title" content={`${data.personal.name} — ${data.personal.title}`} />
