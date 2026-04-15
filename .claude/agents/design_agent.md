@@ -5,7 +5,7 @@ description: >
   dla portfolio Daniel Ciupek. Wywołuj go gdy potrzebujesz decyzji dotyczących: kolorystyki,
   typografii, animacji, układu sekcji, interaktywności 3D, efektów glassmorphism, blob/glitch
   avatara, magnetycznych ikon, estetyki całości projektu lub sekcji certyfikatów.
-model: claude-opus-4-6
+model: opus
 tools:
   - Read
   - Glob
