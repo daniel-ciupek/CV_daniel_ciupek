@@ -246,11 +246,10 @@ dist/
 ## 10. Zarządzanie Assetami
 
 ```
-MyImage/                    # Oryginalne pliki (źródłowe, nie serwowane przez Next.js)
-public/MyImage/             # Skopiuj tu pliki — Next.js serwuje z /public
+public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /public
 ```
 
-- Avatar: `avatarDc.jpeg`
+- Avatar: `public/MyImage/avatarDc.jpeg` → w kodzie: `/MyImage/avatarDc.jpeg`
 - Certyfikaty: 11 plików `.jpg` (szczegóły w sekcji 4)
 - Obrazy serwować przez `next/image` z odpowiednimi `alt` i `sizes`
 
