@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+dist/
+build/
+
+# Environment variables (projekt statyczny — brak API keys, ale zostawiamy jako zabezpieczenie)
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Vercel
+.vercel/
+
+# Turbopack
+.turbo/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
