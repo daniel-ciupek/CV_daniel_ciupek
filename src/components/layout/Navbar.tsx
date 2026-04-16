@@ -7,10 +7,10 @@ import data from "@/config/data";
 
 const navLinks = [
   { label: "O mnie",        href: "#about" },
-  { label: "Kontakt",       href: "#contact" },
+  { label: "Certyfikaty",   href: "#certifications" },
   { label: "Umiejętności",  href: "#skills" },
   { label: "Projekty",      href: "#projects" },
-  { label: "Certyfikaty",   href: "#certifications" },
+  { label: "Kontakt",       href: "#contact" },
 ];
 
 export default function Navbar() {
