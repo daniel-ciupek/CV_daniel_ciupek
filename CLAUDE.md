@@ -317,3 +317,24 @@ Skala:
   4xl:  36px
   5xl:  48px   /* Hero heading */
 ```
+
+---
+
+## 12. Checklist przed Deployem na Produkcję
+
+> **Przeczytaj przed każdym deployem na Vercel / domenę produkcyjną.**
+
+### Zmienna środowiskowa — KRYTYCZNE
+Ustaw w panelu Vercel (Settings → Environment Variables):
+
+```
+NEXT_PUBLIC_SITE_URL=https://twoja-domena.pl
+```
+
+**Dlaczego:** bez tej zmiennej Open Graph (`og:image`) i Twitter Card nie będą działać poprawnie — rekruterzy/portale społecznościowe nie zobaczą podglądu zdjęcia przy udostępnianiu linku do portfolio.
+
+### Pozostałe
+- [ ] Uzupełnij `personal.bio` w `src/config/data.ts`
+- [ ] Uzupełnij `projects[]` w `src/config/data.ts`
+- [ ] Zaktualizuj URL produkcyjny w sekcji 1 tego pliku
+- [ ] Ustaw `NEXT_PUBLIC_SITE_URL` w Vercel
