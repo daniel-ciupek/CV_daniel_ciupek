@@ -84,7 +84,7 @@ skills: [
   { category: "Frontend",  items: ["JavaScript", "TypeScript", "React", "Vue 3", "Next.js"] },
   { category: "Bazy danych", items: ["MySQL", "PostgreSQL"] },
   { category: "DevOps",    items: ["Docker", "Git"] },
-  { category: "Narzędzia", items: ["Postman", "REST API", "Claude Code", "Cursor"] },
+  { category: "AI & Narzędzia", items: ["Claude Code", "Cursor", "Gemini", "Postman", "REST API"] },
 ]
 ```
 

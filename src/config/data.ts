@@ -34,8 +34,8 @@ const data: SiteData = {
       items: ["Docker", "Git", "Postman", "REST API"],
     },
     {
-      category: "AI & Productivity",
-      items: ["Claude Code", "Cursor", "ChatGPT"],
+      category: "AI & Narzędzia",
+      items: ["Claude Code", "Cursor", "Gemini"],
     },
   ],
 
