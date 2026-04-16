@@ -41,15 +41,38 @@ const data: SiteData = {
 
   // ─── Projekty ──────────────────────────────────────────────────
   projects: [
-    // TODO: dodaj swoje projekty wg schematu:
-    // {
-    //   title: "Nazwa projektu",
-    //   description: "Krótki opis co robi i jakie problemy rozwiązuje.",
-    //   stack: ["Laravel", "Vue 3", "MySQL"],
-    //   url: "https://...",       // opcjonalne
-    //   github: "https://...",    // opcjonalne
-    //   image: "/images/...",     // opcjonalne
-    // },
+    
+     {
+       title: "Workflow Management",
+       description: "System zarządzania firmą z modułami obsługi pracowników, projektów i zadań. Aplikacja startowała jako wersja bazowa, którą rozbudowałem na potrzeby firmy, w której pracuję — aktualnie wdrożona i aktywnie użytkowana. Wyeliminowała problem nieefektywnego dysponowania zadaniami, skracając czas koordynacji pracy zespołu. Zbudowana w architekturze full-stack z reaktywnym UI opartym na Livewire 3 (Volt) i Alpine.js, skonteneryzowana przez Docker.",
+       stack: ["Laravel 13", "Livewire 3 (Volt)", "Alpine.js", "Tailwind CSS", "PostgreSQL", "Docker"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/workflow_management",    
+     },
+
+      {
+       title: "Product Manager",
+       description: "Fullstack aplikacja SPA do zarządzania produktami, łącząca backend Laravel z frontendem Vue 3 za pomocą Inertia.js — bez konieczności budowania osobnego REST API. Projekt prezentuje podejście monolityczne z zachowaniem doświadczenia użytkownika typowego dla SPA, skonteneryzowany przez Docker.",
+       stack: ["PHP 8.3", "Laravel 12", "Inertia.js 2", "Vue 3", "Tailwind CSS", "MySQL", "Docker"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/spa_inertia",    
+     },
+
+       {
+       title: "To Do List",
+       description: "Aplikacja SPA do zarządzania zadaniami z systemem autentykacji opartym na Laravel Sanctum (cookie-based session). Frontend zbudowany w Vue 3 z Composition API i Pinia jako store — komunikuje się z dedykowanym Laravel REST API.",
+       stack: ["Vue 3", "Pinia", "Vue Router 4", "Bootstrap 5", "Axios", "date-fns"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/todo-app-vue",    
+     },
+
+      {
+       title: "Backend API dla To Do List",
+       description: "Dedykowane REST API dla aplikacji To Do List, zbudowane w Laravel 11. Obsługuje zarządzanie zadaniami z priorytetami, datami wykonania i parsowaniem naturalnego języka. Autentykacja przez Laravel Sanctum (cookie-based session), zasoby Eloquent ORM.",
+       stack: ["Laravel 11", "Laravel Sanctum", "Eloquent ORM", "REST API", "Carbon"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/laravel_api",    
+     },
   ],
 
   // ─── Certyfikaty ───────────────────────────────────────────────
