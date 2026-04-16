@@ -1,8 +1,6 @@
-"use client";
-
-import { useEffect } from "react";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Lenis from "lenis";
+import LenisProvider from "@/components/layout/LenisProvider";
 import "./globals.css";
 import data from "@/config/data";
 
@@ -16,16 +14,36 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata: Metadata = {
+  title: `${data.personal.name} — ${data.personal.title}`,
+  description:
+    data.personal.bio ||
+    `Portfolio ${data.personal.name} — ${data.personal.title}`,
+  openGraph: {
+    title: `${data.personal.name} — ${data.personal.title}`,
+    description:
+      data.personal.bio ||
+      `Portfolio ${data.personal.name} — ${data.personal.title}`,
+    images: [data.personal.avatar],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${data.personal.name} — ${data.personal.title}`,
+  },
+  icons: {
+    icon: "/logo-ciupas.png",
+    apple: "/logo-ciupas.png",
+  },
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: data.personal.name,
   jobTitle: data.personal.title,
-  url: "",
-  sameAs: [
-    data.personal.github,
-    data.personal.linkedin,
-  ].filter(Boolean),
+  email: data.personal.email,
+  sameAs: [data.personal.github, data.personal.linkedin].filter(Boolean),
 };
 
 export default function RootLayout({
@@ -33,43 +51,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
-
   return (
-    <html lang="pl" className="scroll-smooth">
-      <head>
-        <link rel="icon" href="/logo-ciupas.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/logo-ciupas.png" />
-        <title>{`${data.personal.name} — ${data.personal.title}`}</title>
-        <meta name="description" content={data.personal.bio || `Portfolio ${data.personal.name} — ${data.personal.title}`} />
-        <meta property="og:title" content={`${data.personal.name} — ${data.personal.title}`} />
-        <meta property="og:description" content={data.personal.bio || `Portfolio ${data.personal.name} — ${data.personal.title}`} />
-        <meta property="og:image" content={data.personal.avatar} />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
+    <html lang="pl">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-      </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {children}
+        <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
   );
