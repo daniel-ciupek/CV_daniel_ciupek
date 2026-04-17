@@ -6,7 +6,7 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
-    bio: "Zdeterminowany samouk aspirujący do roli Full Stack Developera (JS, React, Node.js, PHP). Lata pracy w wymagającym środowisku fizycznym wyrobiły we mnie dyscyplinę, którą teraz w pełni przekładam na programowanie. Rozumiejąc, że w erze AI łatwo iść na skróty, swoją edukację zacząłem od twardych fundamentów: czystego HTML, CSS i JS-a, na których opieram swoje obecne projekty. Stawiam sprawę jasno: szukam szansy na start. Oferuję moje pełne wsparcie, lojalność i ciężką pracę przy kodzie w zamian za możliwość rozwoju w warunkach komercyjnych. Kwestie finansowe mają dla mnie obecnie drugorzędne znaczenie – moim absolutnym celem jest zdobycie doświadczenia i udowodnienie swojej wartości w zespole.",
+    bio: "Zdeterminowany, aspirujący do roli Full Stack Developera (Laravel, Vue 3, PHP, JS, React, Node.js). Lata pracy w wymagającym środowisku fizycznym wyrobiły we mnie dyscyplinę, którą teraz w pełni przekładam na programowanie. Rozumiejąc, że w erze AI łatwo iść na skróty, swoją edukację zacząłem od twardych fundamentów: czystego HTML, CSS i JS-a, na których opieram swoje obecne projekty. Stawiam sprawę jasno: szukam szansy na start. Oferuję moje pełne wsparcie, lojalność i ciężką pracę przy kodzie w zamian za możliwość rozwoju w warunkach komercyjnych. Kwestie finansowe mają dla mnie obecnie drugorzędne znaczenie – moim absolutnym celem jest zdobycie doświadczenia i udowodnienie swojej wartości w zespole.",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",
