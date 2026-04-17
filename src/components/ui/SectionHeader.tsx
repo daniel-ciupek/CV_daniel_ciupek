@@ -24,31 +24,41 @@ export default function SectionHeader({
       className="mb-12 md:mb-16 flex flex-col gap-2"
     >
       <div
-        className="flex items-center gap-3 font-mono text-xs sm:text-sm"
-        style={{ color: "var(--accent)" }}
+        className="font-mono text-xs sm:text-sm"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          color: "var(--accent)",
+          flexWrap: "nowrap",
+        }}
       >
-        <span>
-          {index} / {total}
-        </span>
+        <span style={{ whiteSpace: "nowrap" }}>{index} / {total}</span>
         <span aria-hidden>▸</span>
         <span
-          className="tracking-[0.2em] uppercase font-semibold"
-          style={{ color: "var(--text)" }}
+          style={{
+            color: "var(--text)",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            fontWeight: 600,
+            whiteSpace: "nowrap",
+          }}
         >
           {title}
         </span>
         <span
-          className="flex-1 h-px hidden sm:block"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,212,255,0.4) 0%, transparent 100%)",
-          }}
           aria-hidden
+          className="hidden sm:block"
+          style={{
+            flex: 1,
+            height: "1px",
+            background: "linear-gradient(90deg, rgba(0,212,255,0.4) 0%, transparent 100%)",
+          }}
         />
       </div>
       <p
-        className="font-mono text-xs sm:text-sm ml-0 sm:ml-16"
-        style={{ color: "var(--text-subtle)" }}
+        className="font-mono text-xs sm:text-sm"
+        style={{ color: "var(--text-subtle)", marginLeft: 0 }}
       >
         {subtitle}
       </p>
