@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
+import SectionHeader from "@/components/ui/SectionHeader";
 import {
   SiPhp,
   SiLaravel,
@@ -21,7 +22,7 @@ import {
 import { BrainCircuit, Terminal } from "lucide-react";
 import data from "@/config/data";
 
-const iconMap: Record<string, React.ElementType> = {
+const iconMap: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
   PHP: SiPhp,
   Laravel: SiLaravel,
   "Node.js": SiNodedotjs,
@@ -70,28 +71,7 @@ export default function TechStack() {
       />
 
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          Stack
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-16 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Technologie
-        </motion.h2>
+        <SectionHeader index="03" total="05" title="UMIEJĘTNOŚCI" subtitle="// stack.json" />
 
         {/* Categories */}
         <div className="space-y-12">

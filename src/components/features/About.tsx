@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { Code2, Database, Layers, Rocket } from "lucide-react";
 import data from "@/config/data";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const highlights = [
   {
@@ -41,27 +42,7 @@ export default function About() {
     <section id="about" className="relative px-6 py-24 md:py-32">
       {/* Section label */}
       <div className="mx-auto max-w-6xl">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          O mnie
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-12 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Kim jestem
-        </motion.h2>
+        <SectionHeader index="01" total="05" title="O MNIE" subtitle="// whoami" />
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 lg:items-start">
 

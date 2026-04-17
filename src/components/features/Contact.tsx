@@ -5,11 +5,12 @@ import { motion } from "framer-motion";
 import { Mail, Phone } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
 import data from "@/config/data";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 type SocialLink = {
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ size?: number }>;
   value?: string;
 };
 
@@ -91,40 +92,7 @@ export default function Contact() {
       />
 
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          Kontakt
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-4 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Porozmawiajmy
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="mb-16 max-w-xl text-sm leading-relaxed"
-          style={{ color: "var(--text-muted)" }}
-        >
-          Szukam nowych wyzwań i jestem otwarty na propozycje współpracy.
-          Skontaktuj się przez dowolny kanał poniżej.
-        </motion.p>
+        <SectionHeader index="05" total="05" title="KONTAKT" subtitle="// reach.me" />
 
         {/* Dock */}
         <motion.div

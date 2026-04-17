@@ -4,6 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import { ExternalLink, Layers } from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 import data from "@/config/data";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -27,28 +28,7 @@ export default function Projects() {
       />
 
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          Portfolio
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-16 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Projekty
-        </motion.h2>
+        <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="// projects/" />
 
         {/* Empty state */}
         {projects.length === 0 && (

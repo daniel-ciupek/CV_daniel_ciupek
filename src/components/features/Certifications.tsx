@@ -5,6 +5,7 @@ import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { X, Award, Clock, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import data from "@/config/data";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 24 },
@@ -56,39 +57,7 @@ export default function Certifications() {
       />
 
       <div className="mx-auto max-w-6xl">
-        {/* Header */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
-        >
-          Udemy
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-4 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Certyfikaty
-        </motion.h2>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="mb-16 text-sm"
-          style={{ color: "var(--text-muted)" }}
-        >
-          {certs.length} ukończonych kursów · kliknij kartę, aby zobaczyć certyfikat
-        </motion.p>
+        <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="// achievements.log" />
 
         {/* Grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -105,7 +74,6 @@ export default function Certifications() {
               style={{
                 backgroundColor: "var(--bg-surface)",
                 border: "1px solid var(--border)",
-                focusVisibleRingColor: "var(--accent)",
               }}
               onMouseEnter={e => {
                 const el = e.currentTarget as HTMLElement;

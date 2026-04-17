@@ -56,7 +56,7 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   opacity: 0.025;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 1;
 }
 
 /* ─── Selection ─────────────────────────────────────────────── */
@@ -80,6 +80,85 @@ body::before {
     scroll-behavior: auto !important;
   }
   body { cursor: auto; }
+}
+
+/* ─── Ambient Beam ───────────────────────────────────────────── */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, 90vw);
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 30%,
+    rgba(0, 212, 255, 0.06) 0%,
+    transparent 60%
+  );
+}
+@media (max-width: 640px) {
+  body::after {
+    width: 120vw;
+    background: radial-gradient(
+      ellipse 80% 40% at 50% 20%,
+      rgba(0, 212, 255, 0.05) 0%,
+      transparent 55%
+    );
+  }
+}
+
+/* ─── blobMorph (Hero fallback, zastąpione przez WebGL w Etapie 2) */
+@keyframes blobMorph {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50%      { border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%; }
+}
+
+/* ─── Navbar CTA shimmer ─────────────────────────────────────── */
+@keyframes nav-cta-shimmer {
+  0%, 100% { background-position: -200% 0; }
+  50%      { background-position: 200% 0; }
+}
+.nav-cta-shimmer {
+  background-image: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(0, 212, 255, 0.18) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: nav-cta-shimmer 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta-shimmer { animation: none; }
+}
+
+/* ─── Section anchor pulse ───────────────────────────────────── */
+@keyframes anchor-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
+  100% { box-shadow: 0 0 0 24px rgba(0, 212, 255, 0); }
+}
+.anchor-pulse {
+  animation: anchor-pulse 600ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anchor-pulse { animation: none; }
+}
+
+/* ─── ScrollTrigger section-child entrance ───────────────────── */
+[data-animate="section-child"] {
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: opacity, transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-animate="section-child"] {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ─── Print / CV Mode ────────────────────────────────────────── */

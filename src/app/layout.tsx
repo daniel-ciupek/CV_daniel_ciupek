@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import LenisProvider from "@/components/layout/LenisProvider";
+import ScrollAnimations from "@/components/layout/ScrollAnimations";
+import PageLoader from "@/components/layout/PageLoader";
 import "./globals.css";
 import data from "@/config/data";
 
@@ -66,7 +68,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <LenisProvider>{children}</LenisProvider>
+        <LenisProvider>
+          <ScrollAnimations />
+          <PageLoader />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
