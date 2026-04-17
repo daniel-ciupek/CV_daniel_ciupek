@@ -136,10 +136,17 @@ Gradient tekst (hero name):
 - Tagi: glassmorphism pill, ikona technologii + nazwa, glow `#00D4FF` na hover
 
 ### Certifications Cards
-- Grid: `auto-fill, minmax(280px, 1fr)` lub horizontal scroll snap
-- Karta: `bg-[#0F0F0F]`, glassmorphism border, `overflow: hidden`
-- Hover: `translateY(-8px)`, `box-shadow: 0 20px 40px rgba(0,212,255,0.15)`, border zmienia kolor na `#00D4FF`
-- Klik: lightbox modal z pełnym obrazem certyfikatu
+- **DECYZJA FINALNA: Wariant C — Horizontal Scroll Pinned (GSAP ScrollTrigger)**
+- Sekcja `height: 100vh`, pin — pionowy scroll użytkownika = poziomy ruch kart (scrub: 1)
+- Każda karta wjeżdża z parallax (tło blur −8%, tytuł +8% względem ruchu)
+- Progress bar 2px `#00D4FF` na dole sekcji — wypełnia się w trakcie przewijania
+- Filter chips nad karuzelą: `Wszystkie · Backend · Frontend · Bazy · DevOps · AI · Języki`
+- Thumbnail certyfikatu w tle karty: `blur(24px) saturate(0.85) brightness(0.55)` + gradient overlay
+- Lightbox: prev/next + keyboard ← → + counter `3/11` + crossfade
+- **Mobile fallback:** CSS `scroll-snap-type: x mandatory`, karty `80vw`, bez pin, bez parallax
+- **prefers-reduced-motion:** brak pin/scrub, zwykły horizontal scroll bez animacji
+- **Nowe pliki:** `CertificationsC.tsx`, `CertLightbox.tsx`, `CertFilterChips.tsx`, `src/lib/certifications.ts`
+- **Żadne nowe pakiety npm** — GSAP już w stacku
 
 ### Contact / Dock
 - Kontener: glassmorphism, Geist Mono font, wygląd terminala
@@ -208,6 +215,47 @@ Po przeczytaniu wszystkich plików dostarcz strukturyzowany raport:
 ```
 
 Poczekaj na zatwierdzenie planu przez użytkownika zanim przejdziesz do fazy 2.
+
+---
+
+## Zatwierdzone decyzje projektowe (sesja 2026-04-17)
+
+### Globalne
+- **Responsywność:** każda specyfikacja musi zawierać osobny blok Desktop i Mobile. Mobile = uproszczone ale świetnie wyglądające.
+- **Ambient Beam** (propozycja agenta) — wdrożyć w Etapie 1
+- **Section anchor pulse** — wdrożyć w Etapie 1
+
+### Hero
+- **Avatar:** WebGL displacement shader (Three.js / R3F) — wariant A, pełny
+
+### Tech Stack
+- **Layout:** Matter.js physics 2D — tagi z kolizjami, odpychają się od kursora
+
+### Certifications
+- **FINALNY WYBÓR: Wariant C — Horizontal Scroll Pinned (GSAP ScrollTrigger pin)**
+- Istniejący `Certifications.tsx` zostaje zastąpiony przez `CertificationsC.tsx`
+- Thumbnail w tle karty (blur), filter chips, lightbox prev/next + keyboard ← →
+
+### Contact
+- **Facebook + Instagram:** ukryć pod togglem "Więcej"
+- **Terminal wrapper** + copy-to-clipboard + status dot "Dostępny"
+
+### About
+- **Statystyki:** zmodyfikowane — propozycja agenta do ustalenia
+
+### Kolejność etapów (zatwierdzona)
+```
+Etap 1 — Fundament (Loader, Navbar scroll-spy, SectionHeader, ScrollTrigger)
+Etap 2 — Hero (WebGL displacement avatar + parallax + scramble text)
+Etap 3 — About (counters, pull-quote)
+Etap 4 — Tech Stack (Matter.js physics)
+Etap 5 — Projects (3D tilt, terminal header, border-gradient)
+Etap 6 — Certifications (A i C równolegle → wybór jednego)
+Etap 7 — Contact (terminal, magnetyzm, copy-to-clipboard)
+Etap 8 — Footer (3-column, Go-to-top)
+Etap 9 — ATS/cv-print fixes
+Etap 10 — Accessibility + Lighthouse audit
+```
 
 ### Faza 2 — Specyfikacje sekcja po sekcji
 
