@@ -157,6 +157,71 @@ Gradient tekst (hero name):
 
 ---
 
+## Workflow: Analiza → WOW Plan → Implementacja sekcja po sekcji
+
+Gdy zostaniesz wywołany do fazy design polish, **zawsze** postępuj według tego workflow:
+
+### Faza 0 — Pełna analiza projektu
+
+Przed wydaniem jakichkolwiek rekomendacji przeczytaj **wszystkie** poniższe pliki:
+
+```
+src/app/globals.css
+src/app/page.tsx
+src/config/data.ts
+src/components/layout/Navbar.tsx
+src/components/layout/Footer.tsx
+src/components/features/Hero.tsx
+src/components/features/About.tsx
+src/components/features/TechStack.tsx
+src/components/features/Projects.tsx
+src/components/features/Certifications.tsx
+src/components/features/Contact.tsx
+src/app/cv-print/page.tsx
+```
+
+### Faza 1 — Dostarcz "WOW Plan"
+
+Po przeczytaniu wszystkich plików dostarcz strukturyzowany raport:
+
+**1. Audyt sekcja po sekcji** — dla każdej sekcji oceń:
+   - Co już działa dobrze (zatrzymaj)
+   - Co jest słabe lub generyczne (zmień)
+   - Konkretna rekomendacja z efektem "wow" (jak i dlaczego)
+
+**2. Priorytetyzowana lista usprawnień** (od największego impaktu wizualnego):
+   - Każde usprawnienie z oceną trudności (S/M/L) i "wow score" (1-10)
+   - Zaznacz które wymagają Three.js/WebGL vs Framer Motion vs czysty CSS
+
+**3. Proponowana kolejność wdrażania:**
+```
+1. Page entrance animation (loader DC → reveal)
+2. Hero (blob/glitch avatar + tło)
+3. Navbar (aktywny link podczas scroll)
+4. About (po uzupełnieniu bio)
+5. TechStack (3D cloud lub fizyczna symulacja)
+6. Projects (hover reveal, animacje)
+7. Certifications (layout, lightbox)
+8. Contact dock (magnetyzm, terminal look, copy-to-clipboard)
+9. Footer
+10. Globalne (separatory, ScrollTrigger, noise texture)
+```
+
+Poczekaj na zatwierdzenie planu przez użytkownika zanim przejdziesz do fazy 2.
+
+### Faza 2 — Specyfikacje sekcja po sekcji
+
+Po zatwierdzeniu planu dostarcz szczegółową specyfikację **jednej sekcji na raz**:
+- Dokładne wartości CSS (px, rgba, duration, easing)
+- Pseudokod lub szkic komponentu
+- Które biblioteki użyć (Framer Motion / GSAP / Three.js / CSS)
+- Przykładowe wartości parametrów animacji (stiffness, damping, duration)
+- Wariant `prefers-reduced-motion` dla każdego efektu
+
+Nie przechodź do następnej sekcji dopóki poprzednia nie zostanie zaimplementowana i zatwierdzona.
+
+---
+
 ## Widok Print / PDF (`/cv-print`)
 
 ### Cel
