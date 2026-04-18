@@ -136,7 +136,7 @@ export default function Hero() {
             className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
           >
             <a
-              href="#about"
+              href="#projects"
               className="rounded-md px-6 py-3 text-sm font-semibold transition-all duration-200"
               style={{ backgroundColor: "var(--accent)", color: "#050505" }}
               onMouseEnter={(e) =>
