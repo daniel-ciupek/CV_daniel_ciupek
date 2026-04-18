@@ -384,7 +384,7 @@ export default function Contact() {
         }
       `}</style>
 
-      <section id="contact" className="relative px-6 py-24 md:py-32">
+      <section id="contact" className="relative px-6 py-16 md:py-20">
         <div
           aria-hidden
           className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full opacity-[0.04] blur-3xl"

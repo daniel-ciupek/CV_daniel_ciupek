@@ -244,7 +244,7 @@ export default function Projects() {
   const total = projects.length;
 
   return (
-    <section id="projects" className="relative px-6 py-24 md:py-32">
+    <section id="projects" className="relative px-6 py-16 md:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute left-0 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-5 blur-3xl"

@@ -536,7 +536,7 @@ export default function Certifications() {
 
   return (
     <>
-      <section id="certifications" className="relative px-6 py-24 md:py-32">
+      <section id="certifications" className="relative px-6 py-16 md:py-20">
         <div
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full opacity-[0.04] blur-3xl"
