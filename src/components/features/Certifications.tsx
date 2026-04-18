@@ -54,12 +54,34 @@ function CertCard({
   const scale = useTransform(
     trackX,
     [centerX - CARD_STEP, centerX, centerX + CARD_STEP],
-    [0.88, 1.0, 0.88]
+    [0.82, 1.10, 0.82]
   );
   const opacity = useTransform(
     trackX,
     [centerX - CARD_STEP * 1.5, centerX, centerX + CARD_STEP * 1.5],
     [0.50, 1.0, 0.50]
+  );
+  // Increase border-radius as card scales up so it stays visually round
+  const borderRadius = useTransform(
+    trackX,
+    [centerX - CARD_STEP * 0.7, centerX, centerX + CARD_STEP * 0.7],
+    ["16px", "26px", "16px"]
+  );
+  // Center proximity: 0 = far, 1 = perfectly centered — drives border glow
+  const centerProximity = useTransform(
+    trackX,
+    [centerX - CARD_STEP * 0.6, centerX, centerX + CARD_STEP * 0.6],
+    [0, 1, 0]
+  );
+  const cardBorderColor = useTransform(
+    centerProximity,
+    [0, 1],
+    ["rgba(255,255,255,0.08)", "rgba(0,212,255,1)"]
+  );
+  const cardGlow = useTransform(
+    centerProximity,
+    [0, 1],
+    ["0 0 0px rgba(0,212,255,0)", "0 0 18px rgba(0,212,255,0.30), 0 0 36px rgba(0,212,255,0.12)"]
   );
 
   const category = CERT_CATEGORY[cert.key] ?? "Inne";
@@ -73,7 +95,7 @@ function CertCard({
 
   return (
     <motion.div
-      style={{ scale, opacity, width: CARD_W, flexShrink: 0 }}
+      style={{ scale, opacity, width: CARD_W, flexShrink: 0, borderRadius }}
       className="group relative flex cursor-pointer flex-col"
       onClick={handleClick}
       role="button"
@@ -81,22 +103,15 @@ function CertCard({
       onKeyDown={(e) => e.key === "Enter" && onOpen()}
       aria-label={`Podgląd certyfikatu: ${cert.title}`}
     >
-      <div
-        className="relative flex h-full flex-col overflow-hidden rounded-2xl transition-all duration-300"
+      {/* Card shell */}
+      <motion.div
+        className="relative flex h-full flex-col overflow-hidden"
         style={{
+          borderRadius,
           background: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.04)",
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.40)";
-          (e.currentTarget as HTMLElement).style.boxShadow =
-            "0 0 24px rgba(0,212,255,0.12), inset 0 1px 0 rgba(255,255,255,0.04)";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-          (e.currentTarget as HTMLElement).style.boxShadow =
-            "inset 0 1px 0 rgba(255,255,255,0.04)";
+          border: "1px solid",
+          borderColor: cardBorderColor,
+          boxShadow: cardGlow,
         }}
       >
         {/* Thumbnail */}
@@ -112,10 +127,6 @@ function CertCard({
             sizes="280px"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03] select-none"
             style={{ filter: "brightness(0.82)", userSelect: "none", WebkitUserSelect: "none" }}
-          />
-          <div
-            className="absolute inset-x-0 bottom-0 h-12"
-            style={{ background: "linear-gradient(to bottom, transparent, var(--bg-surface))" }}
           />
           <div className="absolute left-3 top-3">
             <span
@@ -165,7 +176,7 @@ function CertCard({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -538,8 +549,8 @@ export default function Certifications() {
           {/* Carousel */}
           <div
             ref={containerRef}
-            className="relative mt-8 overflow-hidden"
-            style={{ cursor: "grab" }}
+            className="relative mt-8 py-6"
+            style={{ cursor: "grab", overflowX: "clip" }}
           >
             <motion.div
               drag="x"
