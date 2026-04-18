@@ -206,7 +206,7 @@ export default function About() {
           <Counter
             target={totalHoursInt}
             suffix="h"
-            label="Godziny nauki"
+            label="Godziny szkoleń"
             sublabel="// 2025–2026"
             inView={inView}
             delay={120}
