@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="public/logo-ciupas.png" alt="Daniel Ciupek logo" width="80" />
+</p>
 
-## Getting Started
+<h1 align="center">Daniel Ciupek — Portfolio</h1>
 
-First, run the development server:
+<p align="center">
+  Interaktywne portfolio / CV online Full Stack Developera
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Framer_Motion-latest-EE4B9E?logo=framer&logoColor=white" alt="Framer Motion" />
+  <img src="https://img.shields.io/badge/GSAP-ScrollTrigger-88CE02?logo=greensock&logoColor=white" alt="GSAP" />
+</p>
+
+<p align="center">
+  <a href="#">🌐 Live Demo</a> · <a href="#uruchomienie-lokalne">📦 Instalacja</a> · <a href="#konfiguracja-treści">⚙️ Konfiguracja</a>
+</p>
+
+---
+
+## O projekcie
+
+Portfolio zbudowane w Next.js 15 z naciskiem na efekty wizualne i płynne animacje. Zawiera sekcje: Hero, O mnie, Tech Stack, Projekty, Certyfikaty, Kontakt oraz wersję ATS-friendly do druku pod adresem `/cv-print`.
+
+## Stos technologiczny
+
+| Warstwa | Technologia |
+|---------|-------------|
+| Framework | Next.js 15 (App Router) |
+| Język | TypeScript (strict) |
+| Stylowanie | Tailwind CSS v4 |
+| Animacje | Framer Motion + GSAP ScrollTrigger |
+| Smooth scroll | Lenis |
+| Ikony | Lucide React + React Icons |
+
+## Uruchomienie lokalne
 
 ```bash
+# 1. Sklonuj repozytorium
+git clone https://github.com/daniel-ciupek/CV_daniel_ciupek.git
+cd CV_daniel_ciupek
+
+# 2. Zainstaluj zależności
+npm install
+
+# 3. Uruchom serwer deweloperski
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Otwórz [http://localhost:3000](http://localhost:3000) w przeglądarce.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> **Wersja CV do druku / PDF:** [http://localhost:3000/cv-print](http://localhost:3000/cv-print)  
+> Użyj `Ctrl+P` → "Zapisz jako PDF" aby wygenerować plik.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Konfiguracja treści
 
-## Learn More
+Wszystkie dane (imię, bio, projekty, certyfikaty, umiejętności, linki social) znajdują się w jednym pliku:
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/config/data.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Edytuj tylko ten plik — wszystkie sekcje strony i cv-print zaktualizują się automatycznie.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Struktura projektu
 
-## Deploy on Vercel
+```
+src/
+├── app/
+│   ├── page.tsx          # Strona główna
+│   ├── cv-print/         # Wersja ATS/PDF
+│   └── globals.css       # Style globalne + klasy cv-*
+├── components/
+│   ├── features/         # Sekcje portfolio (Hero, About, ...)
+│   ├── layout/           # Navbar, Footer
+│   └── ui/               # Komponenty atomowe
+├── config/
+│   └── data.ts           # ← jedyne źródło prawdy
+├── hooks/                # Custom hooks
+└── types/                # Interfejsy TypeScript
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy na Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Połącz repozytorium z [Vercel](https://vercel.com)
+2. Ustaw zmienną środowiskową w panelu Vercel:
+
+```
+NEXT_PUBLIC_SITE_URL=https://twoja-domena.pl
+```
+
+> Bez tej zmiennej Open Graph (podgląd przy udostępnianiu linku) nie będzie działać poprawnie.
+
+---
+
+<p align="center">
+  Built with Next.js &amp; Framer Motion · © 2026 Daniel Ciupek
+</p>
