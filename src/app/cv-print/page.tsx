@@ -61,18 +61,28 @@ function About() {
 }
 
 function Skills() {
+  const primary = data.skills.slice(0, 3);
+  const secondary = data.skills.slice(3);
   return (
     <section>
       <SectionHeading>Umiejętności</SectionHeading>
       <Divider />
       <div className="cv-skills-grid">
-        {data.skills.map(group => (
+        {primary.map(group => (
           <div key={group.category}>
             <p className="cv-skill-category">{group.category}</p>
             <ul className="cv-skill-list">
-              {group.items.map(item => (
-                <li key={item}>{item}</li>
-              ))}
+              {group.items.map(item => <li key={item}>{item}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="cv-skills-grid cv-skills-secondary">
+        {secondary.map(group => (
+          <div key={group.category}>
+            <p className="cv-skill-category">{group.category}</p>
+            <ul className="cv-skill-list">
+              {group.items.map(item => <li key={item}>{item}</li>)}
             </ul>
           </div>
         ))}

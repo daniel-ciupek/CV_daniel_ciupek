@@ -270,6 +270,10 @@ body::after {
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 0.6rem 1.5rem;
 }
+.cv-skills-secondary {
+  margin-top: 3rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
 .cv-skill-category {
   font-size: 9pt;
   font-weight: 700;

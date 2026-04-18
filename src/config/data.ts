@@ -10,7 +10,7 @@ const data: SiteData = {
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",
-    linkedin: "http://linkedin.com/in/daniel-ciupek-4ab127387",
+    linkedin: "https://linkedin.com/in/daniel-ciupek-4ab127387",
     facebook: "https://www.facebook.com/daniel.ciupek.7?locale=pl_PL",
     instagram: "https://www.instagram.com/danter005?igsh=Zzh3bGNrNmtxNHht&utm_source=qr",
   },
