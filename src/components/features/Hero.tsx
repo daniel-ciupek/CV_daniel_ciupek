@@ -7,6 +7,10 @@ import data from "@/config/data";
 import { useScrambleText } from "@/hooks/useScrambleText";
 import { useMouseParallax } from "@/hooks/useMouseParallax";
 import AvatarFallback from "@/components/ui/AvatarFallback";
+import {
+  SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
+  SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql,
+} from "react-icons/si";
 
 // PageLoader trwa ~1600ms, scramble startuje 300ms po zakończeniu
 const SCRAMBLE_DELAY_MS = 1900;
@@ -115,18 +119,44 @@ export default function Hero() {
             </span>
           </motion.h1>
 
-          {data.personal.bio && (
-            <motion.p
-              custom={2}
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              className="mt-6 max-w-lg text-base leading-relaxed md:text-lg"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {data.personal.bio}
-            </motion.p>
-          )}
+          {/* Floating tech icons — scattered */}
+          <motion.div
+            custom={2}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            className="relative mt-6 w-full"
+            style={{ height: 190 }}
+          >
+            {[
+              { Icon: SiLaravel,    color: "#FF2D20", size: 38, top: "8%",  left: "0%"  },
+              { Icon: SiVuedotjs,   color: "#42B883", size: 32, top: "62%", left: "10%" },
+              { Icon: SiPhp,        color: "#A97FD4", size: 42, top: "18%", left: "24%" },
+              { Icon: SiReact,      color: "#61DAFB", size: 34, top: "70%", left: "38%" },
+              { Icon: SiNodedotjs,  color: "#5FA04E", size: 36, top: "5%",  left: "52%" },
+              { Icon: SiTypescript, color: "#3178C6", size: 30, top: "55%", left: "63%" },
+              { Icon: SiJavascript, color: "#F7DF1E", size: 34, top: "20%", left: "76%" },
+              { Icon: SiDocker,     color: "#2496ED", size: 38, top: "68%", left: "86%" },
+              { Icon: SiPostgresql, color: "#336791", size: 28, top: "40%", left: "44%" },
+              { Icon: SiMysql,      color: "#4479A1", size: 30, top: "38%", left: "18%" },
+            ].map(({ Icon, color, size, top, left }, i) => (
+              <motion.div
+                key={i}
+                className="absolute"
+                style={{ top, left, color, opacity: 0.55 }}
+                animate={{ y: [0, -7, 0] }}
+                transition={{
+                  duration: 2.6 + i * 0.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: i * 0.25,
+                }}
+                whileHover={{ opacity: 0.75, scale: 1.25 }}
+              >
+                <Icon size={size} />
+              </motion.div>
+            ))}
+          </motion.div>
 
           <motion.div
             custom={3}
