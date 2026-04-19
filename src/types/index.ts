@@ -30,7 +30,6 @@ export interface Certificate {
   file: string;
   title: string;
   platform: string;
-  date: string;
   hours: number;
 }
 
