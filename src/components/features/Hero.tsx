@@ -9,7 +9,7 @@ import { useMouseParallax } from "@/hooks/useMouseParallax";
 import AvatarFallback from "@/components/ui/AvatarFallback";
 import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
-  SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql,
+  SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython,
 } from "react-icons/si";
 
 // PageLoader trwa ~1600ms, scramble startuje 300ms po zakończeniu
@@ -130,20 +130,21 @@ export default function Hero() {
           >
             {[
               { Icon: SiLaravel,    color: "#FF2D20", size: 38, top: "8%",  left: "0%"  },
-              { Icon: SiVuedotjs,   color: "#42B883", size: 32, top: "62%", left: "10%" },
-              { Icon: SiPhp,        color: "#A97FD4", size: 42, top: "18%", left: "24%" },
-              { Icon: SiReact,      color: "#61DAFB", size: 34, top: "70%", left: "38%" },
-              { Icon: SiNodedotjs,  color: "#5FA04E", size: 36, top: "5%",  left: "52%" },
-              { Icon: SiTypescript, color: "#3178C6", size: 30, top: "55%", left: "63%" },
-              { Icon: SiJavascript, color: "#F7DF1E", size: 34, top: "20%", left: "76%" },
-              { Icon: SiDocker,     color: "#2496ED", size: 38, top: "68%", left: "86%" },
-              { Icon: SiPostgresql, color: "#336791", size: 28, top: "40%", left: "44%" },
-              { Icon: SiMysql,      color: "#4479A1", size: 30, top: "38%", left: "18%" },
+              { Icon: SiVuedotjs,   color: "#42B883", size: 32, top: "62%", left: "9%"  },
+              { Icon: SiPhp,        color: "#A97FD4", size: 42, top: "18%", left: "22%" },
+              { Icon: SiReact,      color: "#61DAFB", size: 34, top: "70%", left: "36%" },
+              { Icon: SiNodedotjs,  color: "#5FA04E", size: 36, top: "5%",  left: "50%" },
+              { Icon: SiTypescript, color: "#3178C6", size: 30, top: "55%", left: "61%" },
+              { Icon: SiJavascript, color: "#F7DF1E", size: 34, top: "18%", left: "74%" },
+              { Icon: SiDocker,     color: "#2496ED", size: 38, top: "66%", left: "89%" },
+              { Icon: SiPostgresql, color: "#336791", size: 28, top: "38%", left: "43%" },
+              { Icon: SiMysql,      color: "#4479A1", size: 30, top: "40%", left: "16%" },
+              { Icon: SiPython,     color: "#3776AB", size: 34, top: "10%", left: "86%" },
             ].map(({ Icon, color, size, top, left }, i) => (
               <motion.div
                 key={i}
                 className="absolute"
-                style={{ top, left, color, opacity: 0.55 }}
+                style={{ top, left, color, opacity: 0.82 }}
                 animate={{ y: [0, -7, 0] }}
                 transition={{
                   duration: 2.6 + i * 0.4,

@@ -2,7 +2,7 @@ import type { ComponentType, CSSProperties } from "react";
 import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiNextdotjs, SiTailwindcss,
-  SiMysql, SiPostgresql, SiDocker, SiGit, SiPostman, SiGooglegemini,
+  SiMysql, SiPostgresql, SiDocker, SiGit, SiPostman, SiGooglegemini, SiPython,
 } from "react-icons/si";
 import { BrainCircuit, Terminal } from "lucide-react";
 
@@ -10,6 +10,7 @@ export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSP
   PHP: SiPhp,
   Laravel: SiLaravel,
   "Node.js": SiNodedotjs,
+  Python: SiPython,
   JavaScript: SiJavascript,
   TypeScript: SiTypescript,
   React: SiReact,

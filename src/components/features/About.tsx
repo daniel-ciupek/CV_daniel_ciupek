@@ -104,7 +104,7 @@ export default function About() {
   const certCount     = data.certificates.length;
   const totalHoursInt = Math.round(data.certificates.reduce((s, c) => s + c.hours, 0));
   const projectsCount = data.projects.length;
-  const yearsLearning = 1;
+  const yearsLearning = 2;
 
   return (
     <section id="about" className="relative px-6 py-16 md:py-20">

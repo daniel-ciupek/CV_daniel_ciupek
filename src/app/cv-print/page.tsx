@@ -130,7 +130,6 @@ function Certificates() {
         {data.certificates.map(cert => (
           <li key={cert.key}>
             <span className="cv-cert-title">{cert.title}</span>
-            <span className="cv-cert-meta"> — {cert.platform} — {cert.date} — {cert.hours}h</span>
           </li>
         ))}
       </ul>

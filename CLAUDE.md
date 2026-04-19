@@ -80,7 +80,7 @@ personal: {
 ### Umiejętności (pogrupowane kategoriami)
 ```ts
 skills: [
-  { category: "Backend",   items: ["PHP", "Laravel", "Node.js"] },
+  { category: "Backend",   items: ["PHP", "Laravel", "Node.js", "Python"] },
   { category: "Frontend",  items: ["JavaScript", "TypeScript", "React", "Vue 3", "Next.js"] },
   { category: "Bazy danych", items: ["MySQL", "PostgreSQL"] },
   { category: "DevOps",    items: ["Docker", "Git"] },
@@ -118,6 +118,7 @@ Wszystkie pliki w `public/MyImage/`:
 | `cert_ai` | `CertyfikatAIProgramisty.jpg` | AI dla programistów: ChatGPT od A do Z | 21.12.2025 |
 | `cert_claude` | `CertyfikatClaudeCode.jpg` | Claude Code w pigułce | 06.04.2026 |
 | `cert_ai_coding` | `CertyfikatAiCodingWithClaudeAndCursor.jpg` | AI Coding Course — Cursor & Claude Code | 05.04.2026 |
+| `cert_python` | `CertyfikatPython.jpg` | [2026] Kurs Python 3 od Podstaw do Mastera | 19.04.2026 |
 
 ---
 

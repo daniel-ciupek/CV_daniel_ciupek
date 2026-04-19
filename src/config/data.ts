@@ -19,7 +19,7 @@ const data: SiteData = {
   skills: [
     {
       category: "Backend",
-      items: ["PHP", "Laravel", "Node.js"],
+      items: ["PHP", "Laravel", "Node.js", "Python"],
     },
     {
       category: "Frontend",
@@ -164,6 +164,14 @@ const data: SiteData = {
       platform: "Udemy",
       date: "05.04.2026",
       hours: 12,
+    },
+    {
+      key: "cert_python",
+      file: "/MyImage/CertyfikatPython.jpg",
+      title: "[2026] Kurs Python 3 od Podstaw do Mastera - 72h!",
+      platform: "Udemy",
+      date: "19.04.2026",
+      hours: 73,
     },
   ],
 };
