@@ -155,7 +155,7 @@ export default function About() {
             <span style={{ color: "var(--accent)" }}>
               Full Stack Developera
             </span>
-            {" "}(Laravel, Vue 3, PHP, JS, React, Node.js).
+            . Moja droga przez różne stosy technologiczne doprowadziła mnie do skoncentrowania mojego rozwoju na ekosystemie Laravela, który stał się moim optymalnym narzędziem do budowania skalowalnych aplikacji webowych.
           </blockquote>
           <figcaption
             className="mt-3 font-mono text-xs tracking-wider uppercase"
