@@ -46,7 +46,7 @@ function Header() {
         {website && (
           <>
             <span className="cv-sep">·</span>
-            <a href={website} target="_blank" rel="noopener noreferrer">{website.replace("https://", "")}</a>
+            <a href={website} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: "#1a56a0" }}>{website.replace("https://", "")}</a>
           </>
         )}
       </div>
