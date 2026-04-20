@@ -166,7 +166,7 @@ function CertCard({
           </p>
           <div className="flex items-center justify-between gap-2">
             <p className="truncate font-mono text-[10px]" style={{ color: "var(--text-muted)" }}>
-              {cert.platform} · {cert.date} · {cert.hours}h
+              {cert.platform} · {cert.hours}h
             </p>
             <div
               className="flex flex-shrink-0 items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
@@ -263,7 +263,7 @@ function CertList({ onOpen }: { onOpen: (i: number) => void }) {
                 className="hidden flex-shrink-0 font-mono text-[11px] sm:block"
                 style={{ color: "var(--text-subtle)" }}
               >
-                {cert.date}
+                {cert.platform}
               </span>
               <span
                 className="flex-shrink-0 font-mono text-[11px]"
@@ -424,7 +424,7 @@ function Lightbox({
               </div>
               <p className="text-sm font-medium" style={{ color: "var(--text)" }}>{cert.title}</p>
               <p className="mt-0.5 font-mono text-xs" style={{ color: "var(--text-muted)" }}>
-                {cert.platform} · {cert.date} · {cert.hours}h
+                {cert.platform} · {cert.hours}h
               </p>
             </div>
             <span className="flex-shrink-0 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
