@@ -22,6 +22,8 @@ export default function LenisProvider({
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
 
+    (window as { __lenis?: typeof lenis }).__lenis = lenis;
+
     let rafId: number;
 
     function raf(time: number) {
@@ -34,6 +36,7 @@ export default function LenisProvider({
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      delete (window as { __lenis?: typeof lenis }).__lenis;
     };
   }, [mounted]);
 

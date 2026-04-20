@@ -1,153 +1,231 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import { Code2, Database, Layers, Rocket } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import data from "@/config/data";
+import SectionHeader from "@/components/ui/SectionHeader";
 
-const highlights = [
-  {
-    icon: Code2,
-    label: "Frontend",
-    value: "React / Vue / Next.js",
-  },
-  {
-    icon: Database,
-    label: "Backend",
-    value: "PHP / Laravel / Node.js",
-  },
-  {
-    icon: Layers,
-    label: "Bazy danych",
-    value: "MySQL / PostgreSQL",
-  },
-  {
-    icon: Rocket,
-    label: "DevOps",
-    value: "Docker / Git",
-  },
-];
+/* ─── useCountUp ───────────────────────────────────────────── */
+function useCountUp(target: number, opts?: { duration?: number; start?: boolean }) {
+  const duration = opts?.duration ?? 1600;
+  const start = opts?.start ?? true;
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number | null>(null);
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: "easeOut" },
-  }),
-};
+  useEffect(() => {
+    if (!start) return;
+    const startTime = performance.now();
+    const easeOutExpo = (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
-export default function About() {
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      setValue(Math.round(target * easeOutExpo(t)));
+      if (t < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [target, duration, start]);
+
+  return value;
+}
+
+/* ─── Counter ──────────────────────────────────────────────── */
+function Counter({
+  target, suffix = "", label, sublabel, inView, delay = 0,
+}: {
+  target: number;
+  suffix?: string;
+  label: string;
+  sublabel: string;
+  inView: boolean;
+  delay?: number;
+}) {
+  const reduce = useReducedMotion();
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(t);
+  }, [inView, delay]);
+
+  const counted = useCountUp(target, { start: !reduce && started, duration: 1600 });
+  const display = reduce || !started ? target : counted;
+
   return (
-    <section id="about" className="relative px-6 py-24 md:py-32">
-      {/* Section label */}
-      <div className="mx-auto max-w-6xl">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-3 font-mono text-sm tracking-widest uppercase"
-          style={{ color: "var(--accent)" }}
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: delay / 1000, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div
+        className="mb-4 h-px w-8"
+        style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 100%)" }}
+        aria-hidden
+      />
+      <div className="flex items-baseline gap-1">
+        <span
+          className="font-mono text-4xl md:text-5xl font-semibold tabular-nums tracking-tight"
+          style={{
+            background: "linear-gradient(135deg, #F1F5F9 0%, #00D4FF 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
         >
-          O mnie
-        </motion.p>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-12 text-3xl font-bold md:text-4xl"
-          style={{ color: "var(--text)" }}
-        >
-          Kim jestem
-        </motion.h2>
-
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 lg:items-start">
-
-          {/* Bio text */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          {display}
+        </span>
+        {suffix && (
+          <span
+            className="font-mono text-xl md:text-2xl font-medium"
+            style={{ color: "var(--accent)" }}
           >
-            {data.personal.bio ? (
-              <p
-                className="text-base leading-relaxed md:text-lg"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {data.personal.bio}
-              </p>
-            ) : (
-              <div className="space-y-4">
-                <p
-                  className="text-base leading-relaxed md:text-lg"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  Jestem Full Stack Developerem z pasją do tworzenia nowoczesnych
-                  aplikacji webowych. Specjalizuję się w ekosystemie PHP/Laravel
-                  na backendzie oraz React i Vue.js na frontendzie.
-                </p>
-                <p
-                  className="text-base leading-relaxed md:text-lg"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  Stale rozwijam swoje umiejętności — posiadam{" "}
-                  <span style={{ color: "var(--accent)" }}>
-                    {data.certificates.length} certyfikatów Udemy
-                  </span>{" "}
-                  potwierdzających kompetencje w obszarach backend, frontend,
-                  baz danych, DevOps i AI.
-                </p>
-              </div>
-            )}
-          </motion.div>
+            {suffix}
+          </span>
+        )}
+      </div>
+      <p className="mt-2 text-sm font-medium tracking-wide" style={{ color: "var(--text)" }}>
+        {label}
+      </p>
+      <p className="mt-0.5 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
+        {sublabel}
+      </p>
+    </motion.div>
+  );
+}
 
-          {/* Highlights grid */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {highlights.map((item, i) => (
-              <motion.div
-                key={item.label}
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="group rounded-xl p-5 transition-all duration-300"
-                style={{
-                  backgroundColor: "var(--bg-surface)",
-                  border: "1px solid var(--border)",
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "rgba(0,212,255,0.30)";
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor =
-                    "var(--border)";
-                }}
-              >
-                <item.icon
-                  size={22}
-                  className="mb-3 transition-colors duration-300"
-                  style={{ color: "var(--accent)" }}
-                />
-                <p
-                  className="mb-1 text-xs font-medium uppercase tracking-wider"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  {item.label}
-                </p>
-                <p
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--text)" }}
-                >
-                  {item.value}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+/* ─── About ────────────────────────────────────────────────── */
+export default function About() {
+  const countersRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(countersRef, { once: true, margin: "-80px" });
+
+  const certCount     = data.certificates.length;
+  const totalHoursInt = Math.round(data.certificates.reduce((s, c) => s + c.hours, 0));
+  const projectsCount = data.projects.length;
+  const yearsLearning = 2;
+
+  return (
+    <section id="about" className="relative px-6 py-16 md:py-20">
+      <div className="mx-auto max-w-4xl">
+        <SectionHeader index="01" total="05" title="O MNIE" subtitle="// whoami" />
+
+        {/* Pull-quote */}
+        <motion.figure
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mb-10 md:mb-14 pl-6 md:pl-10 pr-6 md:pr-10"
+        >
+          {/* Otwierający cudzysłów — lewy */}
+          <span
+            aria-hidden
+            className="absolute -top-4 md:-top-6 left-0 font-mono text-6xl md:text-7xl leading-none select-none"
+            style={{ color: "var(--accent)", opacity: 0.4 }}
+          >
+            &ldquo;
+          </span>
+          {/* Lewa pionowa linia */}
+          <span
+            aria-hidden
+            className="absolute left-0 top-2 bottom-2 w-px"
+            style={{ background: "linear-gradient(180deg, var(--accent) 0%, transparent 100%)" }}
+          />
+          {/* Zamykający cudzysłów — prawy */}
+          <span
+            aria-hidden
+            className="absolute -bottom-4 md:-bottom-6 right-0 font-mono text-6xl md:text-7xl leading-none select-none"
+            style={{ color: "var(--accent)", opacity: 0.4 }}
+          >
+            &rdquo;
+          </span>
+          {/* Prawa pionowa linia */}
+          <span
+            aria-hidden
+            className="absolute right-0 top-2 bottom-2 w-px"
+            style={{ background: "linear-gradient(180deg, transparent 0%, var(--accent) 100%)" }}
+          />
+          <blockquote
+            className="text-xl md:text-2xl font-medium leading-snug tracking-tight"
+            style={{ color: "var(--text)" }}
+          >
+            Aspirujący do roli{" "}
+            <span style={{ color: "var(--accent)" }}>
+              Full Stack Developera
+            </span>
+            . Moja droga przez różne stosy technologiczne doprowadziła mnie do skoncentrowania mojego rozwoju na ekosystemie Laravela, który stał się moim optymalnym narzędziem do budowania skalowalnych aplikacji webowych.
+          </blockquote>
+          <figcaption
+            className="mt-3 font-mono text-xs tracking-wider uppercase"
+            style={{ color: "var(--text-subtle)" }}
+          >
+            — Daniel Ciupek
+          </figcaption>
+        </motion.figure>
+
+        {/* Bio */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-14 md:mb-20"
+        >
+          <p
+            className="text-base md:text-lg leading-relaxed"
+            style={{ color: "var(--text-muted)" }}
+          >
+            {data.personal.bio}
+          </p>
+        </motion.div>
+
+        {/* Divider */}
+        <div
+          className="mb-10 md:mb-12 h-px w-full"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.25) 50%, transparent 100%)",
+          }}
+          aria-hidden
+        />
+
+        {/* Counters */}
+        <div
+          ref={countersRef}
+          className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6"
+        >
+          <Counter
+            target={certCount}
+            label="Certyfikaty"
+            sublabel="// udemy"
+            inView={inView}
+            delay={0}
+          />
+          <Counter
+            target={totalHoursInt}
+            suffix="h"
+            label="Godziny szkoleń"
+            sublabel="// 2025–2026"
+            inView={inView}
+            delay={120}
+          />
+          <Counter
+            target={projectsCount}
+            label="Projekty"
+            sublabel="// w portfolio"
+            inView={inView}
+            delay={240}
+          />
+          <Counter
+            target={yearsLearning}
+            suffix="+"
+            label="Rok kodowania"
+            sublabel="// fundamenty"
+            inView={inView}
+            delay={360}
+          />
         </div>
       </div>
     </section>

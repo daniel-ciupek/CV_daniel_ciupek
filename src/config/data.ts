@@ -6,11 +6,11 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
-    bio: "Zdeterminowany samouk aspirujący do roli Full Stack Developera (JS, React, Node.js, PHP). Lata pracy w wymagającym środowisku fizycznym wyrobiły we mnie dyscyplinę, którą teraz w pełni przekładam na programowanie. Rozumiejąc, że w erze AI łatwo iść na skróty, swoją edukację zacząłem od twardych fundamentów: czystego HTML, CSS i JS-a, na których opieram swoje obecne projekty. Stawiam sprawę jasno: szukam szansy na start. Oferuję moje pełne wsparcie, lojalność i ciężką pracę przy kodzie w zamian za możliwość rozwoju w warunkach komercyjnych. Kwestie finansowe mają dla mnie obecnie drugorzędne znaczenie – moim absolutnym celem jest zdobycie doświadczenia i udowodnienie swojej wartości w zespole.",
+    bio: "Aspirujący Full Stack Developer (Laravel, Vue 3, PHP, JS). Lata pracy w wymagającym środowisku fizycznym wykształciły we mnie dyscyplinę i etykę pracy, które dziś z pełnym zaangażowaniem przekładam na programowanie. Moje podejście opieram na solidnych fundamentach – świadomie zacząłem od czystego HTML, CSS i JavaScript, unikając dróg na skróty, co pozwala mi dziś sprawnie poruszać się w ekosystemie Laravela. Wyznaję zasadę lifelong learning – zdobyte przeze mnie certyfikaty nie są jedynie potwierdzeniem wiedzy, lecz dowodem na autentyczną pasję, która pcha mnie do ciągłego poszerzania horyzontów w każdej wolnej chwili. Szukam swojej pierwszej szansy na start komercyjny. W zamian oferuję lojalność, determinację i pełne wsparcie zespołu, priorytetyzując rozwój zawodowy i możliwość udowodnienia swojej wartości ponad kwestie finansowe.",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",
-    linkedin: "http://linkedin.com/in/daniel-ciupek-4ab127387",
+    linkedin: "https://linkedin.com/in/daniel-ciupek-4ab127387",
     facebook: "https://www.facebook.com/daniel.ciupek.7?locale=pl_PL",
     instagram: "https://www.instagram.com/danter005?igsh=Zzh3bGNrNmtxNHht&utm_source=qr",
   },
@@ -19,7 +19,7 @@ const data: SiteData = {
   skills: [
     {
       category: "Backend",
-      items: ["PHP", "Laravel", "Node.js"],
+      items: ["PHP", "Laravel", "Node.js", "Python"],
     },
     {
       category: "Frontend",
@@ -82,7 +82,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatJavaScript.jpg",
       title: "Vanilla JavaScript od podstaw – stwórz 15 projektów!",
       platform: "Udemy",
-      date: "29.11.2025",
       hours: 39,
     },
     {
@@ -90,7 +89,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatPHP.jpg",
       title: "Kurs programowanie PHP i MySQL od podstaw w Pigułce",
       platform: "Udemy",
-      date: "10.01.2026",
       hours: 32,
     },
     {
@@ -98,7 +96,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatMySql.jpg",
       title: "Kurs SQL od podstaw | MySQL",
       platform: "Udemy",
-      date: "09.01.2026",
       hours: 5,
     },
     {
@@ -106,7 +103,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatPostgreSQL.jpg",
       title: "Kurs PostgreSQL",
       platform: "Udemy",
-      date: "22.01.2026",
       hours: 6,
     },
     {
@@ -114,7 +110,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatLaravel12&Vue3.jpg",
       title: "Laravel 12 & Vue 3 fullstack Mastery: Build 2 portfolio apps",
       platform: "Udemy",
-      date: "17.03.2026",
       hours: 37.5,
     },
     {
@@ -122,7 +117,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatDocker.jpg",
       title: "Docker od podstaw – dla programistów i nie tylko",
       platform: "Udemy",
-      date: "24.03.2026",
       hours: 4.5,
     },
     {
@@ -130,7 +124,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatPostmanTestAPI.jpg",
       title: "Postman od podstaw – testowanie REST API",
       platform: "Udemy",
-      date: "05.02.2026",
       hours: 6,
     },
     {
@@ -138,7 +131,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatAngielskiIT.jpg",
       title: "Angielski w IT. Kompletny Kurs Konwersacyjny",
       platform: "Udemy",
-      date: "16.03.2026",
       hours: 12,
     },
     {
@@ -146,7 +138,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatAIProgramisty.jpg",
       title: "AI dla programistów: ChatGPT od A do Z",
       platform: "Udemy",
-      date: "21.12.2025",
       hours: 4.5,
     },
     {
@@ -154,7 +145,6 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatClaudeCode.jpg",
       title: "Claude Code w pigułce – dla programistów i nie tylko",
       platform: "Udemy",
-      date: "06.04.2026",
       hours: 1.5,
     },
     {
@@ -162,8 +152,14 @@ const data: SiteData = {
       file: "/MyImage/CertyfikatAiCodingWithClaudeAndCursor.jpg",
       title: "The Complete AI Coding Course (2025) – Cursor, Claude Code",
       platform: "Udemy",
-      date: "05.04.2026",
       hours: 12,
+    },
+    {
+      key: "cert_python",
+      file: "/MyImage/CertyfikatPython.jpg",
+      title: "[2026] Kurs Python 3 od Podstaw do Mastera - 72h!",
+      platform: "Udemy",
+      hours: 73,
     },
   ],
 };
