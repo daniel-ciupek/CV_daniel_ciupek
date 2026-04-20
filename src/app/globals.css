@@ -361,6 +361,7 @@ body::after {
 
 /* ─── @media print — ukryj przycisk, ustaw marginesy ──────────── */
 @media print {
+  html { color-scheme: light !important; }
   .cv-print-btn-wrapper { display: none; }
   body { background: #ffffff !important; }
   .cv-page {

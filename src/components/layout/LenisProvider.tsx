@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 export default function LenisProvider({
   children,
