@@ -13,6 +13,7 @@ const data: SiteData = {
     linkedin: "https://linkedin.com/in/daniel-ciupek-4ab127387",
     facebook: "https://www.facebook.com/daniel.ciupek.7?locale=pl_PL",
     instagram: "https://www.instagram.com/danter005?igsh=Zzh3bGNrNmtxNHht&utm_source=qr",
+    website: "https://cv-daniel-ciupek.vercel.app",
   },
 
   // ─── Umiejętności ──────────────────────────────────────────────

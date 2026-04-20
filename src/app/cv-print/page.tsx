@@ -30,7 +30,7 @@ function Divider() {
 /* ─── Sekcje ────────────────────────────────────────────────────────────── */
 
 function Header() {
-  const { name, title, email, phone, github, linkedin } = data.personal;
+  const { name, title, email, phone, github, linkedin, website } = data.personal;
   return (
     <header className="cv-header">
       <h1 className="cv-name">{name}</h1>
@@ -43,6 +43,12 @@ function Header() {
         <a href={github} target="_blank" rel="noopener noreferrer">{github.replace("https://", "")}</a>
         <span className="cv-sep">·</span>
         <a href={linkedin} target="_blank" rel="noopener noreferrer">{linkedin.replace("http://", "").replace("https://", "")}</a>
+        {website && (
+          <>
+            <span className="cv-sep">·</span>
+            <a href={website} target="_blank" rel="noopener noreferrer">{website.replace("https://", "")}</a>
+          </>
+        )}
       </div>
     </header>
   );

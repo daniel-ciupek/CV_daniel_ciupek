@@ -9,6 +9,7 @@ export interface Personal {
   linkedin: string;
   facebook: string;
   instagram: string;
+  website?: string;
 }
 
 export interface SkillCategory {
