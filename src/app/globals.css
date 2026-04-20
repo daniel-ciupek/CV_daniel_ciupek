@@ -168,7 +168,8 @@ body::after {
     color: #111111 !important;
     cursor: auto;
   }
-  body::before { display: none; }
+  body::before,
+  body::after { display: none; }
 }
 
 /* ════════════════════════════════════════════════════════════════

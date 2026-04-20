@@ -21,6 +21,7 @@ export default function LenisProvider({
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      syncTouch: true,
     });
 
     (window as { __lenis?: typeof lenis }).__lenis = lenis;
