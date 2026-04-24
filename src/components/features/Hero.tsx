@@ -181,20 +181,33 @@ export default function Hero() {
               Zobacz projekty
             </a>
             <a
-              href="/cv-print"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#contact"
+              onClick={() => {
+                const el = document.getElementById("contact");
+                if (!el) return;
+                el.classList.add("anchor-pulse");
+                setTimeout(() => el.classList.remove("anchor-pulse"), 700);
+              }}
               className="rounded-md px-6 py-3 text-sm font-semibold transition-all duration-200"
-              style={{ border: "1px solid var(--accent)", color: "var(--accent)" }}
+              style={{
+                border: "1px solid var(--border-hover)",
+                color: "var(--accent)",
+                backgroundColor: "rgba(0, 212, 255, 0.06)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+              }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor =
-                  "var(--accent-glow)";
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = "rgba(0, 212, 255, 0.12)";
+                el.style.borderColor = "var(--accent)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = "rgba(0, 212, 255, 0.06)";
+                el.style.borderColor = "var(--border-hover)";
               }}
             >
-              Pobierz CV
+              Kontakt
             </a>
           </motion.div>
         </div>
