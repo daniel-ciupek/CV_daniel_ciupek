@@ -181,9 +181,13 @@ export default function Hero() {
               Zobacz projekty
             </a>
             <a
-              href="/cv-print"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#contact"
+              onClick={() => {
+                const el = document.getElementById("contact");
+                if (!el) return;
+                el.classList.add("anchor-pulse");
+                setTimeout(() => el.classList.remove("anchor-pulse"), 700);
+              }}
               className="rounded-md px-6 py-3 text-sm font-semibold transition-all duration-200"
               style={{ border: "1px solid var(--accent)", color: "var(--accent)" }}
               onMouseEnter={(e) => {
@@ -194,7 +198,7 @@ export default function Hero() {
                 (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
               }}
             >
-              Pobierz CV
+              Kontakt
             </a>
           </motion.div>
         </div>
