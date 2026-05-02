@@ -250,7 +250,7 @@ function CertList({ onOpen }: { onOpen: (i: number) => void }) {
                 {category}
               </span>
 
-              {/* Title */}
+              {/* Title  */}
               <span
                 className="flex-1 truncate text-[13px] font-medium transition-colors duration-200 group-hover:text-[var(--text)]"
                 style={{ color: "var(--text-muted)" }}
