@@ -74,6 +74,14 @@ const data: SiteData = {
       // url: "https://...",       // opcjonalne
        github: "https://github.com/daniel-ciupek/laravel_api",    
      },
+
+     {
+       title: "AI Subscription & Expense Auditor",
+       description: "Self-hostowana aplikacja do osobistych finansów: wczytuje wyciągi bankowe (CSV/XLS) z polskich banków, automatycznie kategoryzuje transakcje przy pomocy LLM i wykrywa powtarzające się subskrypcje — w tym prawdopodobne duplikaty, za które możesz płacić dwa razy.",
+       stack: ["Laravel 13", "PHP 8.5", "PostgreSQL 18", "Redis 8", "Inertia.js", "React 18", "TypeScript", "Tailwind CSS", "Recharts", "Framer Motion", "Lucide", "Docker"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",    
+     }
   ],
 
   // ─── Certyfikaty ───────────────────────────────────────────────

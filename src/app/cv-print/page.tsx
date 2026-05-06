@@ -99,7 +99,7 @@ function Skills() {
 
 function Projects() {
   return (
-    <section>
+    <section className="cv-section-break-before">
       <SectionHeading>Projekty</SectionHeading>
       <Divider />
       <div className="cv-projects">
@@ -129,7 +129,7 @@ function Projects() {
 
 function Certificates() {
   return (
-    <section>
+    <section className="cv-section-break-before">
       <SectionHeading>Certyfikaty</SectionHeading>
       <Divider />
       <ul className="cv-cert-list">
