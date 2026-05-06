@@ -13,7 +13,7 @@ const springConfig = { stiffness: 260, damping: 28 };
 function toSlug(title: string) {
   return title
     .toLowerCase()
-    .replace(/\s+/g, "-")
+    .replace(/[\s_]+/g, "-")
     .replace(/[^a-z0-9-]/g, "");
 }
 
@@ -203,13 +203,13 @@ function ProjectCard({
           />
 
           {/* Action buttons */}
-          <div className="flex items-center gap-4">
+          <div className="relative z-10 flex items-center gap-4">
             {project.github && (
               <a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-mono text-xs transition-colors duration-200"
+                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
                 style={{ color: "var(--text-muted)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
@@ -223,7 +223,7 @@ function ProjectCard({
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 font-mono text-xs transition-colors duration-200"
+                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
                 style={{ color: "var(--accent)" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--accent)")}

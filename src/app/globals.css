@@ -46,6 +46,19 @@ body {
   font-family: var(--font-sans);
   min-height: 100dvh;
   overflow-x: hidden;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Allow selection inside form fields and on the printable CV page */
+input,
+textarea,
+[contenteditable="true"],
+.cv-page,
+.cv-page * {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 /* ─── Noise Texture Overlay ─────────────────────────────────── */
@@ -385,4 +398,8 @@ body::after {
   a { color: #1a56a0 !important; }
   .cv-section-heading { page-break-after: avoid; }
   .cv-project { page-break-inside: avoid; }
+  .cv-section-break-before {
+    page-break-before: always;
+    break-before: page;
+  }
 }

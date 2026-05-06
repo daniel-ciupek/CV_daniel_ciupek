@@ -236,7 +236,7 @@ function CertList({ onOpen }: { onOpen: (i: number) => void }) {
                 {String(i + 1).padStart(2, "0")}
               </span>
 
-              {/* Category badge */}
+              {/* Category badge  */}
               <span
                 className="flex-shrink-0 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider"
                 style={{
