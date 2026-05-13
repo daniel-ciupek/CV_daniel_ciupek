@@ -4,6 +4,7 @@ import {
   SiReact, SiVuedotjs, SiNextdotjs, SiTailwindcss,
   SiMysql, SiPostgresql, SiDocker, SiGit, SiPostman, SiGooglegemini, SiPython,
 } from "react-icons/si";
+import { FaAws } from "react-icons/fa";
 import { BrainCircuit, Terminal } from "lucide-react";
 
 export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSProperties }>> = {
@@ -21,6 +22,7 @@ export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSP
   PostgreSQL: SiPostgresql,
   Docker: SiDocker,
   Git: SiGit,
+  AWS: FaAws,
   Postman: SiPostman,
   "REST API": Terminal,
   "Claude Code": BrainCircuit,

@@ -11,6 +11,7 @@ import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython,
 } from "react-icons/si";
+import { FaAws } from "react-icons/fa";
 
 // PageLoader trwa ~1600ms, scramble startuje 300ms po zakończeniu
 const SCRAMBLE_DELAY_MS = 1900;
@@ -140,6 +141,7 @@ export default function Hero() {
               { Icon: SiPostgresql, color: "#336791", size: 28, top: "38%", left: "43%" },
               { Icon: SiMysql,      color: "#4479A1", size: 30, top: "40%", left: "16%" },
               { Icon: SiPython,     color: "#3776AB", size: 34, top: "10%", left: "86%" },
+              { Icon: FaAws,              color: "#FF9900", size: 36, top: "40%", left: "78%" },
             ].map(({ Icon, color, size, top, left }, i) => (
               <motion.div
                 key={i}

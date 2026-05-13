@@ -32,7 +32,7 @@ const data: SiteData = {
     },
     {
       category: "DevOps & Narzędzia",
-      items: ["Docker", "Git", "Postman", "REST API"],
+      items: ["Docker", "Git", "AWS", "Postman", "REST API"],
     },
     {
       category: "AI & Narzędzia",
@@ -169,6 +169,13 @@ const data: SiteData = {
       title: "[2026] Kurs Python 3 od Podstaw do Mastera - 72h!",
       platform: "Udemy",
       hours: 73,
+    },
+    {
+      key: "cert_aws",
+      file: "/MyImage/CertyfikatAWS.jpg",
+      title: "AWS Certified Cloud Practitioner - kurs z podręcznikiem",
+      platform: "Udemy",
+      hours: 5.5,
     },
   ],
 };
