@@ -393,11 +393,11 @@ body::after {
   .cv-page a { color: #1a56a0 !important; }
   @page {
     margin: 1.5cm;
-    size: A4;
   }
   a { color: #1a56a0 !important; }
-  .cv-section-heading { page-break-after: avoid; }
-  .cv-project { page-break-inside: avoid; }
+  .cv-section-heading { page-break-after: avoid; break-after: avoid; }
+  .cv-projects { display: block; }
+  .cv-project { page-break-inside: avoid; break-inside: avoid; }
   .cv-section-break-before {
     page-break-before: always;
     break-before: page;

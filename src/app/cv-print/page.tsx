@@ -10,6 +10,7 @@
 
 import data from "@/config/data";
 import PrintButton from "./PrintButton";
+import MobilePrintFix from "./MobilePrintFix";
 
 /* ─── Małe komponenty pomocnicze ───────────────────────────────────────────
    Dzięki nim każda sekcja jest niezależna i łatwa do przestawienia/edycji.
@@ -150,6 +151,7 @@ export default function CvPrint() {
     <>
       {/* Print button — widoczny tylko w przeglądarce, niewidoczny w druku */}
       <PrintButton />
+      <MobilePrintFix />
 
       <main className="cv-page">
         {/*
