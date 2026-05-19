@@ -395,7 +395,8 @@ body::after {
     margin: 1.5cm;
   }
   a { color: #1a56a0 !important; }
-  .cv-section-heading { page-break-after: avoid; }
+  .cv-section-heading { page-break-after: avoid; break-after: avoid; }
+  .cv-projects { display: block; }
   .cv-project { page-break-inside: avoid; break-inside: avoid; }
   .cv-section-break-before {
     page-break-before: always;

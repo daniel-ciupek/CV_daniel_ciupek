@@ -129,7 +129,7 @@ function Projects() {
 
 function Certificates() {
   return (
-    <section>
+    <section className="cv-section-break-before">
       <SectionHeading>Certyfikaty</SectionHeading>
       <Divider />
       <ul className="cv-cert-list">
