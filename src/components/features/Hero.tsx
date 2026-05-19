@@ -140,7 +140,7 @@ export default function Hero() {
               { Icon: SiDocker,     color: "#2496ED", size: 38, top: "66%", left: "89%" },
               { Icon: SiPostgresql, color: "#336791", size: 28, top: "38%", left: "43%" },
               { Icon: SiMysql,      color: "#4479A1", size: 30, top: "40%", left: "16%" },
-              { Icon: SiPython,     color: "#3776AB", size: 34, top: "10%", left: "86%" },
+              { Icon: SiPython,     color: "#3776AB", size: 34, top: "2%",  left: "92%" },
               { Icon: FaAws,              color: "#FF9900", size: 36, top: "40%", left: "78%" },
             ].map(({ Icon, color, size, top, left }, i) => (
               <motion.div
