@@ -81,6 +81,14 @@ const data: SiteData = {
        stack: ["Laravel 13", "PHP 8.5", "PostgreSQL 18", "Redis 8", "Inertia.js", "React 18", "TypeScript", "Tailwind CSS", "Recharts", "Framer Motion", "Lucide", "Docker"],
       // url: "https://...",       // opcjonalne
        github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",    
+     },
+
+      {
+       title: "QR-Master",
+       description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
+       stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/QR-Master",    
      }
   ],
 
