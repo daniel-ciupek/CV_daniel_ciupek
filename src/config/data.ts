@@ -200,7 +200,7 @@ const data: SiteData = {
       file: "/MyImage/GitLabCICD.jpg",
       title: "Kurs GitLab CI/CD od podstaw",
       platform: "Udemy",
-      hours: 5,
+      hours: 14,
     },
   ],
 };
