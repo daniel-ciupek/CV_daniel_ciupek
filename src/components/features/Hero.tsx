@@ -9,7 +9,7 @@ import { useMouseParallax } from "@/hooks/useMouseParallax";
 import AvatarFallback from "@/components/ui/AvatarFallback";
 import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
-  SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython,
+  SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython, SiGitlab, SiLinux,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
 
@@ -142,6 +142,8 @@ export default function Hero() {
               { Icon: SiMysql,      color: "#4479A1", size: 30, top: "40%", left: "16%" },
               { Icon: SiPython,     color: "#3776AB", size: 34, top: "2%",  left: "92%" },
               { Icon: FaAws,              color: "#FF9900", size: 36, top: "40%", left: "78%" },
+              { Icon: SiGitlab,     color: "#FC6D26", size: 32, top: "85%", left: "57%" },
+              { Icon: SiLinux,      color: "#FCC624", size: 30, top: "88%", left: "20%" },
             ].map(({ Icon, color, size, top, left }, i) => (
               <motion.div
                 key={i}

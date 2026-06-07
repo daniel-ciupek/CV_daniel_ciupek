@@ -32,7 +32,7 @@ const data: SiteData = {
     },
     {
       category: "DevOps & Narzędzia",
-      items: ["Docker", "Git", "AWS", "Postman", "REST API"],
+      items: ["Docker", "Git", "AWS", "Postman", "REST API", "GitLab CI/CD", "Linux"],
     },
     {
       category: "AI & Narzędzia",
@@ -43,6 +43,30 @@ const data: SiteData = {
   // ─── Projekty ──────────────────────────────────────────────────
   projects: [
     
+     {
+       title: "PrepMind",
+       description: "PrepMind to aplikacja dla programistów: generuje pytania techniczne, planuje powtórki (SM-2) i symuluje rozmowy rekrutacyjne z AI. Działa w modelu BYOK (własny klucz Gemini), bez abonamentu.",
+       stack: ["Laravel 12", "PHP 8.3", "PostgreSQL 16", "Redis 7", "Inertia.js 2", "Vue 3", "TypeScript", "Pinia 3", "Tailwind CSS 3", "Laravel Breeze", "vue-i18n 11", "Gemini 2.5 Flash", "Pest 3", "Docker"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App",    
+     },
+
+     {
+       title: "AI Subscription & Expense Auditor",
+       description: "Self-hostowana aplikacja do osobistych finansów: wczytuje wyciągi bankowe (CSV/XLS) z polskich banków, automatycznie kategoryzuje transakcje przy pomocy LLM i wykrywa powtarzające się subskrypcje — w tym prawdopodobne duplikaty, za które możesz płacić dwa razy.",
+       stack: ["Laravel 13", "PHP 8.5", "PostgreSQL 18", "Redis 8", "Inertia.js", "React 18", "TypeScript", "Tailwind CSS", "Recharts", "Framer Motion", "Lucide", "Docker"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",    
+     },
+
+      {
+       title: "QR-Master",
+       description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
+       stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/QR-Master",    
+     },
+
      {
        title: "Workflow Management",
        description: "System zarządzania firmą z modułami obsługi pracowników, projektów i zadań. Aplikacja startowała jako wersja bazowa, którą rozbudowałem na potrzeby firmy, w której pracuję — aktualnie wdrożona i aktywnie użytkowana. Wyeliminowała problem nieefektywnego dysponowania zadaniami, skracając czas koordynacji pracy zespołu. Zbudowana w architekturze full-stack z reaktywnym UI opartym na Livewire 3 (Volt) i Alpine.js, skonteneryzowana przez Docker.",
@@ -75,21 +99,7 @@ const data: SiteData = {
        github: "https://github.com/daniel-ciupek/laravel_api",    
      },
 
-     {
-       title: "AI Subscription & Expense Auditor",
-       description: "Self-hostowana aplikacja do osobistych finansów: wczytuje wyciągi bankowe (CSV/XLS) z polskich banków, automatycznie kategoryzuje transakcje przy pomocy LLM i wykrywa powtarzające się subskrypcje — w tym prawdopodobne duplikaty, za które możesz płacić dwa razy.",
-       stack: ["Laravel 13", "PHP 8.5", "PostgreSQL 18", "Redis 8", "Inertia.js", "React 18", "TypeScript", "Tailwind CSS", "Recharts", "Framer Motion", "Lucide", "Docker"],
-      // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",    
-     },
-
-      {
-       title: "QR-Master",
-       description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
-       stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
-      // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/QR-Master",    
-     }
+    
   ],
 
   // ─── Certyfikaty ───────────────────────────────────────────────
@@ -184,6 +194,13 @@ const data: SiteData = {
       title: "AWS Certified Cloud Practitioner - kurs z podręcznikiem",
       platform: "Udemy",
       hours: 5.5,
+    },
+    {
+      key: "cert_gitlab",
+      file: "/MyImage/GitLabCICD.jpg",
+      title: "Kurs GitLab CI/CD od podstaw",
+      platform: "Udemy",
+      hours: 5,
     },
   ],
 };

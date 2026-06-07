@@ -21,6 +21,7 @@ const CERT_CATEGORY: Record<string, string> = {
   cert_ai_coding: "AI",
   cert_python:    "Backend",
   cert_aws:       "Cloud",
+  cert_gitlab:    "DevOps",
 };
 
 type Certificate = (typeof data.certificates)[number];
