@@ -3,6 +3,7 @@ import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiNextdotjs, SiTailwindcss,
   SiMysql, SiPostgresql, SiDocker, SiGit, SiPostman, SiGooglegemini, SiPython,
+  SiGitlab, SiLinux,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
 import { BrainCircuit, Terminal } from "lucide-react";
@@ -28,4 +29,6 @@ export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSP
   "Claude Code": BrainCircuit,
   Cursor: BrainCircuit,
   Gemini: SiGooglegemini,
+  "GitLab CI/CD": SiGitlab,
+  Linux: SiLinux,
 };

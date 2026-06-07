@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, Copy, Check } from "lucide-react";
 import { FaGithub, FaLinkedin, FaFacebook, FaInstagram } from "react-icons/fa";
 import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -89,7 +90,7 @@ function ContactTile({
   href: string;
   delay: number;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const [copied, setCopied] = useState(false);
   const [echo, setEcho] = useState(false);
 
@@ -245,7 +246,7 @@ function ContactTile({
 // ─── Magnetic Social Icon ─────────────────────────────────────────────────────
 
 function MagneticIcon({ social, delay }: { social: SocialDef; delay: number }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const ref = useRef<HTMLAnchorElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
@@ -330,7 +331,7 @@ function CliLine({
   output?: React.ReactNode;
   delay: number;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   return (
     <div className="mb-3">
       <motion.p
@@ -362,7 +363,7 @@ function CliLine({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function Contact() {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const [expanded, setExpanded] = useState(false);
 
   const primary = SOCIALS.slice(0, 2);

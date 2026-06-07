@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 /* ─── useCountUp ───────────────────────────────────────────── */
 function useCountUp(target: number, opts?: { duration?: number; start?: boolean }) {
@@ -42,7 +43,7 @@ function Counter({
   inView: boolean;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const [started, setStarted] = useState(false);
 
   useEffect(() => {

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useSpring, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import data from "@/config/data";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const navLinks = [
   { label: "O mnie",       href: "#about" },
@@ -19,7 +20,7 @@ const sectionIds = navLinks.map((l) => l.href.slice(1));
 export default function Navbar() {
   const [isOpen, setIsOpen]     = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const reduce                  = useReducedMotion();
+  const reduce                  = usePrefersReducedMotion();
   const active                  = useScrollSpy(sectionIds);
 
   const { scrollYProgress } = useScroll();
