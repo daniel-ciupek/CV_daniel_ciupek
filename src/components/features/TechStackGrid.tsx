@@ -2,9 +2,9 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useReducedMotion } from "framer-motion";
 import data from "@/config/data";
 import { iconMap } from "./tech-stack/iconMap";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 function CategoryCard({
   group,
@@ -15,7 +15,7 @@ function CategoryCard({
   delay: number;
   fullHeight?: boolean;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const rawX = useMotionValue(0);

@@ -2,11 +2,11 @@
 
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useReducedMotion } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { ExternalLink } from "lucide-react";
 import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const springConfig = { stiffness: 260, damping: 28 };
 
@@ -36,7 +36,7 @@ function ProjectCard({
   total: number;
   delay: number;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = usePrefersReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
 
   const rawX = useMotionValue(0);

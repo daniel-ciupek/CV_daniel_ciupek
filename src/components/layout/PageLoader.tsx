@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 function TypeWriter({ text, speed = 22 }: { text: string; speed?: number }) {
   const [displayed, setDisplayed] = useState("");
@@ -25,7 +26,7 @@ function TypeWriter({ text, speed = 22 }: { text: string; speed?: number }) {
 }
 
 export default function PageLoader() {
-  const reduce = useReducedMotion();
+  const reduce = usePrefersReducedMotion();
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
