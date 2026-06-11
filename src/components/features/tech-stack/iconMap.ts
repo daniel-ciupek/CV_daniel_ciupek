@@ -3,10 +3,10 @@ import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiNextdotjs, SiTailwindcss,
   SiMysql, SiPostgresql, SiDocker, SiGit, SiPostman, SiGooglegemini, SiPython,
-  SiGitlab, SiLinux,
+  SiGitlab, SiLinux, SiClaude,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
-import { BrainCircuit, Terminal, Bot, Workflow, Waypoints } from "lucide-react";
+import { Terminal, Bot, Workflow, Waypoints, MousePointer2 } from "lucide-react";
 
 export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSProperties }>> = {
   PHP: SiPhp,
@@ -26,8 +26,8 @@ export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSP
   AWS: FaAws,
   Postman: SiPostman,
   "REST API": Terminal,
-  "Claude Code": BrainCircuit,
-  Cursor: BrainCircuit,
+  "Claude Code": SiClaude,
+  Cursor: MousePointer2,
   OpenClaw: Bot,
   "Hermes Agent": Workflow,
   MCP: Waypoints,
