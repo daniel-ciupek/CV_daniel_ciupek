@@ -92,6 +92,7 @@ export default function Image() {
           style={{
             borderRadius: "50%",
             objectFit: "cover",
+            objectPosition: "center 18%",
             border: "4px solid rgba(0,212,255,0.55)",
           }}
         />
