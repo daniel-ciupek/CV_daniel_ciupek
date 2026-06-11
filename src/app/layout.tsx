@@ -22,12 +22,12 @@ export const metadata: Metadata = {
   ),
   title: `${data.personal.name} — ${data.personal.title}`,
   description:
-    data.personal.bio ||
+    data.personal.seoDescription ||
     `Portfolio ${data.personal.name} — ${data.personal.title}`,
   openGraph: {
     title: `${data.personal.name} — ${data.personal.title}`,
     description:
-      data.personal.bio ||
+      data.personal.seoDescription ||
       `Portfolio ${data.personal.name} — ${data.personal.title}`,
     images: [data.personal.avatar],
     type: "website",

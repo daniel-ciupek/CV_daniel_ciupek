@@ -6,6 +6,8 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
+    seoDescription:
+      "Full Stack Developer — Laravel, Vue 3, PostgreSQL, Docker. Buduję produkcyjne aplikacje webowe. 14 certyfikatów, 250+ h szkoleń.",
     bio: "Full Stack Developer budujący aplikacje webowe w ekosystemie Laravela — Laravel 12/13, Vue 3, Inertia.js, PostgreSQL, Docker, CI/CD. Zamiast iść na skróty, postawiłem fundamenty w czystym JavaScript, PHP i SQL, dzięki czemu framework jest dla mnie narzędziem, a nie czarną skrzynką. Najlepiej mówią za mnie projekty: system zarządzania pracownikami, projektami i zadaniami, który samodzielnie zaprojektowałem i wdrożyłem w firmie, w której pracuję — używany produkcyjnie każdego dnia. Obok niego w portfolio znajdziesz aplikację SaaS z płatnościami Stripe, 2FA i analityką realtime oraz projekty wykorzystujące integracje z modelami AI. Ponad 250 godzin szkoleń i 14 certyfikatów to nie ozdoba CV, tylko rytm, w jakim pracuję nad sobą od dwóch lat. Teraz szukam zespołu, w którym to tempo przełożę na komercyjne projekty.",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",

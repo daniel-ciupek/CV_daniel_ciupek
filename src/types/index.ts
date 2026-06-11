@@ -3,6 +3,8 @@ export interface Personal {
   title: string;
   avatar: string;
   bio: string;
+  /** Krótki opis (~150 zn.) do meta description / OG — bio jest za długie dla SEO */
+  seoDescription: string;
   email: string;
   phone: string;
   github: string;
