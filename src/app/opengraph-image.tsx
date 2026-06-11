@@ -11,7 +11,7 @@ export const contentType = "image/png";
 const ACCENT = "#00D4FF";
 const STACK = ["Laravel", "Vue 3", "PostgreSQL", "Docker"];
 
-const avatar = readFileSync(join(process.cwd(), "public/MyImage/avatarDc.jpeg"));
+const avatar = readFileSync(join(process.cwd(), "public/MyImage/avatarOg.jpg"));
 const avatarSrc = `data:image/jpeg;base64,${avatar.toString("base64")}`;
 
 export default function Image() {
@@ -92,7 +92,6 @@ export default function Image() {
           style={{
             borderRadius: "50%",
             objectFit: "cover",
-            objectPosition: "center 18%",
             border: "4px solid rgba(0,212,255,0.55)",
           }}
         />
