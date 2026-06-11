@@ -152,11 +152,10 @@ export default function About() {
             className="text-xl md:text-2xl font-medium leading-snug tracking-tight"
             style={{ color: "var(--text)" }}
           >
-            Aspirujący do roli{" "}
             <span style={{ color: "var(--accent)" }}>
-              Full Stack Developera
-            </span>
-            . Moja droga przez różne stosy technologiczne doprowadziła mnie do skoncentrowania mojego rozwoju na ekosystemie Laravela, który stał się moim optymalnym narzędziem do budowania skalowalnych aplikacji webowych.
+              Full Stack Developer
+            </span>{" "}
+            budujący aplikacje webowe w ekosystemie Laravela — Laravel 12/13, Vue 3, Inertia.js, PostgreSQL, Docker, CI/CD.
           </blockquote>
           <figcaption
             className="mt-3 font-mono text-xs tracking-wider uppercase"
@@ -222,7 +221,7 @@ export default function About() {
           <Counter
             target={yearsLearning}
             suffix="+"
-            label="Rok kodowania"
+            label="Lata praktyki"
             sublabel="// fundamenty"
             inView={inView}
             delay={360}

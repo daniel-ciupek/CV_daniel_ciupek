@@ -6,7 +6,9 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
-    bio: "Aspirujący Full Stack Developer (Laravel, Vue 3, PHP, JS). Lata pracy w wymagającym środowisku fizycznym wykształciły we mnie dyscyplinę i etykę pracy, które dziś z pełnym zaangażowaniem przekładam na programowanie. Moje podejście opieram na solidnych fundamentach – świadomie zacząłem od czystego HTML, CSS i JavaScript, unikając dróg na skróty, co pozwala mi dziś sprawnie poruszać się w ekosystemie Laravela. Wyznaję zasadę lifelong learning – zdobyte przeze mnie certyfikaty nie są jedynie potwierdzeniem wiedzy, lecz dowodem na autentyczną pasję, która pcha mnie do ciągłego poszerzania horyzontów w każdej wolnej chwili. Szukam swojej pierwszej szansy na start komercyjny. W zamian oferuję lojalność, determinację i pełne wsparcie zespołu, priorytetyzując rozwój zawodowy i możliwość udowodnienia swojej wartości ponad kwestie finansowe.",
+    seoDescription:
+      "Full Stack Developer — Laravel, Vue 3, PostgreSQL, Docker. Buduję produkcyjne aplikacje webowe. 14 certyfikatów, 250+ h szkoleń.",
+    bio: "Full Stack Developer budujący aplikacje webowe w ekosystemie Laravela — Laravel 12/13, Vue 3, Inertia.js, PostgreSQL, Docker, CI/CD. Zamiast iść na skróty, postawiłem fundamenty w czystym JavaScript, PHP i SQL, dzięki czemu framework jest dla mnie narzędziem, a nie czarną skrzynką. Najlepiej mówią za mnie projekty: system zarządzania pracownikami, projektami i zadaniami, który samodzielnie zaprojektowałem i wdrożyłem w firmie, w której pracuję — używany produkcyjnie każdego dnia. Obok niego w portfolio znajdziesz aplikację SaaS z płatnościami Stripe, 2FA i analityką realtime oraz projekty wykorzystujące integracje z modelami AI. Ponad 250 godzin szkoleń i 14 certyfikatów to nie ozdoba CV, tylko rytm, w jakim pracuję nad sobą od dwóch lat. Teraz szukam zespołu, w którym to tempo przełożę na komercyjne projekty.",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",
@@ -36,7 +38,7 @@ const data: SiteData = {
     },
     {
       category: "AI & Narzędzia",
-      items: ["Claude Code", "Cursor", "Gemini"],
+      items: ["Claude Code", "Cursor", "OpenClaw", "Hermes Agent", "MCP", "Gemini"],
     },
   ],
 
