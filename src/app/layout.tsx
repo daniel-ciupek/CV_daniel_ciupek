@@ -29,7 +29,6 @@ export const metadata: Metadata = {
     description:
       data.personal.seoDescription ||
       `Portfolio ${data.personal.name} — ${data.personal.title}`,
-    images: [data.personal.avatar],
     type: "website",
   },
   twitter: {

@@ -6,7 +6,7 @@ import {
   SiGitlab, SiLinux,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
-import { BrainCircuit, Terminal } from "lucide-react";
+import { BrainCircuit, Terminal, Bot, Workflow, Waypoints } from "lucide-react";
 
 export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSProperties }>> = {
   PHP: SiPhp,
@@ -28,6 +28,9 @@ export const iconMap: Record<string, ComponentType<{ size?: number; style?: CSSP
   "REST API": Terminal,
   "Claude Code": BrainCircuit,
   Cursor: BrainCircuit,
+  OpenClaw: Bot,
+  "Hermes Agent": Workflow,
+  MCP: Waypoints,
   Gemini: SiGooglegemini,
   "GitLab CI/CD": SiGitlab,
   Linux: SiLinux,

@@ -38,7 +38,7 @@ const data: SiteData = {
     },
     {
       category: "AI & Narzędzia",
-      items: ["Claude Code", "Cursor", "Gemini"],
+      items: ["Claude Code", "Cursor", "OpenClaw", "Hermes Agent", "MCP", "Gemini"],
     },
   ],
 
