@@ -3,6 +3,8 @@ export interface Personal {
   title: string;
   avatar: string;
   bio: string;
+  /** Krótkie hasło do pull-quote w sekcji "O mnie" — kontynuacja po akcentowanym `title` */
+  tagline: string;
   /** Krótki opis (~150 zn.) do meta description / OG — bio jest za długie dla SEO */
   seoDescription: string;
   email: string;
