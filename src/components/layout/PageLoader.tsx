@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 function TypeWriter({ text, speed = 22 }: { text: string; speed?: number }) {
@@ -27,10 +28,13 @@ function TypeWriter({ text, speed = 22 }: { text: string; speed?: number }) {
 
 export default function PageLoader() {
   const reduce = usePrefersReducedMotion();
+  const pathname = usePathname();
+  // trailingSlash: true w next.config → ścieżka może mieć końcowy "/"
+  const isPrint = pathname.replace(/\/$/, "") === "/cv-print";
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (reduce) {
+    if (reduce || isPrint) {
       setVisible(false);
       return;
     }
@@ -40,9 +44,9 @@ export default function PageLoader() {
       clearTimeout(t);
       document.body.style.overflow = "";
     };
-  }, [reduce]);
+  }, [reduce, isPrint]);
 
-  if (reduce) return null;
+  if (reduce || isPrint) return null;
 
   return (
     <AnimatePresence>

@@ -6,9 +6,11 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
+    tagline:
+      "łączący Laravela, Inertię, Vue 3 i Reacta z DevOps — Docker, GitLab CI/CD i automatyzację.",
     seoDescription:
       "Full Stack Developer — Laravel, Vue 3, PostgreSQL, Docker. Buduję produkcyjne aplikacje webowe. 14 certyfikatów, 250+ h szkoleń.",
-    bio: "Full Stack Developer budujący aplikacje webowe w ekosystemie Laravela — Laravel 12/13, Vue 3, Inertia.js, PostgreSQL, Docker, CI/CD. Zamiast iść na skróty, postawiłem fundamenty w czystym JavaScript, PHP i SQL, dzięki czemu framework jest dla mnie narzędziem, a nie czarną skrzynką. Najlepiej mówią za mnie projekty: system zarządzania pracownikami, projektami i zadaniami, który samodzielnie zaprojektowałem i wdrożyłem w firmie, w której pracuję — używany produkcyjnie każdego dnia. Obok niego w portfolio znajdziesz aplikację SaaS z płatnościami Stripe, 2FA i analityką realtime oraz projekty wykorzystujące integracje z modelami AI. Ponad 250 godzin szkoleń i 14 certyfikatów to nie ozdoba CV, tylko rytm, w jakim pracuję nad sobą od dwóch lat. Teraz szukam zespołu, w którym to tempo przełożę na komercyjne projekty.",
+    bio: "Full Stack Developer w ekosystemie Laravela — Laravel, Vue 3, Inertia.js, PostgreSQL i Docker. Buduję kompletne aplikacje webowe, od backendu po reaktywny frontend i konteneryzację, sprawnie wykorzystując narzędzia AI jako wsparcie warsztatu. Interesuję się również automatyzacją i CI/CD — buduję pipeline'y w GitLab CI/CD i GitHub Actions, dbając o powtarzalne wdrożenia i jakość kodu. W portfolio m.in. wdrożony produkcyjnie system do zarządzania pracą zespołu oraz aplikacja SaaS z płatnościami online (Stripe), dwuskładnikowym logowaniem (2FA) i analityką w czasie rzeczywistym. Szukam zespołu, w którym rozwinę się przy komercyjnych projektach.",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",

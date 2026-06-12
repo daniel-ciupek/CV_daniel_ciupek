@@ -153,9 +153,9 @@ export default function About() {
             style={{ color: "var(--text)" }}
           >
             <span style={{ color: "var(--accent)" }}>
-              Full Stack Developer
+              {data.personal.title}
             </span>{" "}
-            budujący aplikacje webowe w ekosystemie Laravela — Laravel 12/13, Vue 3, Inertia.js, PostgreSQL, Docker, CI/CD.
+            {data.personal.tagline}
           </blockquote>
           <figcaption
             className="mt-3 font-mono text-xs tracking-wider uppercase"
