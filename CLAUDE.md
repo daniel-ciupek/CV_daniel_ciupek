@@ -281,7 +281,14 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 
 ## 11. Design Tokens
 
-Zdecydowana paleta — obowiązuje w całym projekcie:
+> **Uwaga — migracja palety (redesign 2026, issue #4):** trwa zmiana systemu wizualnego na gałęzi
+> `feature/design-tokens`. Dopóki nie zapadnie decyzja o mergu do `main`, dokumentujemy **obie** palety.
+> - **v1 (legacy)** — obecna produkcja na `main`. Punkt powrotu, gdyby v2 się nie sprawdziła.
+> - **v2 (redesign)** — nowa paleta na `Dev` / feature-branchach. Kandydat do docelowego mergu.
+>
+> Realne źródło wartości: `src/app/globals.css` (`:root`) + `tailwind.config.ts`. Ten plik ma je odzwierciedlać.
+
+### Tła i akcenty — v1 (legacy / `main`)
 
 ```
 /* Tła */
@@ -289,14 +296,37 @@ Zdecydowana paleta — obowiązuje w całym projekcie:
 --bg-surface:   #0F0F0F   /* karty, panele */
 --bg-elevated:  #171717   /* dropdown, modal */
 
-/* Obramowania */
---border:       rgba(255, 255, 255, 0.08)
---border-hover: rgba(0, 212, 255, 0.30)
-
-/* Akcent */
+/* Akcent — tylko cyan */
 --accent:       #00D4FF
 --accent-dim:   #38BDF8
 --accent-glow:  rgba(0, 212, 255, 0.15)
+```
+
+### Tła i akcenty — v2 (redesign / `Dev`)
+
+```
+/* Tła — ciemniejszy zinc */
+--bg-base:      #09090B   /* główne tło (zinc-950) */
+--bg-surface:   #111116   /* karty, panele */
+--bg-elevated:  #18181F   /* dropdown, modal */
+
+/* Akcent główny — cyan (bez zmian) */
+--accent:       #00D4FF
+--accent-dim:   #38BDF8
+--accent-glow:  rgba(0, 212, 255, 0.15)
+
+/* Akcent drugi — emerald (subtelny, NOWY w v2) */
+--accent-2:      #34D399
+--accent-2-dim:  #10B981
+--accent-2-glow: rgba(52, 211, 153, 0.15)
+```
+
+### Wspólne dla obu palet (bez zmian)
+
+```
+/* Obramowania */
+--border:       rgba(255, 255, 255, 0.08)
+--border-hover: rgba(0, 212, 255, 0.30)
 
 /* Tekst */
 --text:         #F1F5F9
