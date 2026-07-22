@@ -318,7 +318,7 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 /* Akcent drugi — emerald (subtelny, NOWY w v2) */
 --accent-2:      #34D399
 --accent-2-dim:  #10B981
---accent-2-glow: rgba(52, 211, 153, 0.14)
+--accent-2-glow: rgba(52, 211, 153, 0.15)
 ```
 
 ### Wspólne dla obu palet (bez zmian)

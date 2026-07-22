@@ -21,7 +21,7 @@
   /* Accent — secondary (emerald), subtle second tone */
   --accent-2:      #34d399;
   --accent-2-dim:  #10b981;
-  --accent-2-glow: rgba(52, 211, 153, 0.14);
+  --accent-2-glow: rgba(52, 211, 153, 0.15);
 
   /* Text */
   --text:        #f1f5f9;
