@@ -547,7 +547,7 @@ export default function Certifications() {
         />
 
         <div className="mx-auto max-w-6xl">
-          <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="// achievements.log" />
+          <SectionHeader index="02" total="05" title="CERTYFIKATY" />
 
           {/* Carousel */}
           <div

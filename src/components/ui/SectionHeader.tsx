@@ -6,7 +6,8 @@ interface SectionHeaderProps {
   index: string;
   total: string;
   title: string;
-  subtitle: string;
+  /** Czysty opis sekcji (bez terminalowych `//`). Opcjonalny. */
+  subtitle?: string;
 }
 
 export default function SectionHeader({
@@ -21,47 +22,40 @@ export default function SectionHeader({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-12 md:mb-16 flex flex-col gap-2"
+      className="mb-12 flex flex-col gap-3 md:mb-16"
     >
-      <div
-        className="font-mono text-xs sm:text-sm"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          color: "var(--accent)",
-          flexWrap: "nowrap",
-        }}
-      >
-        <span style={{ whiteSpace: "nowrap" }}>{index} / {total}</span>
-        <span aria-hidden>▸</span>
+      {/* Eyebrow — numer sekcji + linia */}
+      <div className="flex items-center gap-3">
         <span
-          style={{
-            color: "var(--text)",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            fontWeight: 600,
-            whiteSpace: "nowrap",
-          }}
+          className="text-xs font-semibold tabular-nums tracking-[0.25em]"
+          style={{ color: "var(--accent)" }}
         >
-          {title}
+          {index} / {total}
         </span>
         <span
           aria-hidden
-          className="hidden sm:block"
+          className="h-px flex-1"
           style={{
-            flex: 1,
-            height: "1px",
-            background: "linear-gradient(90deg, rgba(0,212,255,0.4) 0%, transparent 100%)",
+            background:
+              "linear-gradient(90deg, var(--border-hover) 0%, transparent 100%)",
           }}
         />
       </div>
-      <p
-        className="font-mono text-xs sm:text-sm"
-        style={{ color: "var(--text-subtle)", marginLeft: 0 }}
+
+      {/* Tytuł */}
+      <h2
+        className="text-2xl font-bold tracking-tight md:text-3xl"
+        style={{ color: "var(--text)" }}
       >
-        {subtitle}
-      </p>
+        {title}
+      </h2>
+
+      {/* Podtytuł — opcjonalny, czysty */}
+      {subtitle && (
+        <p className="text-sm md:text-base" style={{ color: "var(--text-muted)" }}>
+          {subtitle}
+        </p>
+      )}
     </motion.div>
   );
 }

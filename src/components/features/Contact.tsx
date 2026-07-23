@@ -393,7 +393,7 @@ export default function Contact() {
         />
 
         <div className="mx-auto max-w-3xl">
-          <SectionHeader index="05" total="05" title="KONTAKT" subtitle="// establish.connection" />
+          <SectionHeader index="05" total="05" title="KONTAKT" />
 
           {/* Terminal window */}
           <motion.div

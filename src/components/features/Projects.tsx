@@ -272,7 +272,7 @@ export default function Projects() {
       />
 
       <div className="mx-auto max-w-6xl" style={{ perspective: "1200px" }}>
-        <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="// projects/" />
+        <SectionHeader index="04" total="05" title="PROJEKTY" />
 
         {projects.length === 0 && (
           <div

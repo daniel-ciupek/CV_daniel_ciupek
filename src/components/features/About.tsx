@@ -32,7 +32,7 @@ function useCountUp(target: number, opts?: { duration?: number; start?: boolean 
   return value;
 }
 
-/* ─── Counter ──────────────────────────────────────────────── */
+/* ─── Counter — glass bento tile ───────────────────────────── */
 function Counter({
   target, suffix = "", label, sublabel, inView, delay = 0,
 }: {
@@ -60,15 +60,17 @@ function Counter({
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.5, delay: delay / 1000, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-2xl border border-white/[0.08] p-5 transition-colors duration-300 hover:border-[rgba(0,212,255,0.30)] md:p-6"
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
     >
-      <div
-        className="mb-4 h-px w-8"
-        style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 100%)" }}
-        aria-hidden
-      />
       <div className="flex items-baseline gap-1">
         <span
-          className="font-mono text-4xl md:text-5xl font-semibold tabular-nums tracking-tight"
+          className="text-4xl font-semibold tabular-nums tracking-tight md:text-5xl"
           style={{
             background: "linear-gradient(135deg, #F1F5F9 0%, #00D4FF 100%)",
             WebkitBackgroundClip: "text",
@@ -80,7 +82,7 @@ function Counter({
         </span>
         {suffix && (
           <span
-            className="font-mono text-xl md:text-2xl font-medium"
+            className="text-xl font-medium md:text-2xl"
             style={{ color: "var(--accent)" }}
           >
             {suffix}
@@ -90,7 +92,7 @@ function Counter({
       <p className="mt-2 text-sm font-medium tracking-wide" style={{ color: "var(--text)" }}>
         {label}
       </p>
-      <p className="mt-0.5 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
+      <p className="mt-0.5 text-xs" style={{ color: "var(--text-subtle)" }}>
         {sublabel}
       </p>
     </motion.div>
@@ -109,123 +111,71 @@ export default function About() {
 
   return (
     <section id="about" className="relative px-6 py-16 md:py-20">
-      <div className="mx-auto max-w-4xl">
-        <SectionHeader index="01" total="05" title="O MNIE" subtitle="// whoami" />
+      <div className="mx-auto max-w-5xl">
+        <SectionHeader index="01" total="05" title="O MNIE" subtitle="Kim jestem" />
 
-        {/* Pull-quote */}
+        {/* Pull-quote — editorial, pasek gradient cyan→emerald */}
         <motion.figure
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mb-10 md:mb-14 pl-6 md:pl-10 pr-6 md:pr-10"
+          className="relative mb-12 pl-6 md:mb-16 md:pl-8"
         >
-          {/* Otwierający cudzysłów — lewy */}
           <span
             aria-hidden
-            className="absolute -top-4 md:-top-6 left-0 font-mono text-6xl md:text-7xl leading-none select-none"
-            style={{ color: "var(--accent)", opacity: 0.4 }}
-          >
-            &ldquo;
-          </span>
-          {/* Lewa pionowa linia */}
-          <span
-            aria-hidden
-            className="absolute left-0 top-2 bottom-2 w-px"
-            style={{ background: "linear-gradient(180deg, var(--accent) 0%, transparent 100%)" }}
-          />
-          {/* Zamykający cudzysłów — prawy */}
-          <span
-            aria-hidden
-            className="absolute -bottom-4 md:-bottom-6 right-0 font-mono text-6xl md:text-7xl leading-none select-none"
-            style={{ color: "var(--accent)", opacity: 0.4 }}
-          >
-            &rdquo;
-          </span>
-          {/* Prawa pionowa linia */}
-          <span
-            aria-hidden
-            className="absolute right-0 top-2 bottom-2 w-px"
-            style={{ background: "linear-gradient(180deg, transparent 0%, var(--accent) 100%)" }}
+            className="absolute bottom-1 left-0 top-1 w-[3px] rounded-full"
+            style={{
+              background: "linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%)",
+            }}
           />
           <blockquote
-            className="text-xl md:text-2xl font-medium leading-snug tracking-tight"
+            className="text-2xl font-medium leading-snug tracking-tight md:text-3xl"
             style={{ color: "var(--text)" }}
           >
-            <span style={{ color: "var(--accent)" }}>
-              {data.personal.title}
-            </span>{" "}
+            <span style={{ color: "var(--accent)" }}>{data.personal.title}</span>{" "}
             {data.personal.tagline}
           </blockquote>
-          <figcaption
-            className="mt-3 font-mono text-xs tracking-wider uppercase"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            — Daniel Ciupek
+          <figcaption className="mt-4 flex items-center gap-3">
+            <span
+              aria-hidden
+              className="h-px w-8"
+              style={{ background: "var(--accent)" }}
+            />
+            <span className="text-sm tracking-wide" style={{ color: "var(--text-muted)" }}>
+              Daniel Ciupek
+            </span>
           </figcaption>
         </motion.figure>
 
-        {/* Bio */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-14 md:mb-20"
-        >
-          <p
-            className="text-base md:text-lg leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
+        {/* Bio + countery (bento 2×2) */}
+        <div className="grid gap-10 lg:grid-cols-5 lg:items-start lg:gap-12">
+          {/* Bio */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-3"
           >
-            {data.personal.bio}
-          </p>
-        </motion.div>
+            <p
+              className="max-w-prose text-base leading-relaxed md:text-lg"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {data.personal.bio}
+            </p>
+          </motion.div>
 
-        {/* Divider */}
-        <div
-          className="mb-10 md:mb-12 h-px w-full"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.25) 50%, transparent 100%)",
-          }}
-          aria-hidden
-        />
-
-        {/* Counters */}
-        <div
-          ref={countersRef}
-          className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-6"
-        >
-          <Counter
-            target={certCount}
-            label="Certyfikaty"
-            sublabel="// udemy"
-            inView={inView}
-            delay={0}
-          />
-          <Counter
-            target={totalHoursInt}
-            suffix="h"
-            label="Godziny szkoleń"
-            sublabel="// 2025–2026"
-            inView={inView}
-            delay={120}
-          />
-          <Counter
-            target={projectsCount}
-            label="Projekty"
-            sublabel="// w portfolio"
-            inView={inView}
-            delay={240}
-          />
-          <Counter
-            target={yearsLearning}
-            suffix="+"
-            label="Lata praktyki"
-            sublabel="// fundamenty"
-            inView={inView}
-            delay={360}
-          />
+          {/* Countery — glass bento 2×2 */}
+          <div
+            ref={countersRef}
+            className="grid grid-cols-2 gap-4 lg:col-span-2"
+          >
+            <Counter target={certCount} label="Certyfikaty" sublabel="Udemy" inView={inView} delay={0} />
+            <Counter target={totalHoursInt} suffix="h" label="Godziny szkoleń" sublabel="2025–2026" inView={inView} delay={120} />
+            <Counter target={projectsCount} label="Projekty" sublabel="W portfolio" inView={inView} delay={240} />
+            <Counter target={yearsLearning} suffix="+" label="Lata praktyki" sublabel="Fundamenty" inView={inView} delay={360} />
+          </div>
         </div>
       </div>
     </section>
