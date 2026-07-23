@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import {
   motion,
   useMotionValue,
@@ -17,6 +18,10 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
  */
 export default function CursorSpotlight() {
   const reduced = usePrefersReducedMotion();
+  // Strona /cv-print (ATS/druk) musi być wolna od efektów — patrz CLAUDE.md §7.
+  // trailingSlash:true → ścieżka to "/cv-print/", normalizujemy końcowy slash.
+  const pathname = usePathname();
+  const isPrint = pathname.replace(/\/$/, "") === "/cv-print";
 
   // Start poza ekranem — poświata jest niewidoczna do pierwszego ruchu myszy.
   const x = useMotionValue(-9999);
@@ -31,7 +36,7 @@ export default function CursorSpotlight() {
   const firstMove = useRef(true);
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || isPrint) return;
     // Pomijamy urządzenia bez hovera (dotyk) — brak listenera = brak pracy.
     if (window.matchMedia("(hover: none)").matches) return;
 
@@ -51,10 +56,10 @@ export default function CursorSpotlight() {
 
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, [reduced, x, y, smoothX, smoothY]);
+  }, [reduced, isPrint, x, y, smoothX, smoothY]);
 
-  // prefers-reduced-motion → efekt całkowicie wyłączony.
-  if (reduced) return null;
+  // prefers-reduced-motion lub strona /cv-print → efekt całkowicie wyłączony.
+  if (reduced || isPrint) return null;
 
   return (
     <motion.div
