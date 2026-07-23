@@ -42,33 +42,11 @@ function ProjectScreenshots({ images, alt }: { images: string[]; alt: string }) 
             src={src}
             alt={i === 0 ? alt : ""}
             fill
-            sizes="(max-width: 1024px) 100vw, 640px"
+            sizes="(max-width: 768px) 40vw, 300px"
             className="object-cover object-top"
           />
         </motion.div>
       ))}
-
-      {/* Delikatny gradient u dołu — pod kropki */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
-        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.45), transparent)" }}
-      />
-
-      {images.length > 1 && (
-        <div className="absolute bottom-2.5 left-1/2 flex -translate-x-1/2 gap-1.5">
-          {images.map((_, i) => (
-            <span
-              key={i}
-              className="h-1.5 rounded-full transition-all duration-300"
-              style={{
-                width: i === idx ? 16 : 6,
-                background: i === idx ? "var(--accent)" : "rgba(255,255,255,0.4)",
-              }}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -228,43 +206,54 @@ function ProjectCard({
 
       {/* Treść — uniesiona w Z */}
       <div
-        className="relative flex h-full flex-col"
+        className="relative flex h-full"
         style={{ transform: "translateZ(24px)" }}
       >
-        {hasMedia && (
-          <div
-            className={`relative overflow-hidden rounded-t-3xl ${
-              featured ? "aspect-[16/8]" : "aspect-video"
-            }`}
-            style={{ borderBottom: "1px solid var(--border)" }}
-          >
-            <ProjectScreenshots images={shots} alt={`${project.title} — zrzut ekranu`} />
-          </div>
-        )}
-
-        <div className={`flex flex-1 flex-col ${featured ? "p-7 md:p-9" : "p-6"}`}>
-          {featured && (
-            <span
-              className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
-              style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+        <div
+          className={`flex h-full w-full ${
+            featured
+              ? "flex-col gap-6 p-7 md:flex-row md:gap-8 md:p-9"
+              : "gap-4 p-5"
+          }`}
+        >
+          {hasMedia && (
+            <div
+              className={`relative aspect-video shrink-0 self-start overflow-hidden rounded-xl ${
+                featured ? "w-full md:w-72" : "w-28 sm:w-36"
+              }`}
+              style={{ border: "1px solid var(--border)" }}
             >
-              Wyróżniony projekt
-            </span>
+              <ProjectScreenshots
+                images={shots}
+                alt={`${project.title} — zrzut ekranu`}
+              />
+            </div>
           )}
-          <h3
-            className={`mb-3 font-semibold ${featured ? "text-2xl font-bold md:text-3xl" : "text-lg"}`}
-            style={{ color: "var(--text)" }}
-          >
-            {project.title}
-          </h3>
-          <p
-            className={`mb-6 leading-relaxed ${featured ? "text-sm md:text-base" : "text-sm"}`}
-            style={{ color: "var(--text-muted)" }}
-          >
-            {project.description}
-          </p>
-          <StackPills stack={project.stack} />
-          <ProjectLinks project={project} />
+
+          <div className="flex flex-1 flex-col">
+            {featured && (
+              <span
+                className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
+                style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+              >
+                Wyróżniony projekt
+              </span>
+            )}
+            <h3
+              className={`mb-2 font-semibold ${featured ? "text-xl md:text-2xl" : "text-base"}`}
+              style={{ color: "var(--text)" }}
+            >
+              {project.title}
+            </h3>
+            <p
+              className={`mb-5 leading-relaxed ${featured ? "text-sm md:text-[15px]" : "text-sm"}`}
+              style={{ color: "var(--text-muted)" }}
+            >
+              {project.description}
+            </p>
+            <StackPills stack={project.stack} />
+            <ProjectLinks project={project} />
+          </div>
         </div>
       </div>
     </motion.div>
