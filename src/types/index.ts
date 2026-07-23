@@ -2,6 +2,10 @@ export interface Personal {
   name: string;
   title: string;
   avatar: string;
+  /** Domyślne (profesjonalne) zdjęcie do morphu awatara w Hero */
+  avatarPro: string;
+  /** Zdjęcie „hacker" pokazywane na hover (crossfade) w Hero */
+  avatarHacker: string;
   bio: string;
   /** Krótkie hasło do pull-quote w sekcji "O mnie" — kontynuacja po akcentowanym `title` */
   tagline: string;

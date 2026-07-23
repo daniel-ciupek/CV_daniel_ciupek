@@ -6,7 +6,7 @@ import { ArrowDown } from "lucide-react";
 import data from "@/config/data";
 import { useScrambleText } from "@/hooks/useScrambleText";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import AvatarFallback from "@/components/ui/AvatarFallback";
+import AvatarMorph from "@/components/ui/AvatarMorph";
 import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython, SiGitlab, SiLinux,
@@ -373,28 +373,19 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Avatar side — bez zmian (Avatar Morph to osobne issue #7) */}
+        {/* Avatar side — interaktywny morph (#7): blob + 3D tilt + crossfade */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
-          className="relative flex-shrink-0"
-          style={{ width: avatarSize, height: avatarSize }}
+          className="flex-shrink-0"
         >
-          {/* Glow behind avatar */}
-          <div
-            aria-hidden
-            className="absolute inset-0 scale-110 rounded-full opacity-30 blur-2xl"
-            style={{ backgroundColor: "var(--accent)" }}
+          <AvatarMorph
+            pro={data.personal.avatarPro}
+            hacker={data.personal.avatarHacker}
+            alt={`${data.personal.name} — ${data.personal.title}`}
+            size={avatarSize}
           />
-
-          <div className="relative">
-            <AvatarFallback
-              src={data.personal.avatar}
-              alt={`${data.personal.name} — ${data.personal.title}`}
-              size={avatarSize}
-            />
-          </div>
         </motion.div>
       </div>
 
