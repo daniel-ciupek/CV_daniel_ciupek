@@ -54,7 +54,14 @@ const data: SiteData = {
        description: "PrepMind to aplikacja dla programistów: generuje pytania techniczne, planuje powtórki (SM-2) i symuluje rozmowy rekrutacyjne z AI. Działa w modelu BYOK (własny klucz Gemini), bez abonamentu.",
        stack: ["Laravel 12", "PHP 8.3", "PostgreSQL 16", "Redis 7", "Inertia.js 2", "Vue 3", "TypeScript", "Pinia 3", "Tailwind CSS 3", "Laravel Breeze", "vue-i18n 11", "Gemini 2.5 Flash", "Pest 3", "Docker"],
       // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App",    
+       github: "https://github.com/daniel-ciupek/AI-Powered-Tech-Interview-Prep-App",
+       screenshots: [
+         "/projects/prepmind/01-dashboard.webp",
+         "/projects/prepmind/02-questions.webp",
+         "/projects/prepmind/03-flashcards.webp",
+         "/projects/prepmind/04-study.webp",
+         "/projects/prepmind/05-interview.webp",
+       ],
      },
 
      {
@@ -62,7 +69,14 @@ const data: SiteData = {
        description: "Self-hostowana aplikacja do osobistych finansów: wczytuje wyciągi bankowe (CSV/XLS) z polskich banków, automatycznie kategoryzuje transakcje przy pomocy LLM i wykrywa powtarzające się subskrypcje — w tym prawdopodobne duplikaty, za które możesz płacić dwa razy.",
        stack: ["Laravel 13", "PHP 8.5", "PostgreSQL 18", "Redis 8", "Inertia.js", "React 18", "TypeScript", "Tailwind CSS", "Recharts", "Framer Motion", "Lucide", "Docker"],
       // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",    
+       github: "https://github.com/daniel-ciupek/AI_subscription_and_expense_auditor",
+       screenshots: [
+         "/projects/ai-subscription-auditor/01-dashboard.webp",
+         "/projects/ai-subscription-auditor/02-subscriptions.webp",
+         "/projects/ai-subscription-auditor/03-detail.webp",
+         "/projects/ai-subscription-auditor/04-ai-alert.webp",
+         "/projects/ai-subscription-auditor/05-imports.webp",
+       ],
      },
 
       {
@@ -70,7 +84,14 @@ const data: SiteData = {
        description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
        stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
       // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/QR-Master",    
+       github: "https://github.com/daniel-ciupek/QR-Master",
+       screenshots: [
+         "/projects/qr-master/01-dashboard.webp",
+         "/projects/qr-master/02-analytics.webp",
+         "/projects/qr-master/03-designer.webp",
+         "/projects/qr-master/04-create.webp",
+         "/projects/qr-master/05-pricing.webp",
+       ],
      },
 
      {
