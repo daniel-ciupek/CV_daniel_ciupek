@@ -6,6 +6,8 @@ const data: SiteData = {
     name: "Daniel Ciupek",
     title: "Full Stack Developer",
     avatar: "/MyImage/avatarDc.jpeg",
+    avatarPro: "/MyImage/avatar-pro.jpg",
+    avatarHacker: "/MyImage/avatar-hacker.jpg",
     tagline:
       "łączący Laravela, Inertię, Vue 3 i Reacta z DevOps — Docker, GitLab CI/CD i automatyzację.",
     seoDescription:
