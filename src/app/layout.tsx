@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import LenisProvider from "@/components/layout/LenisProvider";
 import ScrollAnimations from "@/components/layout/ScrollAnimations";
 import PageLoader from "@/components/layout/PageLoader";
+import CursorSpotlight from "@/components/ui/CursorSpotlight";
 import "./globals.css";
 import data from "@/config/data";
 
@@ -67,6 +68,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        <CursorSpotlight />
         <LenisProvider>
           <ScrollAnimations />
           <PageLoader />
