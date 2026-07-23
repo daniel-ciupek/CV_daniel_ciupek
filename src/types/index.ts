@@ -32,6 +32,8 @@ export interface Project {
   url?: string;
   github?: string;
   image?: string;
+  /** Ścieżki do screenów w `public/` — auto-slideshow w karcie projektu */
+  screenshots?: string[];
 }
 
 export interface Certificate {

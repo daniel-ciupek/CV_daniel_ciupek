@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { ExternalLink } from "lucide-react";
@@ -9,60 +10,173 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const springConfig = { stiffness: 260, damping: 28 };
+const SLIDE_INTERVAL_MS = 3500;
 
-function toSlug(title: string) {
-  return title
-    .toLowerCase()
-    .replace(/[\s_]+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
+type Project = (typeof data.projects)[number];
+
+// ─── Auto-slideshow screenów (crossfade) ──────────────────────────
+function ProjectScreenshots({ images, alt }: { images: string[]; alt: string }) {
+  const reduced = usePrefersReducedMotion();
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    if (reduced || images.length < 2) return;
+    const id = setInterval(
+      () => setIdx((i) => (i + 1) % images.length),
+      SLIDE_INTERVAL_MS
+    );
+    return () => clearInterval(id);
+  }, [reduced, images.length]);
+
+  return (
+    <div className="absolute inset-0" style={{ backgroundColor: "var(--bg-elevated)" }}>
+      {images.map((src, i) => (
+        <motion.div
+          key={src}
+          className="absolute inset-0"
+          initial={false}
+          animate={{ opacity: i === idx ? 1 : 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+        >
+          <Image
+            src={src}
+            alt={i === 0 ? alt : ""}
+            fill
+            sizes="(max-width: 1024px) 100vw, 640px"
+            className="object-cover object-top"
+          />
+        </motion.div>
+      ))}
+
+      {/* Delikatny gradient u dołu — pod kropki */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.45), transparent)" }}
+      />
+
+      {images.length > 1 && (
+        <div className="absolute bottom-2.5 left-1/2 flex -translate-x-1/2 gap-1.5">
+          {images.map((_, i) => (
+            <span
+              key={i}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{
+                width: i === idx ? 16 : 6,
+                background: i === idx ? "var(--accent)" : "rgba(255,255,255,0.4)",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
-function repoName(githubUrl: string) {
-  return githubUrl.split("/").pop() ?? "repo";
+// ─── Współdzielone kawałki treści ─────────────────────────────────
+function StackPills({ stack }: { stack: readonly string[] }) {
+  return (
+    <div className="mb-6 flex flex-wrap gap-2">
+      {stack.map((tech) => (
+        <span
+          key={tech}
+          className="rounded-full px-2.5 py-1 text-xs"
+          style={{
+            backgroundColor: "var(--bg-elevated)",
+            border: "1px solid var(--border)",
+            color: "var(--text-muted)",
+          }}
+        >
+          {tech}
+        </span>
+      ))}
+    </div>
+  );
 }
 
-function padIndex(n: number, total: number) {
-  return `${String(n).padStart(2, "0")}/${String(total).padStart(2, "0")}`;
+function ProjectLinks({ project }: { project: Project }) {
+  return (
+    <div className="relative z-10 mt-auto flex flex-wrap items-center gap-3">
+      {project.github && (
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors duration-200"
+          style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--accent)";
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--text-muted)";
+            e.currentTarget.style.borderColor = "var(--border)";
+          }}
+        >
+          <FaGithub size={14} />
+          Kod
+        </a>
+      )}
+      {project.url && (
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-opacity duration-200 hover:opacity-90"
+          style={{ background: "var(--accent)", color: "var(--bg-base)" }}
+        >
+          <ExternalLink size={14} />
+          Live
+        </a>
+      )}
+    </div>
+  );
 }
 
+// ─── Karta projektu (glass + 3D tilt) ─────────────────────────────
 function ProjectCard({
   project,
-  index,
-  total,
   delay,
+  featured = false,
 }: {
-  project: (typeof data.projects)[number];
-  index: number;
-  total: number;
+  project: Project;
   delay: number;
+  featured?: boolean;
 }) {
   const reduced = usePrefersReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState(false);
 
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(rawY, [-1, 1], [6, -6]), springConfig);
-  const rotateY = useSpring(useTransform(rawX, [-1, 1], [-6, 6]), springConfig);
+  const tilt = featured ? 4 : 6;
+  const rotateX = useSpring(useTransform(rawY, [-1, 1], [tilt, -tilt]), springConfig);
+  const rotateY = useSpring(useTransform(rawX, [-1, 1], [-tilt, tilt]), springConfig);
   const glowX = useSpring(useTransform(rawX, [-1, 1], [0, 100]), springConfig);
   const glowY = useSpring(useTransform(rawY, [-1, 1], [0, 100]), springConfig);
+
+  const spotlight = useTransform(
+    [glowX, glowY],
+    ([x, y]) =>
+      `radial-gradient(500px circle at ${x}% ${y}%, rgba(0,212,255,0.10) 0%, transparent 60%)`
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduced || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    rawX.set(x);
-    rawY.set(y);
+    rawX.set(((e.clientX - rect.left) / rect.width) * 2 - 1);
+    rawY.set(((e.clientY - rect.top) / rect.height) * 2 - 1);
   };
 
   const handleMouseLeave = () => {
+    setHovered(false);
     rawX.set(0);
     rawY.set(0);
   };
 
-  const slug = toSlug(project.title);
-  const repo = project.github ? repoName(project.github) : slug;
+  const shots = project.screenshots ?? [];
+  const hasMedia = shots.length > 0;
 
   return (
     <motion.div
@@ -72,167 +186,85 @@ function ProjectCard({
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleMouseLeave}
       style={{
         rotateX: reduced ? 0 : rotateX,
         rotateY: reduced ? 0 : rotateY,
         transformStyle: "preserve-3d",
-        perspective: 800,
+        perspective: 900,
       }}
-      className="relative flex flex-col rounded-2xl"
+      className={`group relative ${featured ? "lg:col-span-2" : ""}`}
     >
-      {/* Base background */}
+      {/* Glass base + hover gradient */}
       <div
-        className="absolute inset-0 rounded-2xl"
+        className="absolute inset-0 overflow-hidden rounded-3xl"
         style={{
-          backgroundColor: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-          transition: "border-color 0.3s",
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: `1px solid ${hovered ? "var(--border-hover)" : "var(--border)"}`,
+          boxShadow: hovered ? "0 24px 60px -24px rgba(0,212,255,0.25)" : "none",
+          transition: "border-color 0.4s, box-shadow 0.4s",
         }}
-      />
-
-      {/* Spotlight */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{
-          background: useTransform(
-            [glowX, glowY],
-            ([x, y]) =>
-              `radial-gradient(400px circle at ${x}% ${y}%, rgba(0,212,255,0.08) 0%, transparent 60%)`
-          ),
-        }}
-      />
-
-      {/* Content — lifted in Z */}
-      <div
-        className="relative flex flex-1 flex-col"
-        style={{ transform: "translateZ(10px)", borderRadius: "inherit" }}
       >
-        {/* Terminal header */}
         <div
-          className="flex items-center justify-between rounded-t-2xl px-4 py-3"
+          className="absolute inset-0"
           style={{
-            background: "rgba(255,255,255,0.03)",
-            borderBottom: "1px solid var(--border)",
+            background:
+              "linear-gradient(135deg, rgba(0,212,255,0.10) 0%, transparent 55%, rgba(52,211,153,0.08) 100%)",
+            opacity: hovered ? 1 : 0,
+            transition: "opacity 0.5s ease",
           }}
-        >
-          <div className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(255,255,255,0.12)" }} />
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(255,255,255,0.12)" }} />
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(0,212,255,0.60)" }} />
+        />
+      </div>
+
+      {/* Spotlight podążający za kursorem */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 rounded-3xl"
+        style={{ background: spotlight }}
+      />
+
+      {/* Treść — uniesiona w Z */}
+      <div
+        className="relative flex h-full flex-col"
+        style={{ transform: "translateZ(24px)" }}
+      >
+        {hasMedia && (
+          <div
+            className={`relative overflow-hidden rounded-t-3xl ${
+              featured ? "aspect-[16/8]" : "aspect-video"
+            }`}
+            style={{ borderBottom: "1px solid var(--border)" }}
+          >
+            <ProjectScreenshots images={shots} alt={`${project.title} — zrzut ekranu`} />
           </div>
-          <span
-            className="font-mono text-[11px]"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            ~/projects/{slug}
-          </span>
-          <span
-            className="font-mono text-[11px]"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            {padIndex(index, total)}
-          </span>
-        </div>
+        )}
 
-        {/* Body */}
-        <div className="flex flex-1 flex-col p-5">
-          {/* Git clone line */}
-          <p
-            className="mb-4 font-mono text-xs"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            <span style={{ color: "var(--accent)", opacity: 0.7 }}>$ </span>
-            git clone daniel-ciupek/{repo}
+        <div className={`flex flex-1 flex-col ${featured ? "p-7 md:p-9" : "p-6"}`}>
+          {featured && (
             <span
-              className="ml-0.5 inline-block h-[1.1em] w-[7px] align-text-bottom"
-              style={{ background: "var(--accent)", opacity: 0.8, animation: "pulse 1.1s ease-in-out infinite" }}
-            />
-          </p>
-
-          {/* Title */}
-          <h3 className="mb-3 text-base font-semibold" style={{ color: "var(--text)" }}>
-            <span style={{ color: "var(--text-subtle)", marginRight: "0.35em" }}>#</span>
+              className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
+              style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+            >
+              Wyróżniony projekt
+            </span>
+          )}
+          <h3
+            className={`mb-3 font-semibold ${featured ? "text-2xl font-bold md:text-3xl" : "text-lg"}`}
+            style={{ color: "var(--text)" }}
+          >
             {project.title}
           </h3>
-
-          {/* Description */}
           <p
-            className="mb-5 flex-1 text-sm leading-relaxed"
+            className={`mb-6 leading-relaxed ${featured ? "text-sm md:text-base" : "text-sm"}`}
             style={{ color: "var(--text-muted)" }}
           >
             {project.description}
           </p>
-
-          {/* Stack */}
-          <div className="mb-5">
-            <span
-              className="mb-2 block font-mono text-[11px] font-medium"
-              style={{ color: "var(--text-subtle)" }}
-            >
-              ▸ stack
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1 font-mono text-xs"
-                  style={{
-                    backgroundColor: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    color: "var(--text-muted)",
-                  }}
-                >
-                  <span
-                    className="inline-block h-1 w-1 rounded-full flex-shrink-0"
-                    style={{ background: "var(--accent)", opacity: 0.7 }}
-                  />
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Separator */}
-          <div
-            className="mb-4"
-            style={{
-              height: "1px",
-              background: "linear-gradient(90deg, rgba(0,212,255,0.20) 0%, transparent 100%)",
-            }}
-          />
-
-          {/* Action buttons */}
-          <div className="relative z-10 flex items-center gap-4">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
-                style={{ color: "var(--text-muted)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-              >
-                <FaGithub size={13} />
-                source →
-              </a>
-            )}
-            {project.url && (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
-                style={{ color: "var(--accent)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--accent)")}
-              >
-                <ExternalLink size={12} />
-                live ↗
-              </a>
-            )}
-          </div>
+          <StackPills stack={project.stack} />
+          <ProjectLinks project={project} />
         </div>
       </div>
     </motion.div>
@@ -241,7 +273,6 @@ function ProjectCard({
 
 export default function Projects() {
   const projects = data.projects;
-  const total = projects.length;
 
   return (
     <section id="projects" className="relative px-6 py-16 md:py-20">
@@ -254,41 +285,28 @@ export default function Projects() {
       <div className="mx-auto max-w-6xl" style={{ perspective: "1200px" }}>
         <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="// projects/" />
 
-        {/* Empty state */}
         {projects.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="rounded-2xl p-8"
+          <div
+            className="rounded-3xl p-8"
             style={{
               backgroundColor: "var(--bg-surface)",
               border: "1px solid var(--border)",
             }}
           >
-            <p className="mb-2 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
-              <span style={{ color: "var(--accent)", opacity: 0.7 }}>$ </span>
-              ls projects/
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              Uzupełnij <code>projects[]</code> w <code>src/config/data.ts</code>.
             </p>
-            <p className="font-mono text-sm" style={{ color: "var(--text-muted)" }}>
-              directory is empty
-            </p>
-            <p className="mt-1 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
-              Uzupełnij <code>projects[]</code> w <code>src/config/data.ts</code>
-            </p>
-          </motion.div>
+          </div>
         )}
 
-        {/* Project grid */}
         {projects.length > 0 && (
           <div className="grid gap-6 lg:grid-cols-2">
             {projects.map((project, i) => (
               <ProjectCard
                 key={project.title}
                 project={project}
-                index={i + 1}
-                total={total}
-                delay={i * 0.08}
+                delay={i * 0.06}
+                featured={i === 0}
               />
             ))}
           </div>
