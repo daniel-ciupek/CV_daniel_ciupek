@@ -1,20 +1,49 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useAnimationFrame, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import data from "@/config/data";
 import { useScrambleText } from "@/hooks/useScrambleText";
-import { useMouseParallax } from "@/hooks/useMouseParallax";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import AvatarFallback from "@/components/ui/AvatarFallback";
 import {
   SiPhp, SiLaravel, SiNodedotjs, SiJavascript, SiTypescript,
   SiReact, SiVuedotjs, SiDocker, SiPostgresql, SiMysql, SiPython, SiGitlab, SiLinux,
 } from "react-icons/si";
 import { FaAws } from "react-icons/fa";
+import type { IconType } from "react-icons";
 
-// PageLoader trwa ~1600ms, scramble startuje 300ms po zakończeniu
+// PageLoader trwa ~1600ms, scramble startuje ~300ms po zakończeniu
 const SCRAMBLE_DELAY_MS = 1900;
+
+// Przyciąganie magnetyczne CTA (re-use logiki MagneticIcon z Contact.tsx)
+const MAGNET_STRENGTH = 0.3;
+const MAGNET_CLAMP = 14;
+
+interface Tech {
+  Icon: IconType;
+  color: string;
+  label: string;
+}
+
+// Kolejność marquee — najważniejsze technologie na początku
+const TECH: Tech[] = [
+  { Icon: SiLaravel, color: "#FF2D20", label: "Laravel" },
+  { Icon: SiPhp, color: "#A97FD4", label: "PHP" },
+  { Icon: SiVuedotjs, color: "#42B883", label: "Vue 3" },
+  { Icon: SiReact, color: "#61DAFB", label: "React" },
+  { Icon: SiNodedotjs, color: "#5FA04E", label: "Node.js" },
+  { Icon: SiTypescript, color: "#3178C6", label: "TypeScript" },
+  { Icon: SiJavascript, color: "#F7DF1E", label: "JavaScript" },
+  { Icon: SiPython, color: "#3776AB", label: "Python" },
+  { Icon: SiPostgresql, color: "#336791", label: "PostgreSQL" },
+  { Icon: SiMysql, color: "#4479A1", label: "MySQL" },
+  { Icon: SiDocker, color: "#2496ED", label: "Docker" },
+  { Icon: SiGitlab, color: "#FC6D26", label: "GitLab" },
+  { Icon: SiLinux, color: "#FCC624", label: "Linux" },
+  { Icon: FaAws, color: "#FF9900", label: "AWS" },
+];
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -25,17 +54,178 @@ const fadeUp: Variants = {
   }),
 };
 
+// ─── Tech marquee z „center spotlight" ────────────────────────────
+// Ikona przechodząca przez środek zapala się swoim kolorem i płynnie
+// oddaje go kolejnej. Kolor interpolujemy per-frame (muted → brand wg
+// odległości od środka), scroll napędzamy ręcznie — dzięki temu w tej
+// samej pętli znamy pozycje bez getBoundingClientRect co klatkę.
+const MUTED: [number, number, number] = [100, 116, 139]; // var(--text-muted) #64748b
+const MARQUEE_SPEED = 46; // px / s
+const ICON_SIZE = 40;
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const full =
+    h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(full, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+const MARQUEE = TECH.map((t) => ({ ...t, rgb: hexToRgb(t.color) }));
+
+function TechMarquee() {
+  const reduced = usePrefersReducedMotion();
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const xRef = useRef(0);
+  const lastT = useRef<number[]>([]);
+  const geom = useRef({
+    centers: [] as number[],
+    setWidth: 0,
+    viewportW: 0,
+    radius: 80,
+  });
+
+  // Podwojony zestaw → bezszwowa pętla (przewijamy o szerokość jednego setu)
+  const items = [...MARQUEE, ...MARQUEE];
+
+  useEffect(() => {
+    const measure = () => {
+      const vp = viewportRef.current;
+      const els = itemRefs.current;
+      if (!vp || !els[0]) return;
+      const centers = els.map((el) =>
+        el ? el.offsetLeft + el.offsetWidth / 2 : 0
+      );
+      const pitch = els[1] ? els[1].offsetLeft - els[0].offsetLeft : 80;
+      const nth = els[MARQUEE.length];
+      const setWidth = nth ? nth.offsetLeft - els[0].offsetLeft : pitch * MARQUEE.length;
+      geom.current = { centers, setWidth, viewportW: vp.clientWidth, radius: pitch };
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  useAnimationFrame((_, delta) => {
+    if (reduced) return;
+    const g = geom.current;
+    if (!g.setWidth || !g.viewportW) return;
+
+    let x = xRef.current - (MARQUEE_SPEED * (delta || 16)) / 1000;
+    if (x <= -g.setWidth) x += g.setWidth;
+    xRef.current = x;
+    if (rowRef.current) {
+      rowRef.current.style.transform = `translate3d(${x}px,0,0)`;
+    }
+
+    const center = g.viewportW / 2;
+    const radius = g.radius;
+    const els = itemRefs.current;
+    for (let i = 0; i < els.length; i++) {
+      const el = els[i];
+      if (!el) continue;
+      const dist = Math.abs(g.centers[i] + x - center);
+      const t = dist >= radius ? 0 : 1 - dist / radius;
+      const prev = lastT.current[i] ?? 0;
+      if (t === 0 && prev === 0) continue; // pomiń dalekie, niezmienne ikony
+      lastT.current[i] = t;
+      const [br, bg, bb] = items[i].rgb;
+      el.style.color = `rgb(${Math.round(MUTED[0] + (br - MUTED[0]) * t)},${Math.round(
+        MUTED[1] + (bg - MUTED[1]) * t
+      )},${Math.round(MUTED[2] + (bb - MUTED[2]) * t)})`;
+      el.style.transform = `scale(${1 + 0.3 * t})`;
+    }
+  });
+
+  return (
+    <div
+      ref={viewportRef}
+      className="relative overflow-hidden py-3"
+      style={{
+        WebkitMaskImage:
+          "linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent)",
+        maskImage:
+          "linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent)",
+      }}
+    >
+      <div ref={rowRef} className="flex w-max items-center gap-10">
+        {items.map(({ Icon, label, rgb }, i) => (
+          <span
+            key={i}
+            ref={(el) => {
+              itemRefs.current[i] = el;
+            }}
+            title={label}
+            className="inline-flex shrink-0 will-change-transform"
+            style={{
+              color: reduced
+                ? `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`
+                : "rgb(100,116,139)",
+            }}
+          >
+            <Icon size={ICON_SIZE} />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Magnetyczny przycisk CTA (pill) ──────────────────────────────
+function MagneticButton({
+  href,
+  children,
+  className,
+  style,
+  onClick,
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+}) {
+  const reduced = usePrefersReducedMotion();
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+
+  const clamp = (v: number) =>
+    Math.max(-MAGNET_CLAMP, Math.min(MAGNET_CLAMP, v));
+
+  const handleMove = (e: React.MouseEvent) => {
+    if (reduced || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width / 2);
+    const dy = e.clientY - (rect.top + rect.height / 2);
+    setPos({ x: clamp(dx * MAGNET_STRENGTH), y: clamp(dy * MAGNET_STRENGTH) });
+  };
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      onClick={onClick}
+      onMouseMove={handleMove}
+      onMouseLeave={() => setPos({ x: 0, y: 0 })}
+      animate={{ x: pos.x, y: pos.y }}
+      transition={{ type: "spring", stiffness: 180, damping: 16, mass: 0.5 }}
+      className={className}
+      style={{ willChange: "transform", ...style }}
+    >
+      {children}
+    </motion.a>
+  );
+}
+
 export default function Hero() {
+  const reduced = usePrefersReducedMotion();
   const scrambledName = useScrambleText({
     finalText: data.personal.name,
     startDelay: SCRAMBLE_DELAY_MS,
     duration: 1400,
   });
-
-  const getOffset = useMouseParallax();
-  const orb1 = getOffset(0.02);
-  const orb2 = getOffset(0.015);
-  const orb3 = getOffset(0.025);
 
   const [avatarSize, setAvatarSize] = useState(256);
 
@@ -51,39 +241,54 @@ export default function Hero() {
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
+  const handleContactClick = () => {
+    const el = document.getElementById("contact");
+    if (!el) return;
+    el.classList.add("anchor-pulse");
+    setTimeout(() => el.classList.remove("anchor-pulse"), 700);
+  };
+
   return (
     <section
       id="hero"
       className="relative flex min-h-screen items-center overflow-hidden px-6 pt-16"
     >
-      {/* ── Background orbs (parallax) ── */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute -top-32 -left-32 h-96 w-96 rounded-full opacity-20 blur-3xl will-change-transform"
+      {/* ── Aurora gradient mesh (CSS, zastępuje orby parallax) ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <motion.div
+          className="absolute -left-32 -top-40 h-[32rem] w-[32rem] rounded-full blur-3xl"
           style={{
-            background: "radial-gradient(circle, #00d4ff 0%, transparent 70%)",
-            transform: `translate3d(${orb1.x}px, ${orb1.y}px, 0)`,
+            background:
+              "radial-gradient(circle, rgba(0,212,255,0.16) 0%, transparent 70%)",
           }}
+          animate={reduced ? undefined : { x: [0, 40, 0], y: [0, 30, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div
-          className="absolute top-1/2 -right-40 h-80 w-80 rounded-full opacity-10 blur-3xl will-change-transform"
+        <motion.div
+          className="absolute -right-40 top-10 h-[28rem] w-[28rem] rounded-full blur-3xl"
           style={{
-            background: "radial-gradient(circle, #38bdf8 0%, transparent 70%)",
-            transform: `translate3d(${orb2.x}px, ${orb2.y}px, 0)`,
+            background:
+              "radial-gradient(circle, rgba(52,211,153,0.13) 0%, transparent 70%)",
           }}
+          animate={reduced ? undefined : { x: [0, -35, 0], y: [0, 40, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         />
-        <div
-          className="absolute bottom-20 left-1/3 h-64 w-64 rounded-full opacity-10 blur-3xl will-change-transform"
+        <motion.div
+          className="absolute bottom-0 left-1/3 h-[26rem] w-[26rem] rounded-full blur-3xl"
           style={{
-            background: "radial-gradient(circle, #00d4ff 0%, transparent 70%)",
-            transform: `translate3d(${orb3.x}px, ${orb3.y}px, 0)`,
+            background:
+              "radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 70%)",
           }}
+          animate={reduced ? undefined : { x: [0, 30, 0], y: [0, -25, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
 
       {/* ── Content ── */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-12 py-20 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-
         {/* Text side */}
         <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
           <motion.p
@@ -91,7 +296,7 @@ export default function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="mb-4 font-mono text-sm tracking-widest uppercase"
+            className="mb-4 font-mono text-sm uppercase tracking-widest"
             style={{ color: "var(--accent)" }}
           >
             {data.personal.title}
@@ -120,103 +325,55 @@ export default function Hero() {
             </span>
           </motion.h1>
 
-          {/* Floating tech icons — scattered */}
+          {/* Tech marquee — center spotlight wędruje z ikony na ikonę */}
           <motion.div
             custom={2}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="relative mt-6 w-full"
-            style={{ height: 190 }}
+            aria-hidden
+            className="mt-8 w-full max-w-md lg:max-w-xl"
           >
-            {[
-              { Icon: SiLaravel,    color: "#FF2D20", size: 38, top: "8%",  left: "0%"  },
-              { Icon: SiVuedotjs,   color: "#42B883", size: 32, top: "62%", left: "9%"  },
-              { Icon: SiPhp,        color: "#A97FD4", size: 42, top: "18%", left: "22%" },
-              { Icon: SiReact,      color: "#61DAFB", size: 34, top: "70%", left: "36%" },
-              { Icon: SiNodedotjs,  color: "#5FA04E", size: 36, top: "5%",  left: "50%" },
-              { Icon: SiTypescript, color: "#3178C6", size: 30, top: "55%", left: "61%" },
-              { Icon: SiJavascript, color: "#F7DF1E", size: 34, top: "18%", left: "74%" },
-              { Icon: SiDocker,     color: "#2496ED", size: 38, top: "66%", left: "89%" },
-              { Icon: SiPostgresql, color: "#336791", size: 28, top: "38%", left: "43%" },
-              { Icon: SiMysql,      color: "#4479A1", size: 30, top: "40%", left: "16%" },
-              { Icon: SiPython,     color: "#3776AB", size: 34, top: "2%",  left: "92%" },
-              { Icon: FaAws,              color: "#FF9900", size: 36, top: "40%", left: "78%" },
-              { Icon: SiGitlab,     color: "#FC6D26", size: 32, top: "85%", left: "57%" },
-              { Icon: SiLinux,      color: "#FCC624", size: 30, top: "88%", left: "20%" },
-            ].map(({ Icon, color, size, top, left }, i) => (
-              <motion.div
-                key={i}
-                className="absolute"
-                style={{ top, left, color, opacity: 0.82 }}
-                animate={{ y: [0, -7, 0] }}
-                transition={{
-                  duration: 2.6 + i * 0.4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.25,
-                }}
-                whileHover={{ opacity: 0.75, scale: 1.25 }}
-              >
-                <Icon size={size} />
-              </motion.div>
-            ))}
+            <TechMarquee />
           </motion.div>
 
+          {/* CTA — pill + gradient border + magnetic hover */}
           <motion.div
             custom={3}
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
+            className="mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
           >
-            <a
+            <MagneticButton
               href="#projects"
-              className="rounded-md px-6 py-3 text-sm font-semibold transition-all duration-200"
-              style={{ backgroundColor: "var(--accent)", color: "#050505" }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 0 30px rgba(0,212,255,0.4)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLElement).style.boxShadow = "none")
-              }
+              className="rounded-full px-7 py-3 text-sm font-semibold shadow-accent transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(0,212,255,0.45)]"
+              style={{
+                backgroundImage:
+                  "linear-gradient(135deg, #00d4ff 0%, #34d399 100%)",
+                color: "var(--bg-base)",
+              }}
             >
               Zobacz projekty
-            </a>
-            <a
+            </MagneticButton>
+
+            <MagneticButton
               href="#contact"
-              onClick={() => {
-                const el = document.getElementById("contact");
-                if (!el) return;
-                el.classList.add("anchor-pulse");
-                setTimeout(() => el.classList.remove("anchor-pulse"), 700);
-              }}
-              className="rounded-md px-6 py-3 text-sm font-semibold transition-all duration-200"
+              onClick={handleContactClick}
+              className="rounded-full px-7 py-3 text-sm font-semibold transition-shadow duration-300 hover:shadow-[0_0_24px_rgba(0,212,255,0.20)]"
               style={{
-                border: "1px solid var(--border-hover)",
                 color: "var(--accent)",
-                backgroundColor: "rgba(0, 212, 255, 0.06)",
-                backdropFilter: "blur(8px)",
-                WebkitBackdropFilter: "blur(8px)",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.backgroundColor = "rgba(0, 212, 255, 0.12)";
-                el.style.borderColor = "var(--accent)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.backgroundColor = "rgba(0, 212, 255, 0.06)";
-                el.style.borderColor = "var(--border-hover)";
+                border: "1px solid transparent",
+                background:
+                  "linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box",
               }}
             >
               Kontakt
-            </a>
+            </MagneticButton>
           </motion.div>
         </div>
 
-        {/* Avatar side */}
+        {/* Avatar side — bez zmian (Avatar Morph to osobne issue #7) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -227,7 +384,7 @@ export default function Hero() {
           {/* Glow behind avatar */}
           <div
             aria-hidden
-            className="absolute inset-0 rounded-full opacity-30 blur-2xl scale-110"
+            className="absolute inset-0 scale-110 rounded-full opacity-30 blur-2xl"
             style={{ backgroundColor: "var(--accent)" }}
           />
 
@@ -249,7 +406,7 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
-          animate={{ y: [0, 8, 0] }}
+          animate={reduced ? undefined : { y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           style={{ color: "var(--text-subtle)" }}
         >
