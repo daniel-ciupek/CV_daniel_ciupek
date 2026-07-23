@@ -127,7 +127,6 @@ export default function AvatarMorph({ pro, hacker, alt, size }: Props) {
               "linear-gradient(135deg, rgba(0,212,255,0.55), rgba(52,211,153,0.55))",
             opacity: showHacker ? 0.9 : 0.5,
             transition: "opacity 0.6s ease",
-            transform: "translateZ(-1px)",
           }}
         />
 
