@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import data from "@/config/data";
@@ -21,6 +21,61 @@ const sectionIds = navLinks.map((l) => l.href.slice(1));
 // Gradient border (aurora) w konwencji padding-box/border-box
 const AURORA_BORDER =
   "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, var(--accent), var(--accent-2)) border-box";
+
+// ─── Desktopowy link nawigacji: magnetyczny + kinetyczny swap etykiety ──────────
+// Magnetyzm gaśnie przy reduced-motion; na dotyku nie odpala się (brak mousemove).
+// Swap etykiety jest w CSS pod `@media (hover: hover)` (globals.css → .nav-swap).
+function NavLink({
+  link,
+  isActive,
+  onNavClick,
+  reduce,
+}: {
+  link: { label: string; href: string };
+  isActive: boolean;
+  onNavClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  reduce: boolean;
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+
+  const handleMove = (e: React.MouseEvent) => {
+    if (reduce || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const dx = e.clientX - (rect.left + rect.width / 2);
+    const dy = e.clientY - (rect.top + rect.height / 2);
+    const clamp = (v: number) => Math.max(-8, Math.min(8, v));
+    setPos({ x: clamp(dx * 0.35), y: clamp(dy * 0.35) });
+  };
+
+  return (
+    <li className="relative">
+      <motion.a
+        ref={ref}
+        href={link.href}
+        onClick={onNavClick}
+        onMouseMove={handleMove}
+        onMouseLeave={() => setPos({ x: 0, y: 0 })}
+        animate={{ x: pos.x, y: pos.y }}
+        transition={{ type: "spring", stiffness: 180, damping: 16, mass: 0.5 }}
+        className="nav-link relative block py-2 text-sm"
+        style={{ willChange: "transform" }}
+      >
+        {isActive && <span aria-hidden className="nav-glow" />}
+        <span className="nav-swap">
+          <span style={{ color: isActive ? "var(--accent-2)" : "var(--text-muted)" }}>{link.label}</span>
+          <span
+            className="nav-swap__two"
+            aria-hidden
+            style={{ color: isActive ? "var(--accent-2)" : "var(--accent)" }}
+          >
+            {link.label}
+          </span>
+        </span>
+      </motion.a>
+    </li>
+  );
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen]     = useState(false);
@@ -96,43 +151,17 @@ export default function Navbar() {
           />
         </a>
 
-        {/* Desktop links */}
+        {/* Desktop links — magnetyczne + kinetyczny swap (wariant 4) */}
         <ul className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => {
-            const isActive = active === link.href.slice(1);
-            return (
-              <li key={link.href} className="relative">
-                <a
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className="relative block py-2 text-sm transition-colors duration-200"
-                  style={{ color: isActive ? "var(--text)" : "var(--text-muted)" }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.color = "var(--text)";
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.color = "var(--text-muted)";
-                  }}
-                >
-                  {link.label}
-                  {isActive && (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute -bottom-0.5 left-0 right-0 h-[2px] rounded-full"
-                      style={{
-                        background: "linear-gradient(90deg, var(--accent), var(--accent-2))",
-                      }}
-                      transition={
-                        reduce
-                          ? { duration: 0 }
-                          : { type: "spring", stiffness: 420, damping: 38, mass: 0.6 }
-                      }
-                    />
-                  )}
-                </a>
-              </li>
-            );
-          })}
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.href}
+              link={link}
+              isActive={active === link.href.slice(1)}
+              onNavClick={handleNavClick}
+              reduce={reduce}
+            />
+          ))}
         </ul>
 
         {/* Desktop CTA — magnetic + gradient border */}
