@@ -18,6 +18,10 @@ export interface Personal {
   facebook: string;
   instagram: string;
   website?: string;
+  /** Status dostępności — StatusDot w sekcji Kontakt (część przed „·" podświetlana) */
+  availability: string;
+  /** Teksty CTA sekcji Kontakt (bez hardkodu w komponencie) */
+  contact: { headline: string; subline: string };
 }
 
 export interface SkillCategory {
