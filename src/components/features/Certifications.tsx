@@ -115,14 +115,15 @@ function RingCard({
             className="select-none object-cover"
             style={{ userSelect: "none", WebkitUserSelect: "none" }}
           />
-          {/* Górny scrim + badge kategorii */}
+          {/* Górny scrim — subtelna winieta na górze karty */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 h-14"
             style={{ background: "linear-gradient(to bottom, rgba(9,9,11,0.7), transparent)" }}
           />
+          {/* Badge kategorii — prawy dolny róg (czyste białe tło certyfikatu) */}
           <span
-            className="absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider"
+            className="absolute bottom-3 right-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider"
             style={{
               background: "rgba(9,9,11,0.55)",
               border: "1px solid rgba(0,212,255,0.35)",
