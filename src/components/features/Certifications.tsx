@@ -203,7 +203,7 @@ function CertList({
             <button
               key={cert.key}
               onClick={() => onOpen(i)}
-              className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-200"
+              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-200 sm:items-center"
               style={{
                 background: isActive ? "rgba(0,212,255,0.06)" : "rgba(255,255,255,0.02)",
                 border: `1px solid ${isActive ? "rgba(0,212,255,0.30)" : "var(--border)"}`,
@@ -216,7 +216,7 @@ function CertList({
               }}
             >
               <span
-                className="w-6 shrink-0 font-mono text-[11px] tabular-nums"
+                className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
                 style={{ color: isActive ? "var(--accent)" : "var(--text-subtle)" }}
               >
                 {String(i + 1).padStart(2, "0")}
@@ -234,7 +234,7 @@ function CertList({
                 {catOf(cert)}
               </span>
               <span
-                className="flex-1 truncate text-[13px]"
+                className="min-w-0 flex-1 break-words text-[13px] leading-snug sm:truncate"
                 style={{
                   color: isActive ? "var(--text)" : "var(--text-muted)",
                   fontWeight: isActive ? 600 : 400,
@@ -250,7 +250,7 @@ function CertList({
               </span>
               <Maximize2
                 size={13}
-                className="shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                className="hidden shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
                 style={{ color: "var(--accent)" }}
               />
             </button>
