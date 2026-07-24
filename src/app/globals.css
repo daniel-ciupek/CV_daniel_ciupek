@@ -171,6 +171,65 @@ body::after {
   .nav-cta-shimmer { animation: none; }
 }
 
+/* ─── Navbar kinetic link swap (desktop, tylko hover-capable) ─── */
+.nav-swap {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.5em;
+  line-height: 1.5;
+  vertical-align: bottom;
+}
+.nav-swap > span {
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-swap > span.nav-swap__two {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+@media (hover: hover) {
+  .nav-link:hover .nav-swap > span {
+    transform: translateY(-100%);
+  }
+}
+/* Parytet dla klawiatury */
+.nav-link:focus-visible {
+  outline: 2px solid var(--border-hover);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.nav-link:focus-visible .nav-swap > span {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-swap > span {
+    transition: none;
+  }
+}
+
+/* Aktywny link — pulsująca emeraldowa poświata (za tekstem, poza clipem swapa) */
+.nav-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 240%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgba(52, 211, 153, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+  animation: nav-glow-pulse 2.2s ease-in-out infinite;
+}
+@keyframes nav-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-glow { animation: none; opacity: 0.6; }
+}
+
 /* ─── Section anchor pulse ───────────────────────────────────── */
 @keyframes anchor-pulse {
   0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
