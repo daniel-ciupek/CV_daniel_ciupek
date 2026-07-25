@@ -31,12 +31,14 @@ function Divider() {
 /* ─── Sekcje ────────────────────────────────────────────────────────────── */
 
 function Header() {
-  const { name, title, email, phone, github, linkedin, website } = data.personal;
+  const { name, title, email, phone, github, linkedin, website, location } = data.personal;
   return (
     <header className="cv-header">
       <h1 className="cv-name">{name}</h1>
       <p className="cv-title">{title}</p>
       <div className="cv-contact-row">
+        <span>{location}</span>
+        <span className="cv-sep">·</span>
         <a href={`mailto:${email}`}>{email}</a>
         <span className="cv-sep">·</span>
         <a href={`tel:${phone}`}>{phone}</a>
@@ -137,6 +139,54 @@ function Certificates() {
         {data.certificates.map(cert => (
           <li key={cert.key}>
             <span className="cv-cert-title">{cert.title}</span>
+            <span className="cv-cert-meta">
+              {" — "}{cert.platform}{cert.date ? ` — ${cert.date}` : ""}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function Experience() {
+  if (!data.experience?.length) return null;
+  return (
+    <section>
+      <SectionHeading>Doświadczenie</SectionHeading>
+      <Divider />
+      <div className="cv-experience">
+        {data.experience.map((exp, i) => (
+          <div key={i} className="cv-exp-item">
+            <div className="cv-exp-header">
+              <span className="cv-exp-role">{exp.role}</span>
+              {exp.org && <span className="cv-exp-org">{exp.org}</span>}
+              {exp.period && <span className="cv-exp-period">{exp.period}</span>}
+            </div>
+            {exp.description && <p className="cv-exp-desc">{exp.description}</p>}
+            {exp.highlights?.length ? (
+              <ul className="cv-exp-list">
+                {exp.highlights.map(h => <li key={h}>{h}</li>)}
+              </ul>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Languages() {
+  const { languages } = data.personal;
+  if (!languages?.length) return null;
+  return (
+    <section>
+      <SectionHeading>Języki</SectionHeading>
+      <Divider />
+      <ul className="cv-lang-list">
+        {languages.map(lang => (
+          <li key={lang.name}>
+            <span className="cv-lang-name">{lang.name}</span> — {lang.level}
           </li>
         ))}
       </ul>
@@ -160,9 +210,11 @@ export default function CvPrint() {
         */}
         <Header />
         <About />       {/* pojawi się gdy data.personal.bio jest uzupełnione */}
+        <Experience />
         <Skills />
         <Projects />
         <Certificates />
+        <Languages />
       </main>
     </>
   );

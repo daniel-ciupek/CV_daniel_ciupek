@@ -9,7 +9,8 @@ import data from "@/config/data";
 const inter = Inter({ subsets: ["latin"], weight: ["400", "600", "700"] });
 
 export const metadata: Metadata = {
-  title: `CV — ${data.personal.name}`,
+  // Bez myślnika/spacji problematycznych → czysta nazwa pliku „Daniel Ciupek CV.pdf"
+  title: `${data.personal.name} CV`,
   description: `Curriculum Vitae — ${data.personal.name}, ${data.personal.title}`,
   robots: { index: false, follow: false },
 };
@@ -21,6 +22,7 @@ export default function CvPrintLayout({
 }) {
   return (
     <div
+      lang="pl"
       className={inter.className}
       style={{ background: "#ffffff", color: "#111111", minHeight: "100vh" }}
     >

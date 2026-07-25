@@ -22,6 +22,21 @@ export interface Personal {
   availability: string;
   /** Teksty CTA sekcji Kontakt (bez hardkodu w komponencie) */
   contact: { headline: string; subline: string };
+  /** Lokalizacja — CV/ATS (kraj + dyspozycyjność), np. „Polska · zdalnie / hybryda" */
+  location: string;
+  /** Języki — sekcja w /cv-print (nazwa + poziom) */
+  languages: { name: string; level: string }[];
+}
+
+export interface Experience {
+  role: string;
+  /** Nazwa firmy/organizacji — opcjonalna */
+  org?: string;
+  /** Okres — opcjonalny (np. „03.2026–06.2026") */
+  period?: string;
+  description: string;
+  /** Punktowane osiągnięcia/zakres — opcjonalne */
+  highlights?: string[];
 }
 
 export interface SkillCategory {
@@ -46,11 +61,14 @@ export interface Certificate {
   title: string;
   platform: string;
   hours: number;
+  /** Rok ukończenia — format ATS „Nazwa — Platforma — rok" */
+  date?: string;
 }
 
 export interface SiteData {
   personal: Personal;
   skills: SkillCategory[];
+  experience: Experience[];
   projects: Project[];
   certificates: Certificate[];
 }
