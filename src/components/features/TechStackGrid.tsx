@@ -13,7 +13,7 @@ const CHIP_VARIANTS: Variants = {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.7, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
