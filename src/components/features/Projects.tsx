@@ -9,7 +9,8 @@ import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-const springConfig = { stiffness: 260, damping: 28 };
+// Wspólny spring tilt kart (spójny z TechStackGrid) — #47
+const springConfig = { stiffness: 300, damping: 30 };
 const SLIDE_INTERVAL_MS = 3500;
 
 type Project = (typeof data.projects)[number];
@@ -264,7 +265,7 @@ export default function Projects() {
   const projects = data.projects;
 
   return (
-    <section id="projects" className="relative px-6 py-16 md:py-20">
+    <section id="projects" aria-labelledby="projects-heading" className="relative px-6 py-16 md:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute left-0 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-5 blur-3xl"
@@ -272,7 +273,7 @@ export default function Projects() {
       />
 
       <div className="mx-auto max-w-6xl" style={{ perspective: "1200px" }}>
-        <SectionHeader index="04" total="05" title="PROJEKTY" />
+        <SectionHeader index="04" total="05" title="PROJEKTY" headingId="projects-heading" />
 
         {projects.length === 0 && (
           <div

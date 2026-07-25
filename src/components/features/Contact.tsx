@@ -24,9 +24,9 @@ const SOCIALS: SocialDef[] = [
   { label: "Instagram", href: data.personal.instagram, icon: FaInstagram },
 ];
 
-const AURORA = "linear-gradient(135deg, #00d4ff, #34d399)";
+const AURORA = "var(--gradient-aurora)";
 const AURORA_BORDER =
-  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box";
+  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, var(--gradient-aurora) border-box";
 
 // ─── Status Dot (cyan, bez terminala) ────────────────────────────────────────────
 
@@ -244,9 +244,9 @@ export default function Contact() {
         }
       `}</style>
 
-      <section id="contact" className="relative px-6 py-20 md:py-28">
+      <section id="contact" aria-labelledby="contact-heading" className="relative px-6 py-20 md:py-28">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader index="05" total="05" title="KONTAKT" />
+          <SectionHeader index="05" total="05" title="KONTAKT" headingId="contact-heading" />
 
           {/* Glass panel */}
           <motion.div
@@ -312,7 +312,7 @@ export default function Contact() {
               <StatusDot />
 
               <p
-                className="mt-5 text-3xl font-bold leading-[1.05] tracking-tight md:text-5xl"
+                className="mt-5 text-balance text-3xl font-bold leading-[1.05] tracking-tight md:text-5xl"
                 style={{ color: "var(--text)" }}
               >
                 {leadWords}{" "}

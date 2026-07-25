@@ -715,7 +715,7 @@ export default function Certifications() {
 
   return (
     <>
-      <section id="certifications" className="relative overflow-hidden px-6 py-16 md:py-20">
+      <section id="certifications" aria-labelledby="certifications-heading" className="relative overflow-hidden px-6 py-16 md:py-20">
         {/* Ambient aurora — cyan + szept emerald */}
         <div
           aria-hidden
@@ -727,7 +727,7 @@ export default function Certifications() {
         />
 
         <div className="mx-auto max-w-6xl">
-          <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="Kursy ukończone na Udemy" />
+          <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="Kursy ukończone na Udemy" headingId="certifications-heading" />
 
           {reduced ? <CertGrid onOpen={openLightbox} /> : <RingCarousel onOpen={openLightbox} paused={lightboxIndex !== null} />}
         </div>

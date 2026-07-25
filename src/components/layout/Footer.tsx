@@ -6,7 +6,7 @@ import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { ArrowUp, ArrowUpRight } from "lucide-react";
 import data from "@/config/data";
 
-const AURORA = "linear-gradient(135deg, #00d4ff, #34d399)";
+const AURORA = "var(--gradient-aurora)";
 // Maska „tylko obrys" — pokazuje gradient wyłącznie na 1px ramce (padding-box XOR border-box)
 const RING_MASK: React.CSSProperties = {
   WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",

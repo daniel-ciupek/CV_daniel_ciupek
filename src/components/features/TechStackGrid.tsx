@@ -36,6 +36,7 @@ function CategoryCard({
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
 
+  // Wspólny spring tilt kart (spójny z Projects) — #47
   const springConfig = { stiffness: 300, damping: 30 };
   const rotateX = useSpring(useTransform(rawY, [-1, 1], [8, -8]), springConfig);
   const rotateY = useSpring(useTransform(rawX, [-1, 1], [-8, 8]), springConfig);

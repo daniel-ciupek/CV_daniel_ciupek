@@ -50,7 +50,7 @@ const fadeUp: Variants = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
+    transition: { delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   }),
 };
 
@@ -251,6 +251,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
+      aria-labelledby="hero-heading"
       className="relative flex min-h-screen items-center overflow-hidden px-6 pt-16"
     >
       {/* ── Aurora gradient mesh (CSS, zastępuje orby parallax) ── */}
@@ -296,13 +297,14 @@ export default function Hero() {
             variants={fadeUp}
             initial="hidden"
             animate="visible"
-            className="mb-4 font-mono text-sm uppercase tracking-widest"
+            className="mb-4 text-sm font-semibold uppercase tracking-widest"
             style={{ color: "var(--accent)" }}
           >
             {data.personal.title}
           </motion.p>
 
           <motion.h1
+            id="hero-heading"
             custom={1}
             variants={fadeUp}
             initial="hidden"
@@ -349,8 +351,7 @@ export default function Hero() {
               href="#projects"
               className="rounded-full px-7 py-3 text-sm font-semibold shadow-accent transition-shadow duration-300 hover:shadow-[0_0_40px_rgba(0,212,255,0.45)]"
               style={{
-                backgroundImage:
-                  "linear-gradient(135deg, #00d4ff 0%, #34d399 100%)",
+                backgroundImage: "var(--gradient-aurora)",
                 color: "var(--bg-base)",
               }}
             >
@@ -365,7 +366,7 @@ export default function Hero() {
                 color: "var(--accent)",
                 border: "1px solid transparent",
                 background:
-                  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box",
+                  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, var(--gradient-aurora) border-box",
               }}
             >
               Kontakt
@@ -377,7 +378,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
+          transition={{ delay: 0.4, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="flex-shrink-0"
         >
           <AvatarMorph
