@@ -32,6 +32,9 @@ export default function PageLoader() {
   // trailingSlash: true w next.config → ścieżka może mieć końcowy "/"
   const isPrint = pathname.replace(/\/$/, "") === "/cv-print";
   const [visible, setVisible] = useState(true);
+  const [particles, setParticles] = useState<
+    { left: number; top: number; size: number; delay: number }[]
+  >([]);
 
   useEffect(() => {
     if (reduce || isPrint) {
@@ -46,6 +49,19 @@ export default function PageLoader() {
     };
   }, [reduce, isPrint]);
 
+  // Cząsteczki generowane po stronie klienta (unikamy niezgodności hydratacji)
+  useEffect(() => {
+    if (reduce || isPrint) return;
+    setParticles(
+      Array.from({ length: 16 }, () => ({
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: 2 + Math.random() * 2,
+        delay: Math.random() * 2.4,
+      }))
+    );
+  }, [reduce, isPrint]);
+
   if (reduce || isPrint) return null;
 
   return (
@@ -57,11 +73,51 @@ export default function PageLoader() {
           exit={{ y: "-100%" }}
           transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1], delay: 1.4 }}
         >
-          <svg
-            viewBox="0 0 160 80"
-            className="h-16 sm:h-20"
-            aria-hidden
-          >
+          <div className="relative grid place-items-center">
+            {/* Poświata za monogramem */}
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute rounded-full"
+              style={{
+                width: "240%",
+                height: "240%",
+                background: "radial-gradient(circle, rgba(0,212,255,0.16), transparent 62%)",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ delay: 1.1, duration: 0.8 }}
+            />
+
+            {/* Cząsteczki światła */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute"
+              style={{ inset: "-40% -60%" }}
+            >
+              {particles.map((p, i) => (
+                <motion.span
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    left: `${p.left}%`,
+                    top: `${p.top}%`,
+                    width: p.size,
+                    height: p.size,
+                    background: "var(--accent)",
+                    boxShadow: "0 0 6px rgba(0,212,255,0.8)",
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.7, 0], y: [0, -8, 0] }}
+                  transition={{ duration: 2.6, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
+                />
+              ))}
+            </div>
+
+            <svg
+              viewBox="0 0 160 80"
+              className="relative h-16 sm:h-20"
+              aria-hidden
+            >
             {/* Letter D */}
             <motion.path
               d="M10 10 L10 70 L38 70 Q62 70 62 40 Q62 10 38 10 Z"
@@ -101,7 +157,8 @@ export default function PageLoader() {
                 filter: "drop-shadow(0 0 8px rgba(0,212,255,0.6))",
               }}
             />
-          </svg>
+            </svg>
+          </div>
 
           <motion.p
             className="mt-4 font-mono text-[11px] sm:text-[13px]"
