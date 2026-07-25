@@ -12,7 +12,6 @@ const config: Config = {
         accent:     "#00d4ff",
         "accent-dim":  "#38bdf8",
         "accent-2":     "#34d399",
-        "accent-2-dim": "#10b981",
         "bg-base":     "#09090b",
         "bg-surface":  "#111116",
         "bg-elevated": "#18181f",
@@ -20,12 +19,6 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "monospace"],
-      },
-      backgroundImage: {
-        "gradient-accent":
-          "linear-gradient(135deg, #f1f5f9 0%, #00d4ff 100%)",
-        "gradient-aurora":
-          "linear-gradient(135deg, #00d4ff 0%, #34d399 100%)",
       },
       boxShadow: {
         accent: "0 0 30px rgba(0, 212, 255, 0.15)",

@@ -110,9 +110,9 @@ export default function About() {
   const yearsLearning = 2;
 
   return (
-    <section id="about" className="relative px-6 py-16 md:py-20">
+    <section id="about" aria-labelledby="about-heading" className="relative px-6 py-16 md:py-20">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="01" total="05" title="O MNIE" subtitle="Kim jestem" />
+        <SectionHeader index="01" total="05" title="O MNIE" subtitle="Kim jestem" headingId="about-heading" />
 
         {/* Pull-quote — editorial, pasek gradient cyan→emerald */}
         <motion.figure
@@ -130,7 +130,7 @@ export default function About() {
             }}
           />
           <blockquote
-            className="max-w-4xl text-2xl font-medium leading-snug tracking-tight md:text-3xl"
+            className="max-w-4xl text-balance text-2xl font-medium leading-snug tracking-tight md:text-3xl"
             style={{ color: "var(--text)" }}
           >
             <span style={{ color: "var(--accent)" }}>{data.personal.title}</span>{" "}

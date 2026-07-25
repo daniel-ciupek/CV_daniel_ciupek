@@ -20,7 +20,7 @@ const sectionIds = navLinks.map((l) => l.href.slice(1));
 
 // Gradient border (aurora) w konwencji padding-box/border-box
 const AURORA_BORDER =
-  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, var(--accent), var(--accent-2)) border-box";
+  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, var(--gradient-aurora) border-box";
 
 // ─── Desktopowy link nawigacji: magnetyczny + kinetyczny swap etykiety ──────────
 // Magnetyzm gaśnie przy reduced-motion; na dotyku nie odpala się (brak mousemove).

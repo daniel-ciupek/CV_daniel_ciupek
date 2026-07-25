@@ -8,6 +8,8 @@ interface SectionHeaderProps {
   title: string;
   /** Czysty opis sekcji (bez terminalowych `//`). Opcjonalny. */
   subtitle?: string;
+  /** id nagłówka <h2> — do powiązania z sekcją przez aria-labelledby. */
+  headingId?: string;
 }
 
 export default function SectionHeader({
@@ -15,6 +17,7 @@ export default function SectionHeader({
   total,
   title,
   subtitle,
+  headingId,
 }: SectionHeaderProps) {
   return (
     <motion.div
@@ -44,6 +47,7 @@ export default function SectionHeader({
 
       {/* Tytuł */}
       <h2
+        id={headingId}
         className="text-2xl font-bold tracking-tight md:text-3xl"
         style={{ color: "var(--text)" }}
       >
