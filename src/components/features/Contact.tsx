@@ -179,6 +179,14 @@ function SocialCluster() {
           e.currentTarget.style.color = "var(--text-muted)";
           e.currentTarget.style.borderColor = "var(--border)";
         }}
+        onFocus={(e) => {
+          e.currentTarget.style.color = "var(--accent)";
+          e.currentTarget.style.borderColor = "var(--border-hover)";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.color = "var(--text-muted)";
+          e.currentTarget.style.borderColor = "var(--border)";
+        }}
       >
         {expanded ? "mniej" : `więcej (${extra.length})`}
         <motion.span

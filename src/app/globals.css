@@ -40,6 +40,19 @@
   box-sizing: border-box;
 }
 
+/* ─── Widoczny focus dla klawiatury (WCAG 2.4.7) ─────────────────
+   Globalny ring dla WSZYSTKICH interaktywnych elementów. :focus-visible
+   (nie :focus) pokazuje go tylko przy nawigacji klawiaturą — klik myszą
+   go nie wywołuje, więc wygląd dla myszy się nie zmienia. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.16);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 html {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
   color-scheme: dark;
@@ -194,12 +207,8 @@ body::after {
     transform: translateY(-100%);
   }
 }
-/* Parytet dla klawiatury */
-.nav-link:focus-visible {
-  outline: 2px solid var(--border-hover);
-  outline-offset: 4px;
-  border-radius: 4px;
-}
+/* Parytet dla klawiatury — ring z globalnej reguły :focus-visible,
+   tu dokładamy tylko kinetyczny swap etykiety (jak na hover) */
 .nav-link:focus-visible .nav-swap > span {
   transform: translateY(-100%);
 }

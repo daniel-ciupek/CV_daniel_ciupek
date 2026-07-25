@@ -214,6 +214,12 @@ function CertList({
               onMouseLeave={(e) => {
                 if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
               }}
+              onFocus={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border-hover)";
+              }}
+              onBlur={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
+              }}
             >
               <span
                 className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
@@ -390,7 +396,7 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
-        className="relative mx-auto cursor-grab select-none outline-none active:cursor-grabbing"
+        className="relative mx-auto cursor-grab select-none active:cursor-grabbing"
         style={{ height: stageH, perspective, perspectiveOrigin: "50% 45%", touchAction: "pan-y" }}
       >
         <motion.div
