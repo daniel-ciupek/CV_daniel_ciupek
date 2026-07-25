@@ -22,7 +22,6 @@ export default function CvPrintLayout({
 }) {
   return (
     <div
-      lang="pl"
       className={inter.className}
       style={{ background: "#ffffff", color: "#111111", minHeight: "100vh" }}
     >
