@@ -25,8 +25,8 @@
 
   /* Text */
   --text:        #f1f5f9;
-  --text-muted:  #64748b;
-  --text-subtle: #334155;
+  --text-muted:  #7c8a9c; /* WCAG AA: 5.4–5.7:1 na tłach v2 (poprz. #64748b ≈ 4.2:1) */
+  --text-subtle: #334155; /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
 
   /* Fonts (injected by Next.js layout) */
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;

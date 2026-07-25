@@ -92,7 +92,7 @@ function Counter({
       <p className="mt-2 text-sm font-medium tracking-wide" style={{ color: "var(--text)" }}>
         {label}
       </p>
-      <p className="mt-0.5 text-xs" style={{ color: "var(--text-subtle)" }}>
+      <p className="mt-0.5 text-xs" style={{ color: "var(--text-muted)" }}>
         {sublabel}
       </p>
     </motion.div>
