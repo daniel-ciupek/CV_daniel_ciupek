@@ -330,8 +330,8 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 
 /* Tekst */
 --text:         #F1F5F9
---text-muted:   #64748B
---text-subtle:  #334155
+--text-muted:   #7C8A9C   /* WCAG AA ≥5:1 na tłach v2 (podniesione z #64748B w #42) */
+--text-subtle:  #334155   /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
 
 /* Typografia */
 Font UI:        Geist Sans (Next.js default)
@@ -347,6 +347,24 @@ Skala:
   3xl:  30px
   4xl:  36px
   5xl:  48px   /* Hero heading */
+```
+
+### System komponentów (spójność — issue #44)
+
+```
+/* Promień kart (Tailwind) */
+Kafle / karty w siatce:   rounded-2xl (16px)   /* About, Tech Stack, Projekty, Footer, karty certów */
+Duży panel sekcji:        rounded-3xl (24px)   /* Kontakt — pełnowymiarowy panel nad aurorą */
+
+/* Kształt CTA */
+Główne przyciski akcji:   rounded-full (pill)  /* Hero, Navbar, Contact — jeden sygnaturowy kształt */
+Drobne utility:           rounded-lg           /* kopiuj e-mail, linki projektu, chipy tech — inna warstwa */
+
+/* Receptura szkła — dwa świadome warianty */
+glass (przezroczyste):    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)) + blur(12px) + 1px --border
+                          → karty nad ciemnym tłem (About, Tech Stack, Projekty, Footer)
+glass-solid (kryjące):    rgba(17,17,22,.55) + blur(12px) + 1px --border
+                          → duże panele nad ruchomą aurorą, gdzie krycie chroni czytelność (Kontakt)
 ```
 
 ---
