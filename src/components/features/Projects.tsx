@@ -176,7 +176,7 @@ function ProjectCard({
     >
       {/* Glass base + hover gradient */}
       <div
-        className="absolute inset-0 overflow-hidden rounded-3xl"
+        className="absolute inset-0 overflow-hidden rounded-2xl"
         style={{
           background:
             "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
@@ -200,7 +200,7 @@ function ProjectCard({
 
       {/* Spotlight podążający za kursorem */}
       <motion.div
-        className="pointer-events-none absolute inset-0 rounded-3xl"
+        className="pointer-events-none absolute inset-0 rounded-2xl"
         style={{ background: spotlight }}
       />
 
@@ -276,7 +276,7 @@ export default function Projects() {
 
         {projects.length === 0 && (
           <div
-            className="rounded-3xl p-8"
+            className="rounded-2xl p-8"
             style={{
               backgroundColor: "var(--bg-surface)",
               border: "1px solid var(--border)",

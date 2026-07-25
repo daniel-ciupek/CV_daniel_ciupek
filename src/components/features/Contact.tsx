@@ -338,7 +338,7 @@ export default function Contact() {
                 <MagneticElement>
                   <a
                     href={`mailto:${email}`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_42px_rgba(0,212,255,0.45)] sm:w-auto"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_42px_rgba(0,212,255,0.45)] sm:w-auto"
                     style={{ background: AURORA, color: "var(--bg-base)" }}
                   >
                     <Mail size={17} />
@@ -349,7 +349,7 @@ export default function Contact() {
                 <MagneticElement>
                   <a
                     href={`tel:${phone.replace(/\s/g, "")}`}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_26px_rgba(0,212,255,0.22)] sm:w-auto"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_26px_rgba(0,212,255,0.22)] sm:w-auto"
                     style={{ color: "var(--accent)", border: "1px solid transparent", background: AURORA_BORDER }}
                   >
                     <Phone size={16} />

@@ -180,7 +180,7 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           clamp={10}
-          className="relative hidden overflow-hidden rounded-lg px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(0,212,255,0.28)] md:inline-flex md:items-center"
+          className="relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(0,212,255,0.28)] md:inline-flex md:items-center"
           style={{
             color: "var(--accent)",
             border: "1px solid transparent",
@@ -262,7 +262,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleNavClick}
-                  className="block rounded-lg py-2 text-center text-sm font-medium"
+                  className="block rounded-full py-2 text-center text-sm font-medium"
                   style={{
                     color: "var(--accent)",
                     border: "1px solid transparent",
