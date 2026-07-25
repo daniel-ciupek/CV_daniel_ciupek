@@ -26,6 +26,11 @@ const data: SiteData = {
       subline:
         "Szukam zespołu, w którym rozwinę się przy komercyjnych projektach. Napisz — odpowiadam szybko.",
     },
+    location: "Polska · zdalnie / hybryda",
+    languages: [
+      { name: "Polski", level: "język ojczysty" },
+      { name: "Angielski", level: "komunikatywny (B1/B2)" },
+    ],
   },
 
   // ─── Umiejętności ──────────────────────────────────────────────
@@ -49,6 +54,20 @@ const data: SiteData = {
     {
       category: "AI & Narzędzia",
       items: ["Claude Code", "Cursor", "OpenClaw", "Hermes Agent", "MCP", "Gemini"],
+    },
+  ],
+
+  // ─── Doświadczenie ─────────────────────────────────────────────
+  experience: [
+    {
+      role: "Staż — Full Stack Developer",
+      description:
+        "Praca w zespole developerskim przy rzeczywistych zadaniach projektowych — z naciskiem na współpracę, komunikację i wspólne standardy kodu.",
+      highlights: [
+        "Współpraca w zespole w oparciu o Git flow i code review",
+        "Komunikacja i podział zadań w zespole, praca zgodnie z przyjętymi standardami",
+        "Udział w rozwoju aplikacji webowych — backend i frontend",
+      ],
     },
   ],
 
@@ -143,6 +162,7 @@ const data: SiteData = {
       title: "Vanilla JavaScript od podstaw",
       platform: "Udemy",
       hours: 39,
+      date: "2025",
     },
     {
       key: "cert_php",
@@ -150,6 +170,7 @@ const data: SiteData = {
       title: "Kurs programowanie PHP i MySQL",
       platform: "Udemy",
       hours: 32,
+      date: "2026",
     },
     {
       key: "cert_mysql",
@@ -157,6 +178,7 @@ const data: SiteData = {
       title: "Kurs SQL od podstaw | MySQL",
       platform: "Udemy",
       hours: 5,
+      date: "2026",
     },
     {
       key: "cert_postgres",
@@ -164,6 +186,7 @@ const data: SiteData = {
       title: "Kurs PostgreSQL",
       platform: "Udemy",
       hours: 6,
+      date: "2026",
     },
     {
       key: "cert_laravel",
@@ -171,6 +194,7 @@ const data: SiteData = {
       title: "Laravel 12 & Vue 3 fullstack Mastery",
       platform: "Udemy",
       hours: 37.5,
+      date: "2026",
     },
     {
       key: "cert_docker",
@@ -178,6 +202,7 @@ const data: SiteData = {
       title: "Docker od podstaw",
       platform: "Udemy",
       hours: 4.5,
+      date: "2026",
     },
     {
       key: "cert_postman",
@@ -185,6 +210,7 @@ const data: SiteData = {
       title: "Postman od podstaw – testowanie REST API",
       platform: "Udemy",
       hours: 6,
+      date: "2026",
     },
     {
       key: "cert_english",
@@ -192,6 +218,7 @@ const data: SiteData = {
       title: "Angielski w IT. Kompletny Kurs Konwersacyjny",
       platform: "Udemy",
       hours: 12,
+      date: "2026",
     },
     {
       key: "cert_ai",
@@ -199,6 +226,7 @@ const data: SiteData = {
       title: "AI dla programistów: ChatGPT od A do Z",
       platform: "Udemy",
       hours: 4.5,
+      date: "2025",
     },
     {
       key: "cert_claude",
@@ -206,6 +234,7 @@ const data: SiteData = {
       title: "Claude Code w pigułce",
       platform: "Udemy",
       hours: 1.5,
+      date: "2026",
     },
     {
       key: "cert_ai_coding",
@@ -213,6 +242,7 @@ const data: SiteData = {
       title: "The Complete AI Coding Course (2025) – Cursor, Claude Code",
       platform: "Udemy",
       hours: 12,
+      date: "2026",
     },
     {
       key: "cert_python",
@@ -220,6 +250,7 @@ const data: SiteData = {
       title: "[2026] Kurs Python 3 od Podstaw do Mastera",
       platform: "Udemy",
       hours: 73,
+      date: "2026",
     },
     {
       key: "cert_aws",
@@ -227,6 +258,7 @@ const data: SiteData = {
       title: "AWS Certified Cloud Practitioner",
       platform: "Udemy",
       hours: 5.5,
+      date: "2026",
     },
     {
       key: "cert_gitlab",
@@ -234,6 +266,7 @@ const data: SiteData = {
       title: "Kurs GitLab CI/CD od podstaw",
       platform: "Udemy",
       hours: 14,
+      date: "2026",
     },
   ],
 };

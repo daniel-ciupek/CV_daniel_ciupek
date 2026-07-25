@@ -487,6 +487,64 @@ body::after {
   color: #666;
 }
 
+/* Doświadczenie */
+.cv-experience {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.cv-exp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+  margin-bottom: 0.2rem;
+}
+.cv-exp-role {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #111;
+}
+.cv-exp-org {
+  font-size: 10pt;
+  color: #444;
+}
+.cv-exp-period {
+  font-size: 9pt;
+  color: #777;
+  margin-left: auto;
+}
+.cv-exp-desc {
+  margin: 0 0 0.3rem;
+  font-size: 10pt;
+  color: #333;
+}
+.cv-exp-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 10pt;
+  color: #222;
+}
+.cv-exp-list li {
+  margin-bottom: 0.15rem;
+}
+
+/* Języki */
+.cv-lang-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 10pt;
+  color: #222;
+}
+.cv-lang-name {
+  font-weight: 600;
+  color: #111;
+}
+
 /* ─── @media print — ukryj przycisk, ustaw marginesy ──────────── */
 @media print {
   html { color-scheme: light !important; }
@@ -510,6 +568,11 @@ body::after {
   }
   a { color: #1a56a0 !important; }
   .cv-section-heading { page-break-after: avoid; break-after: avoid; }
+  /* Jedna kolumna umiejętności w druku — poprawny reading order dla ATS */
+  .cv-skills-grid,
+  .cv-skills-secondary { grid-template-columns: 1fr !important; }
+  .cv-skills-secondary { margin-top: 1.6rem !important; }
+  .cv-exp-item { page-break-inside: avoid; break-inside: avoid; }
   .cv-projects { display: block; }
   .cv-project { page-break-inside: avoid; break-inside: avoid; }
   .cv-section-break-before {
