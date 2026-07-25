@@ -126,8 +126,10 @@ Wszystkie pliki w `public/MyImage/`:
 
 ### Kolejność sekcji strony głównej
 ```
-Navbar → Hero → About → Tech Stack → Projects → Certifications → Contact → Footer
+Navbar → Hero → About → Certifications → Tech Stack → Projects → Contact → Footer
 ```
+> Świadoma decyzja (issue #45): Certyfikaty prowadzą przed Umiejętnościami i Projektami —
+> 14 realnych certów jako atut na wejściu. Eyebrow 01–05 odzwierciedla ten układ.
 
 ### Kursor
 - Standardowy kursor systemowy — brak custom cursora

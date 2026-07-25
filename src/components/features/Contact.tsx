@@ -244,8 +244,8 @@ export default function Contact() {
         }
       `}</style>
 
-      <section id="contact" className="relative px-6 py-24 md:py-32">
-        <div className="mx-auto max-w-4xl">
+      <section id="contact" className="relative px-6 py-20 md:py-28">
+        <div className="mx-auto max-w-6xl">
           <SectionHeader index="05" total="05" title="KONTAKT" />
 
           {/* Glass panel */}
@@ -307,8 +307,8 @@ export default function Contact() {
               }}
             />
 
-            {/* Treść */}
-            <div className="relative">
+            {/* Treść — kolumna czytelna w szerokim panelu (6xl) */}
+            <div className="relative max-w-3xl">
               <StatusDot />
 
               <p

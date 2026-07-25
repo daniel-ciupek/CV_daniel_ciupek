@@ -111,7 +111,7 @@ export default function About() {
 
   return (
     <section id="about" className="relative px-6 py-16 md:py-20">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         <SectionHeader index="01" total="05" title="O MNIE" subtitle="Kim jestem" />
 
         {/* Pull-quote — editorial, pasek gradient cyan→emerald */}
@@ -130,7 +130,7 @@ export default function About() {
             }}
           />
           <blockquote
-            className="text-2xl font-medium leading-snug tracking-tight md:text-3xl"
+            className="max-w-4xl text-2xl font-medium leading-snug tracking-tight md:text-3xl"
             style={{ color: "var(--text)" }}
           >
             <span style={{ color: "var(--accent)" }}>{data.personal.title}</span>{" "}
