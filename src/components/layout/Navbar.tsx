@@ -63,11 +63,21 @@ function NavLink({
       >
         {isActive && <span aria-hidden className="nav-glow" />}
         <span className="nav-swap">
-          <span style={{ color: isActive ? "var(--accent-2)" : "var(--text-muted)" }}>{link.label}</span>
+          <span
+            style={{
+              color: isActive ? "var(--accent)" : "var(--text-muted)",
+              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+            }}
+          >
+            {link.label}
+          </span>
           <span
             className="nav-swap__two"
             aria-hidden
-            style={{ color: isActive ? "var(--accent-2)" : "var(--accent)" }}
+            style={{
+              color: "var(--accent)",
+              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+            }}
           >
             {link.label}
           </span>
@@ -147,7 +157,7 @@ export default function Navbar() {
           <span
             aria-hidden
             className="ml-0.5 h-1.5 w-1.5 self-end rounded-full transition-transform duration-300 group-hover:scale-125"
-            style={{ background: "var(--accent-2)", boxShadow: "0 0 8px var(--accent-2)", marginBottom: "0.35rem" }}
+            style={{ background: "var(--accent)", boxShadow: "0 0 8px var(--accent)", marginBottom: "0.35rem" }}
           />
         </a>
 

@@ -28,7 +28,7 @@ const AURORA = "linear-gradient(135deg, #00d4ff, #34d399)";
 const AURORA_BORDER =
   "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box";
 
-// ─── Status Dot (emerald, bez terminala) ────────────────────────────────────────
+// ─── Status Dot (cyan, bez terminala) ────────────────────────────────────────────
 
 function StatusDot() {
   const [head, ...rest] = data.personal.availability.split("·");
@@ -36,14 +36,14 @@ function StatusDot() {
   return (
     <div
       className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-      style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.22)" }}
+      style={{ background: "rgba(0,212,255,0.08)", border: "1px solid rgba(0,212,255,0.24)" }}
     >
       <span
-        className="status-dot-e h-[7px] w-[7px] flex-shrink-0 rounded-full"
-        style={{ background: "#34D399" }}
+        className="status-dot h-[7px] w-[7px] flex-shrink-0 rounded-full"
+        style={{ background: "var(--accent)" }}
       />
       <span className="text-[13px]">
-        <span style={{ color: "#34D399", fontWeight: 500 }}>{head.trim()}</span>
+        <span style={{ color: "var(--accent)", fontWeight: 500 }}>{head.trim()}</span>
         {tail && <span style={{ color: "var(--text-muted)" }}>{` · ${tail}`}</span>}
       </span>
     </div>
@@ -220,18 +220,18 @@ export default function Contact() {
   return (
     <>
       <style>{`
-        @keyframes availablePulseEmerald {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.5), 0 0 8px rgba(52,211,153,0.5); }
-          50%      { box-shadow: 0 0 0 5px rgba(52,211,153,0),   0 0 12px rgba(52,211,153,0.6); }
+        @keyframes availablePulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.5), 0 0 8px rgba(0,212,255,0.5); }
+          50%      { box-shadow: 0 0 0 5px rgba(0,212,255,0),   0 0 12px rgba(0,212,255,0.6); }
         }
-        .status-dot-e { animation: availablePulseEmerald 2.2s ease-in-out infinite; }
+        .status-dot { animation: availablePulse 2.2s ease-in-out infinite; }
         @keyframes copyPulse {
           0%   { box-shadow: 0 0 0 0 rgba(0,212,255,0.4); }
           100% { box-shadow: 0 0 0 7px rgba(0,212,255,0); }
         }
         .copy-pulse { animation: copyPulse 0.5s ease-out; }
         @media (prefers-reduced-motion: reduce) {
-          .status-dot-e { animation: none; box-shadow: 0 0 0 2px rgba(52,211,153,0.15), 0 0 12px rgba(52,211,153,0.5); }
+          .status-dot { animation: none; box-shadow: 0 0 0 2px rgba(0,212,255,0.15), 0 0 12px rgba(0,212,255,0.5); }
           .copy-pulse { animation: none; }
         }
       `}</style>
@@ -331,7 +331,7 @@ export default function Contact() {
                   <a
                     href={`mailto:${email}`}
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_42px_rgba(0,212,255,0.45)] sm:w-auto"
-                    style={{ background: AURORA, color: "#06202b" }}
+                    style={{ background: AURORA, color: "var(--bg-base)" }}
                   >
                     <Mail size={17} />
                     Napisz:&nbsp;<span className="font-mono font-medium">{email}</span>

@@ -365,7 +365,7 @@ export default function Hero() {
                 color: "var(--accent)",
                 border: "1px solid transparent",
                 background:
-                  "linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box",
+                  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, linear-gradient(135deg, #00d4ff, #34d399) border-box",
               }}
             >
               Kontakt
