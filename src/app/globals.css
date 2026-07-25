@@ -242,6 +242,39 @@ body::after {
   .anchor-pulse { animation: none; }
 }
 
+/* ─── Tech Stack — animowany obrys aurory (Aurora Rim) ───────── */
+@property --tech-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes tech-rim-spin {
+  to { --tech-angle: 360deg; }
+}
+.tech-rim {
+  padding: 1px;
+  background: conic-gradient(
+    from var(--tech-angle),
+    rgba(0, 212, 255, 0.9),
+    rgba(52, 211, 153, 0.9),
+    rgba(0, 212, 255, 0.12),
+    rgba(0, 212, 255, 0.9)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: tech-rim-spin 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* obrys zostaje (statyczny gradient), ale bez obrotu */
+  .tech-rim { animation: none; }
+}
+
 /* ─── ScrollTrigger section-child entrance ───────────────────── */
 [data-animate="section-child"] {
   opacity: 0;
