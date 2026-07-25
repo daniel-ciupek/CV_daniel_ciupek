@@ -20,6 +20,12 @@ const data: SiteData = {
     facebook: "https://www.facebook.com/daniel.ciupek.7?locale=pl_PL",
     instagram: "https://www.instagram.com/danter005?igsh=Zzh3bGNrNmtxNHht&utm_source=qr",
     website: "https://cv-daniel-ciupek.vercel.app",
+    availability: "Dostępny · otwarty na propozycje współpracy",
+    contact: {
+      headline: "Porozmawiajmy o współpracy.",
+      subline:
+        "Szukam zespołu, w którym rozwinę się przy komercyjnych projektach. Napisz — odpowiadam szybko.",
+    },
   },
 
   // ─── Umiejętności ──────────────────────────────────────────────
