@@ -37,23 +37,44 @@ const data: SiteData = {
   skills: [
     {
       category: "Backend",
-      items: ["PHP", "Laravel", "Node.js", "Python"],
+      items: ["PHP", "Laravel", "Livewire", "Node.js", "Python"],
     },
     {
       category: "Frontend",
-      items: ["JavaScript", "TypeScript", "React", "Vue 3", "Next.js", "Tailwind CSS"],
+      items: [
+        "JavaScript",
+        "TypeScript",
+        "React",
+        "Vue 3",
+        "Inertia.js",
+        "Pinia",
+        "Alpine.js",
+        "Next.js",
+        "Tailwind CSS",
+      ],
     },
     {
       category: "Bazy danych",
-      items: ["MySQL", "PostgreSQL"],
+      items: ["MySQL", "PostgreSQL", "Redis"],
     },
     {
       category: "DevOps & Narzędzia",
-      items: ["Docker", "Git", "AWS", "Postman", "REST API", "GitLab CI/CD", "Linux"],
+      items: [
+        "Docker",
+        "Git",
+        "GitLab CI/CD",
+        "GitHub Actions",
+        "AWS",
+        "Linux",
+        "Postman",
+        "REST API",
+        "PHPStan",
+        "Pest",
+      ],
     },
     {
       category: "AI & Narzędzia",
-      items: ["Claude Code", "Cursor", "OpenClaw", "Hermes Agent", "MCP", "Gemini"],
+      items: ["Claude Code", "Cursor", "Gemini", "MCP", "Prompt Engineering", "n8n"],
     },
   ],
 
