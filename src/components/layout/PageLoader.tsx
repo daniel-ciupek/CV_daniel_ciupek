@@ -3,28 +3,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import data from "@/config/data";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-
-function TypeWriter({ text, speed = 22 }: { text: string; speed?: number }) {
-  const [displayed, setDisplayed] = useState("");
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) clearInterval(interval);
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, speed]);
-
-  return (
-    <span>
-      {displayed}
-      <span className="animate-pulse">|</span>
-    </span>
-  );
-}
 
 export default function PageLoader() {
   const reduce = usePrefersReducedMotion();
@@ -161,13 +141,14 @@ export default function PageLoader() {
           </div>
 
           <motion.p
-            className="mt-4 font-mono text-[11px] sm:text-[13px]"
-            style={{ color: "var(--text-muted)" }}
+            className="mt-4 text-[11px] font-medium uppercase tracking-[0.34em] sm:text-[12px]"
+            style={{ color: "var(--text-muted)", paddingLeft: "0.34em" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.4 }}
           >
-            <TypeWriter text="> portfolio.init()" speed={22} />
+            {data.personal.name}
+            <span className="animate-pulse" aria-hidden>|</span>
           </motion.p>
         </motion.div>
       )}
