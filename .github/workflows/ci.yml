@@ -1,0 +1,40 @@
+name: CI
+
+# Waliduje każdy PR (i push) do Dev/main: lint → typecheck → build.
+# Przez branch protection (ustawiane w GitHub, nie w repo) czerwony run blokuje merge do main.
+
+on:
+  pull_request:
+    branches: [Dev, main]
+  push:
+    branches: [Dev, main]
+
+# Anuluj poprzedni, wciąż trwający run dla tej samej gałęzi/PR-a.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
