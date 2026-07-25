@@ -187,11 +187,11 @@ function CertList({
       <div className="mb-3 flex items-center justify-between">
         <span
           className="text-[11px] font-medium uppercase tracking-[0.18em]"
-          style={{ color: "var(--text-subtle)" }}
+          style={{ color: "var(--text-muted)" }}
         >
           Wszystkie certyfikaty
         </span>
-        <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--text-subtle)" }}>
+        <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
           {N} pozycji
         </span>
       </div>
@@ -217,7 +217,7 @@ function CertList({
             >
               <span
                 className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: isActive ? "var(--accent)" : "var(--text-subtle)" }}
+                style={{ color: isActive ? "var(--accent)" : "var(--text-muted)" }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
@@ -244,7 +244,7 @@ function CertList({
               </span>
               <span
                 className="hidden shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: "var(--text-subtle)" }}
+                style={{ color: "var(--text-muted)" }}
               >
                 {cert.hours}h
               </span>
@@ -477,7 +477,7 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
         </button>
       </div>
 
-      <p className="mt-4 text-center font-mono text-[11px]" style={{ color: "var(--text-subtle)" }}>
+      <p className="mt-4 text-center font-mono text-[11px]" style={{ color: "var(--text-muted)" }}>
         Kręci się sam · przeciągnij, by obrócić · kliknij, by powiększyć · {String(activeIndex + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
       </p>
 
@@ -662,7 +662,7 @@ function Lightbox({
                 {cert.platform} · {cert.hours}h
               </p>
             </div>
-            <span className="flex-shrink-0 font-mono text-xs tabular-nums" style={{ color: "var(--text-subtle)" }}>
+            <span className="flex-shrink-0 font-mono text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
               {String(activeIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>

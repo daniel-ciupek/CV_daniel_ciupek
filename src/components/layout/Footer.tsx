@@ -152,7 +152,7 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <p className="mt-4 text-center text-[11.5px]" style={{ color: "var(--text-subtle)" }}>
+        <p className="mt-4 text-center text-[11.5px]" style={{ color: "var(--text-muted)" }}>
           © {year} {data.personal.name} · Zbudowane w Next.js
         </p>
       </div>

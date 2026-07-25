@@ -170,13 +170,13 @@ function SocialCluster() {
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
         className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200"
-        style={{ border: "1px solid var(--border)", color: "var(--text-subtle)", background: "transparent" }}
+        style={{ border: "1px solid var(--border)", color: "var(--text-muted)", background: "transparent" }}
         onMouseEnter={(e) => {
           e.currentTarget.style.color = "var(--accent)";
           e.currentTarget.style.borderColor = "var(--border-hover)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.color = "var(--text-subtle)";
+          e.currentTarget.style.color = "var(--text-muted)";
           e.currentTarget.style.borderColor = "var(--border)";
         }}
       >
