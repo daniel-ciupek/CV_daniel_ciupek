@@ -26,6 +26,9 @@ export interface Personal {
   location: string;
   /** Języki — sekcja w /cv-print (nazwa + poziom) */
   languages: { name: string; level: string }[];
+  /** Wersje angielskie (dla /cv-print/en) — fallback do PL, gdy brak */
+  bio_en?: string;
+  location_en?: string;
 }
 
 export interface Experience {
@@ -37,6 +40,10 @@ export interface Experience {
   description: string;
   /** Punktowane osiągnięcia/zakres — opcjonalne */
   highlights?: string[];
+  /** Wersje angielskie (dla /cv-print/en) */
+  role_en?: string;
+  description_en?: string;
+  highlights_en?: string[];
 }
 
 export interface SkillCategory {
@@ -53,6 +60,8 @@ export interface Project {
   image?: string;
   /** Ścieżki do screenów w `public/` — auto-slideshow w karcie projektu */
   screenshots?: string[];
+  /** Opis po angielsku (dla /cv-print/en) — fallback do PL, gdy brak */
+  description_en?: string;
 }
 
 export interface Certificate {
@@ -63,6 +72,8 @@ export interface Certificate {
   hours: number;
   /** Rok ukończenia — format ATS „Nazwa — Platforma — rok" */
   date?: string;
+  /** Tytuł po angielsku (dla /cv-print/en) — fallback do `title`, gdy brak */
+  title_en?: string;
 }
 
 export interface SiteData {
