@@ -106,6 +106,22 @@ const data: SiteData = {
   // ─── Projekty ──────────────────────────────────────────────────
   projects: [
     
+      {
+       title: "QR-Master",
+       description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
+       description_en: "A SaaS (SPA) for managing QR codes with real-time analytics and an AI chat. It integrates Stripe payments, 2FA/WebAuthn and fast search, built for maximum performance (FrankenPHP, Octane) and rigorous CI/CD (PHPStan level 8, Snyk).",
+       stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
+      // url: "https://...",       // opcjonalne
+       github: "https://github.com/daniel-ciupek/QR-Master",
+       screenshots: [
+         "/projects/qr-master/01-dashboard.webp",
+         "/projects/qr-master/02-analytics.webp",
+         "/projects/qr-master/03-designer.webp",
+         "/projects/qr-master/04-create.webp",
+         "/projects/qr-master/05-pricing.webp",
+       ],
+     },
+
      {
        title: "PrepMind",
        description: "PrepMind to aplikacja dla programistów: generuje pytania techniczne, planuje powtórki (SM-2) i symuluje rozmowy rekrutacyjne z AI. Działa w modelu BYOK (własny klucz Gemini), bez abonamentu.",
@@ -135,22 +151,6 @@ const data: SiteData = {
          "/projects/ai-subscription-auditor/03-detail.webp",
          "/projects/ai-subscription-auditor/04-ai-alert.webp",
          "/projects/ai-subscription-auditor/05-imports.webp",
-       ],
-     },
-
-      {
-       title: "QR-Master",
-       description: "SaaS (SPA) do zarządzania kodami QR z analityką realtime i czatem AI. Projekt integruje płatności Stripe, 2FA/WebAuthn i szybkie wyszukiwanie, opierając się na maksymalnej wydajności (FrankenPHP, Octane) oraz rygorystycznym CI/CD (PHPStan lvl 8, Snyk).",
-       description_en: "A SaaS (SPA) for managing QR codes with real-time analytics and an AI chat. It integrates Stripe payments, 2FA/WebAuthn and fast search, built for maximum performance (FrankenPHP, Octane) and rigorous CI/CD (PHPStan level 8, Snyk).",
-       stack: ["Laravel 13", "Vue 3", "Inertia.js", "TypeScript", "FrankenPHP", "Stripe", "Filament", "GitHub Actions"],
-      // url: "https://...",       // opcjonalne
-       github: "https://github.com/daniel-ciupek/QR-Master",
-       screenshots: [
-         "/projects/qr-master/01-dashboard.webp",
-         "/projects/qr-master/02-analytics.webp",
-         "/projects/qr-master/03-designer.webp",
-         "/projects/qr-master/04-create.webp",
-         "/projects/qr-master/05-pricing.webp",
        ],
      },
 

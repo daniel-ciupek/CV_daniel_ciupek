@@ -322,12 +322,14 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
         </span>
       </div>
 
-      {/* Pasek miniatur */}
+      {/* Pasek miniatur — data-lenis-prevent-touch: oddaj poziomy scroll natywnie,
+          bo Lenis (syncTouch) przejmuje dotyk na całej stronie i psuje przewijanie palcem */}
       <div
         role="tablist"
         aria-label="Wybór projektu"
         onKeyDown={onKeyDown}
-        className="flex gap-3 overflow-x-auto pb-2"
+        data-lenis-prevent-touch
+        className="no-scrollbar flex touch-pan-x gap-3 overflow-x-auto overscroll-x-contain pb-2"
       >
         {projects.map((p, i) => (
           <Thumb
