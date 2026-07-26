@@ -104,6 +104,10 @@ body::before {
 ::-webkit-scrollbar-thumb  { background: var(--text-subtle); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
+/* Ukryty pasek przewijania — element nadal przewijalny palcem/gestem (np. pasek miniatur projektów) */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 /* ─── Accessibility: Reduced Motion ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
