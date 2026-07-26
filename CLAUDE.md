@@ -126,8 +126,10 @@ Wszystkie pliki w `public/MyImage/`:
 
 ### Kolejność sekcji strony głównej
 ```
-Navbar → Hero → About → Tech Stack → Projects → Certifications → Contact → Footer
+Navbar → Hero → About → Certifications → Tech Stack → Projects → Contact → Footer
 ```
+> Świadoma decyzja (issue #45): Certyfikaty prowadzą przed Umiejętnościami i Projektami —
+> 14 realnych certów jako atut na wejściu. Eyebrow 01–05 odzwierciedla ten układ.
 
 ### Kursor
 - Standardowy kursor systemowy — brak custom cursora
@@ -281,27 +283,42 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 
 ## 11. Design Tokens
 
-Zdecydowana paleta — obowiązuje w całym projekcie:
+> **Paleta v2 — produkcja (redesign 2026, issue #4–#47, utrwalona na `main`).**
+> v1 (legacy #050505/#0F0F0F) wycofana — v2 jest jedyną obowiązującą paletą.
+> Realne źródło wartości: `src/app/globals.css` (`:root`) + `tailwind.config.ts`. Ten plik ma je odzwierciedlać.
+
+### Tła i akcenty
 
 ```
-/* Tła */
---bg-base:      #050505   /* główne tło strony */
---bg-surface:   #0F0F0F   /* karty, panele */
---bg-elevated:  #171717   /* dropdown, modal */
+/* Tła — ciemniejszy zinc */
+--bg-base:      #09090B   /* główne tło (zinc-950) */
+--bg-surface:   #111116   /* karty, panele */
+--bg-elevated:  #18181F   /* dropdown, modal */
 
-/* Obramowania */
---border:       rgba(255, 255, 255, 0.08)
---border-hover: rgba(0, 212, 255, 0.30)
-
-/* Akcent */
+/* Akcent główny — cyan (BOHATER UI) */
 --accent:       #00D4FF
 --accent-dim:   #38BDF8
 --accent-glow:  rgba(0, 212, 255, 0.15)
 
+/* Akcent drugi — emerald: WYŁĄCZNIE w aurorze/gradiencie/ruchomym świetle, nigdy jako samodzielny kolor UI */
+--accent-2:      #34D399
+--accent-2-glow: rgba(52, 211, 153, 0.15)
+
+/* Gradient sygnaturowy (aurora cyan→emerald) — jedno źródło prawdy */
+--gradient-aurora: linear-gradient(135deg, #00d4ff, #34d399)
+```
+
+### Wspólne dla obu palet (bez zmian)
+
+```
+/* Obramowania */
+--border:       rgba(255, 255, 255, 0.08)
+--border-hover: rgba(0, 212, 255, 0.30)
+
 /* Tekst */
 --text:         #F1F5F9
---text-muted:   #64748B
---text-subtle:  #334155
+--text-muted:   #7C8A9C   /* WCAG AA ≥5:1 na tłach v2 (podniesione z #64748B w #42) */
+--text-subtle:  #334155   /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
 
 /* Typografia */
 Font UI:        Geist Sans (Next.js default)
@@ -317,6 +334,24 @@ Skala:
   3xl:  30px
   4xl:  36px
   5xl:  48px   /* Hero heading */
+```
+
+### System komponentów (spójność — issue #44)
+
+```
+/* Promień kart (Tailwind) */
+Kafle / karty w siatce:   rounded-2xl (16px)   /* About, Tech Stack, Projekty, Footer, karty certów */
+Duży panel sekcji:        rounded-3xl (24px)   /* Kontakt — pełnowymiarowy panel nad aurorą */
+
+/* Kształt CTA */
+Główne przyciski akcji:   rounded-full (pill)  /* Hero, Navbar, Contact — jeden sygnaturowy kształt */
+Drobne utility:           rounded-lg           /* kopiuj e-mail, linki projektu, chipy tech — inna warstwa */
+
+/* Receptura szkła — dwa świadome warianty */
+glass (przezroczyste):    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)) + blur(12px) + 1px --border
+                          → karty nad ciemnym tłem (About, Tech Stack, Projekty, Footer)
+glass-solid (kryjące):    rgba(17,17,22,.55) + blur(12px) + 1px --border
+                          → duże panele nad ruchomą aurorą, gdzie krycie chroni czytelność (Kontakt)
 ```
 
 ---

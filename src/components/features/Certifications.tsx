@@ -1,11 +1,19 @@
 "use client";
 
 import { useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+  useAnimationFrame,
+  type MotionValue,
+} from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import Image from "next/image";
 import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const CERT_CATEGORY: Record<string, string> = {
   cert_js:        "Frontend",
@@ -26,258 +34,229 @@ const CERT_CATEGORY: Record<string, string> = {
 
 type Certificate = (typeof data.certificates)[number];
 const certs = data.certificates;
+const N = certs.length;
+const STEP = 360 / N;              // kąt między kartami
+const DRAG_SENS = 0.12;            // stopni obrotu na 1px przeciągnięcia (łagodne)
+const AUTO_SPEED = 4.5;            // stopni/sek auto-obrotu (powoli)
 
-const CARD_W = 280;
-const CARD_GAP = 20;
-const CARD_STEP = CARD_W + CARD_GAP;
+const catOf = (cert: Certificate) => CERT_CATEGORY[cert.key] ?? "Inne";
 
-// ─── Card ─────────────────────────────────────────────────────────────────────
+// Normalizuj kąt do (-180, 180]; 0 = karta na wprost
+const wrapDeg = (a: number) => {
+  a %= 360;
+  if (a > 180) a -= 360;
+  if (a < -180) a += 360;
+  return a;
+};
 
-function CertCard({
+// ─── Karta na pierścieniu 3D ────────────────────────────────────────────────────
+
+function RingCard({
   cert,
-  index,
-  total,
-  trackX,
-  cardIndex,
-  containerWidth,
-  wasDragged,
-  onOpen,
+  i,
+  radius,
+  cardW,
+  cardH,
+  rotation,
+  isActive,
+  onClick,
 }: {
   cert: Certificate;
-  index: number;
-  total: number;
-  trackX: ReturnType<typeof useMotionValue<number>>;
-  cardIndex: number;
-  containerWidth: number;
-  wasDragged: React.RefObject<boolean>;
-  onOpen: () => void;
+  i: number;
+  radius: number;
+  cardW: number;
+  cardH: number;
+  rotation: MotionValue<number>;
+  isActive: boolean;
+  onClick: () => void;
 }) {
-  const centerX = (containerWidth - CARD_W) / 2 - cardIndex * CARD_STEP;
+  const theta = STEP * i;
+  const eff = useTransform(rotation, (r) => wrapDeg(theta + r));
 
-  const scale = useTransform(
-    trackX,
-    [centerX - CARD_STEP, centerX, centerX + CARD_STEP],
-    [0.82, 1.10, 0.82]
-  );
-  const opacity = useTransform(
-    trackX,
-    [centerX - CARD_STEP * 1.5, centerX, centerX + CARD_STEP * 1.5],
-    [0.50, 1.0, 0.50]
-  );
-  // Increase border-radius as card scales up so it stays visually round
-  const borderRadius = useTransform(
-    trackX,
-    [centerX - CARD_STEP * 0.7, centerX, centerX + CARD_STEP * 0.7],
-    ["16px", "26px", "16px"]
-  );
-  // Center proximity: 0 = far, 1 = perfectly centered — drives border glow
-  const centerProximity = useTransform(
-    trackX,
-    [centerX - CARD_STEP * 0.6, centerX, centerX + CARD_STEP * 0.6],
-    [0, 1, 0]
-  );
-  const cardBorderColor = useTransform(
-    centerProximity,
-    [0, 1],
-    ["rgba(255,255,255,0.08)", "rgba(0,212,255,1)"]
-  );
-  const cardGlow = useTransform(
-    centerProximity,
-    [0, 1],
-    ["0 0 0px rgba(0,212,255,0)", "0 0 18px rgba(0,212,255,0.30), 0 0 36px rgba(0,212,255,0.12)"]
-  );
+  // Przód znacznie większy niż boki
+  const scale = useTransform(eff, (a) => Math.max(0.46, 1 - (Math.abs(a) / STEP) * 0.3));
+  const opacity = useTransform(eff, (a) => (Math.abs(a) >= 112 ? 0 : 1));
+  // Boki głęboko w cieniu, przód w pełni jasny
+  const darken = useTransform(eff, (a) => Math.min(0.9, (Math.abs(a) / STEP) * 0.68));
+  // Poświata aurory tylko na wprost
+  const glow = useTransform(eff, (a) => Math.max(0, 1 - Math.abs(a) / (STEP * 0.6)));
 
-  const category = CERT_CATEGORY[cert.key] ?? "Inne";
-  const idx = String(index).padStart(2, "0");
-  const tot = String(total).padStart(2, "0");
-
-  const handleClick = () => {
-    if (wasDragged.current) return;
-    onOpen();
-  };
+  const category = catOf(cert);
 
   return (
-    <motion.div
-      style={{ scale, opacity, width: CARD_W, flexShrink: 0, borderRadius }}
-      className="group relative flex cursor-pointer flex-col"
-      onClick={handleClick}
+    <div
+      className="absolute left-1/2 top-1/2"
+      style={{
+        width: cardW,
+        height: cardH,
+        marginLeft: -cardW / 2,
+        marginTop: -cardH / 2,
+        transform: `rotateY(${theta}deg) translateZ(${radius}px)`,
+        transformStyle: "preserve-3d",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+      }}
+      onClick={onClick}
       role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onOpen()}
-      aria-label={`Podgląd certyfikatu: ${cert.title}`}
+      aria-label={`Certyfikat: ${cert.title}`}
     >
-      {/* Card shell */}
-      <motion.div
-        className="relative flex h-full flex-col overflow-hidden"
-        style={{
-          borderRadius,
-          background: "var(--bg-surface)",
-          border: "1px solid",
-          borderColor: cardBorderColor,
-          boxShadow: cardGlow,
-        }}
-      >
-        {/* Thumbnail */}
+      <motion.div className="relative h-full w-full" style={{ opacity, scale }}>
+        {/* Rama certyfikatu */}
         <div
-          className="relative h-44 w-full overflow-hidden"
-          onMouseDown={(e) => e.preventDefault()}
+          className="relative h-full w-full overflow-hidden rounded-2xl"
+          style={{ border: "1px solid var(--border)", background: "var(--bg-elevated)" }}
         >
           <Image
             src={cert.file}
             alt={cert.title}
             fill
             draggable={false}
-            sizes="280px"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03] select-none"
-            style={{ filter: "brightness(0.82)", userSelect: "none", WebkitUserSelect: "none" }}
+            sizes="320px"
+            className="select-none object-cover"
+            style={{ userSelect: "none", WebkitUserSelect: "none" }}
           />
-          <div className="absolute left-3 top-3">
-            <span
-              className="rounded-full px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider"
-              style={{
-                background: "rgba(5,5,5,0.72)",
-                border: "1px solid rgba(0,212,255,0.35)",
-                color: "var(--accent)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              {category}
-            </span>
-          </div>
+          {/* Górny scrim — subtelna winieta na górze karty */}
           <div
-            className="absolute right-3 top-3 font-mono text-[10px]"
-            style={{ color: "rgba(255,255,255,0.5)", textShadow: "0 1px 4px rgba(0,0,0,0.8)" }}
-          >
-            {idx} / {tot}
-          </div>
-        </div>
-
-        {/* Content */}
-        <div className="flex flex-1 flex-col justify-between p-4">
-          <p
-            className="mb-3 text-[13px] font-semibold leading-snug"
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-14"
+            style={{ background: "linear-gradient(to bottom, rgba(9,9,11,0.7), transparent)" }}
+          />
+          {/* Badge kategorii — prawy dolny róg (czyste białe tło certyfikatu) */}
+          <span
+            className="absolute bottom-3 right-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider"
             style={{
-              color: "var(--text)",
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical" as const,
-              overflow: "hidden",
+              background: "rgba(9,9,11,0.55)",
+              border: "1px solid rgba(0,212,255,0.35)",
+              color: "var(--accent)",
             }}
           >
-            {cert.title}
-          </p>
-          <div className="flex items-center justify-between gap-2">
-            <p className="truncate font-mono text-[10px]" style={{ color: "var(--text-muted)" }}>
-              {cert.platform} · {cert.hours}h
-            </p>
-            <div
-              className="flex flex-shrink-0 items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-              style={{ color: "var(--accent)" }}
-            >
-              <Maximize2 size={11} />
-              <span className="font-mono text-[10px]">podgląd</span>
-            </div>
-          </div>
+            {category}
+          </span>
+
+          {/* Cień kart bocznych */}
+          <motion.div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: "#000", opacity: darken }}
+          />
+
+          {/* Smuga-skan na aktywnej karcie */}
+          {isActive && (
+            <motion.div
+              key={`sweep-${i}`}
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0"
+              style={{
+                height: "55%",
+                background:
+                  "linear-gradient(180deg, transparent 0%, rgba(0,212,255,0.16) 42%, rgba(52,211,153,0.12) 58%, transparent 100%)",
+              }}
+              initial={{ y: "-60%", opacity: 0 }}
+              animate={{ y: "170%", opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 0.75, ease: "easeInOut" }}
+            />
+          )}
         </div>
+
+        {/* Poświata aurory — rama przedniej karty */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-2xl"
+          style={{
+            opacity: glow,
+            border: "1px solid rgba(0,212,255,0.85)",
+            boxShadow: "0 0 26px 1px rgba(0,212,255,0.32), 0 0 70px rgba(52,211,153,0.14)",
+          }}
+        />
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
-// ─── Certificate list ──────────────────────────────────────────────────────────
+// ─── Lista wszystkich certyfikatów (pod karuzelą) ───────────────────────────────
 
-function CertList({ onOpen }: { onOpen: (i: number) => void }) {
+function CertList({
+  activeIndex,
+  onOpen,
+}: {
+  activeIndex: number;
+  onOpen: (i: number) => void;
+}) {
   return (
-    <div
-      className="mt-12 overflow-hidden rounded-2xl"
-      style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
-    >
-      {/* Header */}
-      <div
-        className="flex items-center justify-between px-5 py-3"
-        style={{ borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.02)" }}
-      >
-        <span className="font-mono text-[11px]" style={{ color: "var(--text-subtle)" }}>
-          {"// wszystkie certyfikaty"}
+    <div className="mt-12">
+      <div className="mb-3 flex items-center justify-between">
+        <span
+          className="text-[11px] font-medium uppercase tracking-[0.18em]"
+          style={{ color: "var(--text-muted)" }}
+        >
+          Wszystkie certyfikaty
         </span>
-        <span className="font-mono text-[11px]" style={{ color: "var(--text-subtle)" }}>
-          {certs.length} pozycji
+        <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
+          {N} pozycji
         </span>
       </div>
 
-      {/* Rows */}
-      <div>
+      <div className="grid gap-2 sm:grid-cols-2">
         {certs.map((cert, i) => {
-          const category = CERT_CATEGORY[cert.key] ?? "Inne";
+          const isActive = i === activeIndex;
           return (
             <button
               key={cert.key}
               onClick={() => onOpen(i)}
-              className="group flex w-full items-center gap-4 px-5 py-3 text-left transition-all duration-200"
+              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-200 sm:items-center"
               style={{
-                borderBottom: i < certs.length - 1 ? "1px solid var(--border)" : "none",
+                background: isActive ? "rgba(0,212,255,0.06)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${isActive ? "rgba(0,212,255,0.30)" : "var(--border)"}`,
               }}
               onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.background = "rgba(0,212,255,0.04)";
-                el.style.borderLeft = "2px solid rgba(0,212,255,0.50)";
-                el.style.paddingLeft = "18px";
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border-hover)";
               }}
               onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.background = "";
-                el.style.borderLeft = "";
-                el.style.paddingLeft = "";
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
+              }}
+              onFocus={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border-hover)";
+              }}
+              onBlur={(e) => {
+                if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
               }}
             >
-              {/* Index */}
               <span
-                className="w-7 flex-shrink-0 font-mono text-[10px]"
-                style={{ color: "var(--text-subtle)" }}
+                className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
+                style={{ color: isActive ? "var(--accent)" : "var(--text-muted)" }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
-
-              {/* Category badge  */}
               <span
-                className="flex-shrink-0 rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider"
+                className="shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
                 style={{
                   background: "rgba(0,212,255,0.08)",
                   border: "1px solid rgba(0,212,255,0.20)",
                   color: "var(--accent)",
-                  minWidth: 56,
+                  minWidth: 60,
                   textAlign: "center",
                 }}
               >
-                {category}
+                {catOf(cert)}
               </span>
-
-              {/* Title  */}
               <span
-                className="flex-1 truncate text-[13px] font-medium transition-colors duration-200 group-hover:text-[var(--text)]"
-                style={{ color: "var(--text-muted)" }}
+                className="min-w-0 flex-1 break-words text-[13px] leading-snug sm:truncate"
+                style={{
+                  color: isActive ? "var(--text)" : "var(--text-muted)",
+                  fontWeight: isActive ? 600 : 400,
+                }}
               >
                 {cert.title}
               </span>
-
-              {/* Meta */}
               <span
-                className="hidden flex-shrink-0 font-mono text-[11px] sm:block"
-                style={{ color: "var(--text-subtle)" }}
-              >
-                {cert.platform}
-              </span>
-              <span
-                className="flex-shrink-0 font-mono text-[11px]"
-                style={{ color: "var(--text-subtle)", minWidth: 36, textAlign: "right" }}
+                className="hidden shrink-0 font-mono text-[11px] tabular-nums sm:block"
+                style={{ color: "var(--text-muted)" }}
               >
                 {cert.hours}h
               </span>
-
-              {/* Arrow hint */}
               <Maximize2
-                size={12}
-                className="flex-shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                size={13}
+                className="hidden shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
                 style={{ color: "var(--accent)" }}
               />
             </button>
@@ -288,7 +267,271 @@ function CertList({ onOpen }: { onOpen: (i: number) => void }) {
   );
 }
 
-// ─── Lightbox ─────────────────────────────────────────────────────────────────
+// ─── Karuzela 3D ────────────────────────────────────────────────────────────────
+
+function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused: boolean }) {
+  const reduced = usePrefersReducedMotion();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const rotation = useMotionValue(0);
+  const targetRef = useRef<number | null>(null);
+  const activeRef = useRef(0);
+  const draggingRef = useRef(false);
+  const draggedRef = useRef(false);
+  const capturedRef = useRef(false);
+  const startXRef = useRef(0);
+  const startRotRef = useRef(0);
+
+  // Wymiary sceny
+  const cardW = Math.min(300, Math.max(190, Math.round(containerWidth * 0.3)));
+  const cardH = Math.round(cardW / 1.414);
+  const radius = Math.round((cardW / 2) / Math.tan(Math.PI / N) * 1.18);
+  const perspective = Math.round(radius * 2.5);
+  const stageH = Math.round(cardH * 2.15);
+
+  useLayoutEffect(() => {
+    if (stageRef.current) setContainerWidth(stageRef.current.clientWidth);
+  }, []);
+
+  useEffect(() => {
+    if (!stageRef.current) return;
+    const ro = new ResizeObserver(([entry]) => setContainerWidth(entry.contentRect.width));
+    ro.observe(stageRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  // Pętla: auto-obrót / dojazd do celu / aktualizacja aktywnej karty
+  useAnimationFrame((_, delta) => {
+    if (reduced) return;
+    const dt = Math.min(delta, 50) / 1000;
+    if (draggingRef.current) {
+      // rotacja ustawiana przez pointer
+    } else if (targetRef.current !== null) {
+      const r = rotation.get();
+      const diff = targetRef.current - r;
+      if (Math.abs(diff) < 0.2) {
+        rotation.set(targetRef.current);
+        targetRef.current = null;
+      } else {
+        rotation.set(r + diff * Math.min(1, dt * 6));
+      }
+    } else if (!paused) {
+      rotation.set(rotation.get() - AUTO_SPEED * dt);
+    }
+    const idx = ((Math.round(-rotation.get() / STEP) % N) + N) % N;
+    if (idx !== activeRef.current) {
+      activeRef.current = idx;
+      setActiveIndex(idx);
+    }
+  });
+
+  // Dojazd do konkretnego indeksu najkrótszą drogą
+  const goToIndex = useCallback((i: number) => {
+    const r = rotation.get();
+    const base = -i * STEP;
+    targetRef.current = base + Math.round((r - base) / 360) * 360;
+  }, [rotation]);
+
+  const step = useCallback((dir: 1 | -1) => {
+    const curV = Math.round(-rotation.get() / STEP);
+    targetRef.current = -(curV + dir) * STEP;
+  }, [rotation]);
+
+  // Pointer drag (działa też dla touch).
+  // Uwaga: przechwytujemy pointer DOPIERO po realnym ruchu (>4px), żeby
+  // zwykły klik w kartę nie był zjadany przez pointer-capture i otwierał lightbox.
+  const onPointerDown = (e: React.PointerEvent) => {
+    draggingRef.current = true;
+    draggedRef.current = false;
+    capturedRef.current = false;
+    startXRef.current = e.clientX;
+    startRotRef.current = rotation.get();
+    targetRef.current = null;
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+    const dx = e.clientX - startXRef.current;
+    if (Math.abs(dx) > 4) {
+      draggedRef.current = true;
+      if (!capturedRef.current) {
+        e.currentTarget.setPointerCapture?.(e.pointerId);
+        capturedRef.current = true;
+      }
+    }
+    if (draggedRef.current) rotation.set(startRotRef.current + dx * DRAG_SENS);
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    if (capturedRef.current) {
+      e.currentTarget.releasePointerCapture?.(e.pointerId);
+      capturedRef.current = false;
+    }
+    // brak snapu — auto-obrót płynnie wraca
+  };
+
+  const handleCardClick = (i: number) => {
+    if (draggedRef.current) return;
+    onOpen(i); // klik w dowolny kafelek → pełny podgląd
+  };
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+    else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(activeIndex); }
+  };
+
+  return (
+    <div className="mt-8">
+      {/* Scena 3D */}
+      <div
+        ref={stageRef}
+        role="group"
+        aria-label="Karuzela certyfikatów — przeciągnij lub użyj strzałek"
+        tabIndex={0}
+        onKeyDown={onKeyDown}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        className="relative mx-auto cursor-grab select-none active:cursor-grabbing"
+        style={{ height: stageH, perspective, perspectiveOrigin: "50% 45%", touchAction: "pan-y" }}
+      >
+        <motion.div
+          className="absolute inset-0"
+          style={{ transformStyle: "preserve-3d", rotateY: rotation, willChange: "transform" }}
+        >
+          {containerWidth > 0 &&
+            certs.map((cert, i) => (
+              <RingCard
+                key={cert.key}
+                cert={cert}
+                i={i}
+                radius={radius}
+                cardW={cardW}
+                cardH={cardH}
+                rotation={rotation}
+                isActive={i === activeIndex}
+                onClick={() => handleCardClick(i)}
+              />
+            ))}
+        </motion.div>
+
+        {/* Cień/podłoga */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-1 mx-auto h-10 w-2/3"
+          style={{
+            background: "radial-gradient(ellipse at center, rgba(0,212,255,0.10), transparent 70%)",
+            filter: "blur(8px)",
+          }}
+        />
+      </div>
+
+      {/* Nawigacja */}
+      <div className="mt-8 flex items-center justify-center gap-4">
+        <button
+          onClick={() => step(-1)}
+          className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200"
+          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.color = "var(--accent)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border)";
+            e.currentTarget.style.color = "var(--text-muted)";
+          }}
+          aria-label="Poprzedni certyfikat"
+        >
+          <ChevronLeft size={16} />
+        </button>
+
+        <div className="flex max-w-[220px] flex-wrap items-center justify-center gap-1.5">
+          {certs.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goToIndex(i)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === activeIndex ? 20 : 6,
+                height: 6,
+                background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
+              }}
+              aria-label={`Przejdź do certyfikatu ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => step(1)}
+          className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200"
+          style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.color = "var(--accent)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border)";
+            e.currentTarget.style.color = "var(--text-muted)";
+          }}
+          aria-label="Następny certyfikat"
+        >
+          <ChevronRight size={16} />
+        </button>
+      </div>
+
+      <p className="mt-4 text-center font-mono text-[11px]" style={{ color: "var(--text-muted)" }}>
+        Kręci się sam · przeciągnij, by obrócić · kliknij, by powiększyć · {String(activeIndex + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
+      </p>
+
+      {/* Pełna lista certyfikatów — pod karuzelą, czytelna */}
+      <CertList activeIndex={activeIndex} onOpen={onOpen} />
+    </div>
+  );
+}
+
+// ─── Fallback bez animacji (prefers-reduced-motion) ─────────────────────────────
+
+function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
+  return (
+    <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+      {certs.map((cert, i) => (
+        <button
+          key={cert.key}
+          onClick={() => onOpen(i)}
+          className="group overflow-hidden rounded-2xl text-left transition-colors duration-200"
+          style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
+        >
+          <div className="relative aspect-[1.414/1] w-full overflow-hidden">
+            <Image src={cert.file} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
+            <span
+              className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
+              style={{ background: "rgba(9,9,11,0.6)", border: "1px solid rgba(0,212,255,0.3)", color: "var(--accent)" }}
+            >
+              {catOf(cert)}
+            </span>
+          </div>
+          <div className="p-3">
+            <p
+              className="text-[13px] font-medium leading-snug"
+              style={{ color: "var(--text)", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
+            >
+              {cert.title}
+            </p>
+            <p className="mt-1 font-mono text-[10px]" style={{ color: "var(--text-muted)" }}>
+              {cert.platform} · {cert.hours}h
+            </p>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Lightbox (jeden akcent — cyan) ─────────────────────────────────────────────
 
 function Lightbox({
   activeIndex,
@@ -329,7 +572,7 @@ function Lightbox({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.22 }}
         className="fixed inset-0 z-[100] cursor-pointer"
-        style={{ background: "rgba(0,0,0,0.88)", backdropFilter: "blur(12px)" }}
+        style={{ background: "rgba(9,9,11,0.82)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
         onClick={onClose}
         aria-hidden
       />
@@ -345,14 +588,14 @@ function Lightbox({
       >
         <button
           className="pointer-events-auto absolute left-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-xl transition-all duration-200 md:left-6"
-          style={{ background: "rgba(23,23,23,0.9)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          style={{ background: "rgba(24,24,31,0.9)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.45)";
-            (e.currentTarget as HTMLElement).style.color = "var(--accent)";
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.color = "var(--accent)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-            (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+            e.currentTarget.style.borderColor = "var(--border)";
+            e.currentTarget.style.color = "var(--text-muted)";
           }}
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
           aria-label="Poprzedni certyfikat"
@@ -364,21 +607,21 @@ function Lightbox({
           className="pointer-events-auto relative w-full max-w-3xl overflow-hidden rounded-2xl"
           style={{
             background: "var(--bg-elevated)",
-            border: "1px solid rgba(0,212,255,0.25)",
-            boxShadow: "0 0 80px rgba(0,212,255,0.12)",
+            border: "1px solid rgba(0,212,255,0.28)",
+            boxShadow: "0 0 90px rgba(0,212,255,0.14)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
           <button
             className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200"
-            style={{ background: "rgba(0,0,0,0.6)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+            style={{ background: "rgba(9,9,11,0.6)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--text)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.40)";
+              e.currentTarget.style.color = "var(--text)";
+              e.currentTarget.style.borderColor = "var(--border-hover)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-              (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
+              e.currentTarget.style.color = "var(--text-muted)";
+              e.currentTarget.style.borderColor = "var(--border)";
             }}
             onClick={onClose}
             aria-label="Zamknij podgląd"
@@ -409,27 +652,23 @@ function Lightbox({
 
           <div
             className="flex items-center justify-between px-5 py-3"
-            style={{ borderTop: "1px solid var(--border)" }}
+            style={{ borderTop: "1px solid var(--border)", background: "rgba(255,255,255,0.02)" }}
           >
             <div>
               <div className="mb-1">
                 <span
-                  className="rounded-full px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider"
-                  style={{
-                    background: "rgba(0,212,255,0.10)",
-                    border: "1px solid rgba(0,212,255,0.22)",
-                    color: "var(--accent)",
-                  }}
+                  className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
+                  style={{ background: "rgba(0,212,255,0.10)", border: "1px solid rgba(0,212,255,0.24)", color: "var(--accent)" }}
                 >
-                  {CERT_CATEGORY[cert.key] ?? "Inne"}
+                  {catOf(cert)}
                 </span>
               </div>
               <p className="text-sm font-medium" style={{ color: "var(--text)" }}>{cert.title}</p>
-              <p className="mt-0.5 font-mono text-xs" style={{ color: "var(--text-muted)" }}>
+              <p className="mt-0.5 font-mono text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
                 {cert.platform} · {cert.hours}h
               </p>
             </div>
-            <span className="flex-shrink-0 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
+            <span className="flex-shrink-0 font-mono text-xs tabular-nums" style={{ color: "var(--text-muted)" }}>
               {String(activeIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -437,14 +676,14 @@ function Lightbox({
 
         <button
           className="pointer-events-auto absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-xl transition-all duration-200 md:right-6"
-          style={{ background: "rgba(23,23,23,0.9)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          style={{ background: "rgba(24,24,31,0.9)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.45)";
-            (e.currentTarget as HTMLElement).style.color = "var(--accent)";
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.color = "var(--accent)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-            (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
+            e.currentTarget.style.borderColor = "var(--border)";
+            e.currentTarget.style.color = "var(--text-muted)";
           }}
           onClick={(e) => { e.stopPropagation(); onNext(); }}
           aria-label="Następny certyfikat"
@@ -459,72 +698,9 @@ function Lightbox({
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export default function Certifications() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [activeIndex, setActiveIndex] = useState(5);
+  const reduced = usePrefersReducedMotion();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const total = certs.length;
-
-  const trackX = useMotionValue(0);
-  // Track whether the user actually dragged (to distinguish from a click)
-  const wasDragged = useRef(false);
-
-  // Measure container synchronously before first paint to avoid initial position flash
-  useLayoutEffect(() => {
-    if (!containerRef.current) return;
-    const w = containerRef.current.clientWidth;
-    setContainerWidth(w);
-    // Center card 5 (middle of 11) immediately, no animation
-    trackX.set((w - CARD_W) / 2 - 5 * CARD_STEP);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Keep container width in sync on resize
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const w = entry.contentRect.width;
-      setContainerWidth(w);
-      // Re-center active card on resize (no animation, instant)
-      trackX.set((w - CARD_W) / 2 - activeIndex * CARD_STEP);
-    });
-    ro.observe(containerRef.current);
-    return () => ro.disconnect();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeIndex]);
-
-  const goTo = useCallback(
-    (index: number) => {
-      const clamped = Math.max(0, Math.min(index, total - 1));
-      setActiveIndex(clamped);
-      const targetX = (containerWidth - CARD_W) / 2 - clamped * CARD_STEP;
-      animate(trackX, targetX, { type: "spring", stiffness: 320, damping: 32 });
-    },
-    [containerWidth, total, trackX]
-  );
-
-  const handleDragStart = useCallback(() => {
-    wasDragged.current = false;
-  }, []);
-
-  const handleDrag = useCallback((_: unknown, info: { offset: { x: number } }) => {
-    if (Math.abs(info.offset.x) > 5) wasDragged.current = true;
-  }, []);
-
-  const handleDragEnd = useCallback(
-    (_: unknown, info: { offset: { x: number } }) => {
-      const threshold = 40;
-      if (info.offset.x < -threshold) goTo(activeIndex + 1);
-      else if (info.offset.x > threshold) goTo(activeIndex - 1);
-      else goTo(activeIndex);
-      // Allow a tick before resetting so onClick sees the correct value
-      setTimeout(() => { wasDragged.current = false; }, 0);
-    },
-    [activeIndex, goTo]
-  );
-
-  const dragLeft  = containerWidth > 0 ? (containerWidth - CARD_W) / 2 - (total - 1) * CARD_STEP : -9999;
-  const dragRight = containerWidth > 0 ? (containerWidth - CARD_W) / 2 : 9999;
 
   const openLightbox  = useCallback((i: number) => setLightboxIndex(i), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -539,120 +715,21 @@ export default function Certifications() {
 
   return (
     <>
-      <section id="certifications" className="relative px-6 py-16 md:py-20">
+      <section id="certifications" aria-labelledby="certifications-heading" className="relative overflow-hidden px-6 py-16 md:py-20">
+        {/* Ambient aurora — cyan + szept emerald */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full opacity-[0.04] blur-3xl"
-          style={{ background: "radial-gradient(circle, #00d4ff 0%, transparent 70%)" }}
+          className="pointer-events-none absolute left-1/2 top-1/4 h-80 w-[42rem] -translate-x-1/2 opacity-[0.06] blur-3xl"
+          style={{
+            background:
+              "radial-gradient(60% 100% at 40% 50%, #00d4ff 0%, transparent 70%), radial-gradient(55% 100% at 65% 50%, #34d399 0%, transparent 70%)",
+          }}
         />
 
         <div className="mx-auto max-w-6xl">
-          <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="// achievements.log" />
+          <SectionHeader index="02" total="05" title="CERTYFIKATY" subtitle="Kursy ukończone na Udemy" headingId="certifications-heading" />
 
-          {/* Carousel */}
-          <div
-            ref={containerRef}
-            className="relative mt-8 py-6"
-            style={{ cursor: "grab", overflowX: "clip" }}
-          >
-            <motion.div
-              drag="x"
-              dragConstraints={{ left: dragLeft, right: dragRight }}
-              dragElastic={0.06}
-              onDragStart={handleDragStart}
-              onDrag={handleDrag}
-              onDragEnd={handleDragEnd}
-              style={{ x: trackX, display: "flex", gap: CARD_GAP }}
-              className="select-none"
-              whileTap={{ cursor: "grabbing" }}
-            >
-              {certs.map((cert, i) => (
-                <CertCard
-                  key={cert.key}
-                  cert={cert}
-                  index={i + 1}
-                  total={total}
-                  trackX={trackX}
-                  cardIndex={i}
-                  containerWidth={containerWidth}
-                  wasDragged={wasDragged}
-                  onOpen={() => openLightbox(i)}
-                />
-              ))}
-            </motion.div>
-
-            {/* Fade masks */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-0 w-20"
-              style={{ background: "linear-gradient(to right, var(--bg-base), transparent)" }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-20"
-              style={{ background: "linear-gradient(to left, var(--bg-base), transparent)" }}
-            />
-          </div>
-
-          {/* Navigation */}
-          <div className="mt-5 flex items-center justify-center gap-4">
-            <button
-              onClick={() => goTo(activeIndex - 1)}
-              disabled={activeIndex === 0}
-              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 disabled:opacity-25"
-              style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
-              onMouseEnter={(e) => {
-                if (activeIndex === 0) return;
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.40)";
-                (e.currentTarget as HTMLElement).style.color = "var(--accent)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-              }}
-              aria-label="Poprzedni certyfikat"
-            >
-              <ChevronLeft size={16} />
-            </button>
-
-            <div className="flex items-center gap-1.5">
-              {certs.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className="rounded-full transition-all duration-300"
-                  style={{
-                    width: i === activeIndex ? 20 : 6,
-                    height: 6,
-                    background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
-                  }}
-                  aria-label={`Przejdź do certyfikatu ${i + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              onClick={() => goTo(activeIndex + 1)}
-              disabled={activeIndex === total - 1}
-              className="flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 disabled:opacity-25"
-              style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", color: "var(--text-muted)" }}
-              onMouseEnter={(e) => {
-                if (activeIndex === total - 1) return;
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.40)";
-                (e.currentTarget as HTMLElement).style.color = "var(--accent)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "var(--border)";
-                (e.currentTarget as HTMLElement).style.color = "var(--text-muted)";
-              }}
-              aria-label="Następny certyfikat"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </div>
-
-          {/* Certificate list */}
-          <CertList onOpen={openLightbox} />
+          {reduced ? <CertGrid onOpen={openLightbox} /> : <RingCarousel onOpen={openLightbox} paused={lightboxIndex !== null} />}
         </div>
       </section>
 

@@ -11,21 +11,19 @@ const config: Config = {
       colors: {
         accent:     "#00d4ff",
         "accent-dim":  "#38bdf8",
-        "bg-base":     "#050505",
-        "bg-surface":  "#0f0f0f",
-        "bg-elevated": "#171717",
+        "accent-2":     "#34d399",
+        "bg-base":     "#09090b",
+        "bg-surface":  "#111116",
+        "bg-elevated": "#18181f",
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-geist-mono)", "monospace"],
       },
-      backgroundImage: {
-        "gradient-accent":
-          "linear-gradient(135deg, #f1f5f9 0%, #00d4ff 100%)",
-      },
       boxShadow: {
         accent: "0 0 30px rgba(0, 212, 255, 0.15)",
         "accent-lg": "0 0 60px rgba(0, 212, 255, 0.20)",
+        "accent-2": "0 0 30px rgba(52, 211, 153, 0.15)",
       },
       animation: {
         "blob-morph": "blobMorph 8s ease-in-out infinite",

@@ -1,297 +1,379 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
 import { ExternalLink } from "lucide-react";
 import data from "@/config/data";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
-const springConfig = { stiffness: 260, damping: 28 };
+const SLIDE_INTERVAL_MS = 3500;
 
-function toSlug(title: string) {
+type Project = (typeof data.projects)[number];
+
+// Monogram z tytułu (fallback podglądu dla projektów bez zrzutów)
+function monogram(title: string) {
   return title
-    .toLowerCase()
-    .replace(/[\s_]+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
+    .split(/[\s—–-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }
 
-function repoName(githubUrl: string) {
-  return githubUrl.split("/").pop() ?? "repo";
-}
-
-function padIndex(n: number, total: number) {
-  return `${String(n).padStart(2, "0")}/${String(total).padStart(2, "0")}`;
-}
-
-function ProjectCard({
-  project,
-  index,
-  total,
-  delay,
-}: {
-  project: (typeof data.projects)[number];
-  index: number;
-  total: number;
-  delay: number;
-}) {
+// ─── Auto-slideshow screenów (crossfade) ──────────────────────────
+function ProjectScreenshots({ images, alt }: { images: string[]; alt: string }) {
   const reduced = usePrefersReducedMotion();
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [idx, setIdx] = useState(0);
 
-  const rawX = useMotionValue(0);
-  const rawY = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(rawY, [-1, 1], [6, -6]), springConfig);
-  const rotateY = useSpring(useTransform(rawX, [-1, 1], [-6, 6]), springConfig);
-  const glowX = useSpring(useTransform(rawX, [-1, 1], [0, 100]), springConfig);
-  const glowY = useSpring(useTransform(rawY, [-1, 1], [0, 100]), springConfig);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduced || !cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    rawX.set(x);
-    rawY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    rawX.set(0);
-    rawY.set(0);
-  };
-
-  const slug = toSlug(project.title);
-  const repo = project.github ? repoName(project.github) : slug;
+  useEffect(() => {
+    if (reduced || images.length < 2) return;
+    const id = setInterval(
+      () => setIdx((i) => (i + 1) % images.length),
+      SLIDE_INTERVAL_MS
+    );
+    return () => clearInterval(id);
+  }, [reduced, images.length]);
 
   return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+    <div className="absolute inset-0" style={{ backgroundColor: "var(--bg-elevated)" }}>
+      {images.map((src, i) => (
+        <motion.div
+          key={src}
+          className="absolute inset-0"
+          initial={false}
+          animate={{ opacity: i === idx ? 1 : 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+        >
+          <Image
+            src={src}
+            alt={i === 0 ? alt : ""}
+            fill
+            sizes="(max-width: 768px) 100vw, 1100px"
+            className="object-cover object-top"
+          />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// Fallback podglądu — aurora + monogram (projekty bez zrzutów)
+function FallbackPreview({ title, big = false }: { title: string; big?: boolean }) {
+  return (
+    <div
+      aria-hidden
+      className="absolute inset-0 grid place-items-center"
       style={{
-        rotateX: reduced ? 0 : rotateX,
-        rotateY: reduced ? 0 : rotateY,
-        transformStyle: "preserve-3d",
-        perspective: 800,
+        background:
+          "radial-gradient(120% 120% at 28% 18%, rgba(0,212,255,0.10), transparent 55%), radial-gradient(120% 120% at 82% 88%, rgba(52,211,153,0.08), transparent 55%), var(--bg-elevated)",
       }}
-      className="relative flex flex-col rounded-2xl"
     >
-      {/* Base background */}
-      <div
-        className="absolute inset-0 rounded-2xl"
+      <span
+        className={`font-mono font-bold tracking-tight ${big ? "text-5xl sm:text-6xl" : "text-lg"}`}
         style={{
-          backgroundColor: "var(--bg-surface)",
-          border: "1px solid var(--border)",
-          transition: "border-color 0.3s",
+          background: "var(--gradient-aurora)",
+          WebkitBackgroundClip: "text",
+          backgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          color: "transparent",
+          opacity: 0.9,
         }}
-      />
-
-      {/* Spotlight */}
-      <motion.div
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{
-          background: useTransform(
-            [glowX, glowY],
-            ([x, y]) =>
-              `radial-gradient(400px circle at ${x}% ${y}%, rgba(0,212,255,0.08) 0%, transparent 60%)`
-          ),
-        }}
-      />
-
-      {/* Content — lifted in Z */}
-      <div
-        className="relative flex flex-1 flex-col"
-        style={{ transform: "translateZ(10px)", borderRadius: "inherit" }}
       >
-        {/* Terminal header */}
-        <div
-          className="flex items-center justify-between rounded-t-2xl px-4 py-3"
+        {monogram(title)}
+      </span>
+    </div>
+  );
+}
+
+// Podgląd w dużej karcie: slideshow zrzutów lub fallback
+function DetailPreview({ project }: { project: Project }) {
+  const shots = project.screenshots ?? [];
+  if (shots.length > 0) {
+    return <ProjectScreenshots images={shots} alt={`${project.title} — zrzut ekranu`} />;
+  }
+  return <FallbackPreview title={project.title} big />;
+}
+
+// Podgląd w miniaturze: pierwszy zrzut (statyczny) lub fallback
+function ThumbPreview({ project }: { project: Project }) {
+  const shots = project.screenshots ?? [];
+  if (shots.length > 0) {
+    return (
+      <Image
+        src={shots[0]}
+        alt=""
+        fill
+        sizes="150px"
+        className="object-cover object-top"
+      />
+    );
+  }
+  return <FallbackPreview title={project.title} />;
+}
+
+// ─── Współdzielone kawałki treści ─────────────────────────────────
+function StackPills({ stack }: { stack: readonly string[] }) {
+  return (
+    <div className="mb-6 flex flex-wrap gap-2">
+      {stack.map((tech) => (
+        <span
+          key={tech}
+          className="rounded-full px-2.5 py-1 text-xs"
           style={{
-            background: "rgba(255,255,255,0.03)",
-            borderBottom: "1px solid var(--border)",
+            backgroundColor: "var(--bg-elevated)",
+            border: "1px solid var(--border)",
+            color: "var(--text-muted)",
           }}
         >
-          <div className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(255,255,255,0.12)" }} />
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(255,255,255,0.12)" }} />
-            <span className="h-3 w-3 rounded-full" style={{ background: "rgba(0,212,255,0.60)" }} />
-          </div>
-          <span
-            className="font-mono text-[11px]"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            ~/projects/{slug}
-          </span>
-          <span
-            className="font-mono text-[11px]"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            {padIndex(index, total)}
-          </span>
-        </div>
+          {tech}
+        </span>
+      ))}
+    </div>
+  );
+}
 
-        {/* Body */}
-        <div className="flex flex-1 flex-col p-5">
-          {/* Git clone line */}
-          <p
-            className="mb-4 font-mono text-xs"
-            style={{ color: "var(--text-subtle)" }}
-          >
-            <span style={{ color: "var(--accent)", opacity: 0.7 }}>$ </span>
-            git clone daniel-ciupek/{repo}
-            <span
-              className="ml-0.5 inline-block h-[1.1em] w-[7px] align-text-bottom"
-              style={{ background: "var(--accent)", opacity: 0.8, animation: "pulse 1.1s ease-in-out infinite" }}
-            />
-          </p>
+function ProjectLinks({ project }: { project: Project }) {
+  return (
+    <div className="relative z-10 flex flex-wrap items-center gap-3">
+      {project.github && (
+        <a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors duration-200"
+          style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "var(--accent)";
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "var(--text-muted)";
+            e.currentTarget.style.borderColor = "var(--border)";
+          }}
+        >
+          <FaGithub size={14} />
+          Kod
+        </a>
+      )}
+      {project.url && (
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-opacity duration-200 hover:opacity-90"
+          style={{ background: "var(--accent)", color: "var(--bg-base)" }}
+        >
+          <ExternalLink size={14} />
+          Live
+        </a>
+      )}
+    </div>
+  );
+}
 
-          {/* Title */}
-          <h3 className="mb-3 text-base font-semibold" style={{ color: "var(--text)" }}>
-            <span style={{ color: "var(--text-subtle)", marginRight: "0.35em" }}>#</span>
-            {project.title}
-          </h3>
-
-          {/* Description */}
-          <p
-            className="mb-5 flex-1 text-sm leading-relaxed"
-            style={{ color: "var(--text-muted)" }}
-          >
-            {project.description}
-          </p>
-
-          {/* Stack */}
-          <div className="mb-5">
-            <span
-              className="mb-2 block font-mono text-[11px] font-medium"
-              style={{ color: "var(--text-subtle)" }}
-            >
-              ▸ stack
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  className="flex items-center gap-1.5 rounded-md px-2.5 py-1 font-mono text-xs"
-                  style={{
-                    backgroundColor: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    color: "var(--text-muted)",
-                  }}
-                >
-                  <span
-                    className="inline-block h-1 w-1 rounded-full flex-shrink-0"
-                    style={{ background: "var(--accent)", opacity: 0.7 }}
-                  />
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Separator */}
-          <div
-            className="mb-4"
-            style={{
-              height: "1px",
-              background: "linear-gradient(90deg, rgba(0,212,255,0.20) 0%, transparent 100%)",
-            }}
-          />
-
-          {/* Action buttons */}
-          <div className="relative z-10 flex items-center gap-4">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
-                style={{ color: "var(--text-muted)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-              >
-                <FaGithub size={13} />
-                source →
-              </a>
-            )}
-            {project.url && (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="-my-2 flex items-center gap-1.5 py-2 font-mono text-xs transition-colors duration-200"
-                style={{ color: "var(--accent)" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--text)")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "var(--accent)")}
-              >
-                <ExternalLink size={12} />
-                live ↗
-              </a>
-            )}
-          </div>
+// ─── Miniatura w pasku selektora ──────────────────────────────────
+function Thumb({
+  project,
+  index,
+  active,
+  onSelect,
+  tabRef,
+}: {
+  project: Project;
+  index: number;
+  active: boolean;
+  onSelect: (i: number) => void;
+  tabRef: (el: HTMLButtonElement | null) => void;
+}) {
+  return (
+    <button
+      ref={tabRef}
+      role="tab"
+      aria-selected={active}
+      aria-controls="project-detail"
+      id={`project-tab-${index}`}
+      tabIndex={active ? 0 : -1}
+      onClick={() => onSelect(index)}
+      className="group w-32 flex-shrink-0 rounded-lg text-left sm:w-36"
+      style={{ opacity: active ? 1 : 0.55, transition: "opacity 0.2s" }}
+    >
+      <div
+        className="relative aspect-[16/10] overflow-hidden rounded-lg"
+        style={
+          active
+            ? {
+                padding: "1.5px",
+                background: "var(--gradient-aurora)",
+                boxShadow: "0 0 20px rgba(0,212,255,0.22)",
+              }
+            : { border: "1px solid var(--border)" }
+        }
+      >
+        <div className="relative h-full w-full overflow-hidden rounded-[6px]">
+          <ThumbPreview project={project} />
         </div>
       </div>
-    </motion.div>
+      <span
+        className="mt-2 block truncate text-xs transition-colors duration-200"
+        style={{ color: active ? "var(--accent)" : "var(--text-muted)" }}
+      >
+        {project.title}
+      </span>
+    </button>
+  );
+}
+
+// ─── Switcher: duża karta + pasek miniatur ────────────────────────
+function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
+  const reduced = usePrefersReducedMotion();
+  const [selected, setSelected] = useState(0);
+  const total = projects.length;
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const project = projects[selected];
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    let next = selected;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (selected + 1) % total;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (selected - 1 + total) % total;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = total - 1;
+    else return;
+    e.preventDefault();
+    setSelected(next);
+    tabRefs.current[next]?.focus();
+  };
+
+  return (
+    <div>
+      {/* Duża karta — glass, podgląd na górze */}
+      <div
+        id="project-detail"
+        role="tabpanel"
+        aria-labelledby={`project-tab-${selected}`}
+        className="overflow-hidden rounded-2xl"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid var(--border)",
+        }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selected}
+            initial={reduced ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
+            transition={{ duration: reduced ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div
+              className="relative h-[220px] w-full overflow-hidden sm:h-[300px] md:h-[380px]"
+              style={{ borderBottom: "1px solid var(--border)" }}
+            >
+              <DetailPreview project={project} />
+            </div>
+
+            <div className="p-6 md:p-8">
+              {selected === 0 && (
+                <span
+                  className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
+                  style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+                >
+                  Wyróżniony projekt
+                </span>
+              )}
+              <h3
+                className="mb-2 text-xl font-semibold md:text-2xl"
+                style={{ color: "var(--text)" }}
+              >
+                {project.title}
+              </h3>
+              <p
+                className="mb-5 max-w-3xl text-sm leading-relaxed md:text-[15px]"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {project.description}
+              </p>
+              <StackPills stack={project.stack} />
+              <ProjectLinks project={project} />
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Nagłówek selektora + licznik */}
+      <div className="mb-3 mt-8 flex items-center justify-between">
+        <span
+          className="font-mono text-[11px] uppercase tracking-[0.16em]"
+          style={{ color: "var(--text-muted)" }}
+        >
+          Wszystkie projekty
+        </span>
+        <span
+          className="font-mono text-[11px] tabular-nums"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {String(selected + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+        </span>
+      </div>
+
+      {/* Pasek miniatur */}
+      <div
+        role="tablist"
+        aria-label="Wybór projektu"
+        onKeyDown={onKeyDown}
+        className="flex gap-3 overflow-x-auto pb-2"
+      >
+        {projects.map((p, i) => (
+          <Thumb
+            key={p.title}
+            project={p}
+            index={i}
+            active={i === selected}
+            onSelect={setSelected}
+            tabRef={(el) => {
+              tabRefs.current[i] = el;
+            }}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
 export default function Projects() {
   const projects = data.projects;
-  const total = projects.length;
 
   return (
-    <section id="projects" className="relative px-6 py-16 md:py-20">
+    <section id="projects" aria-labelledby="projects-heading" className="relative px-6 py-16 md:py-20">
       <div
         aria-hidden
         className="pointer-events-none absolute left-0 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-5 blur-3xl"
         style={{ background: "radial-gradient(circle, #00d4ff 0%, transparent 70%)" }}
       />
 
-      <div className="mx-auto max-w-6xl" style={{ perspective: "1200px" }}>
-        <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="// projects/" />
+      <div className="mx-auto max-w-6xl">
+        <SectionHeader index="04" total="05" title="PROJEKTY" headingId="projects-heading" />
 
-        {/* Empty state */}
-        {projects.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+        {projects.length === 0 ? (
+          <div
             className="rounded-2xl p-8"
             style={{
               backgroundColor: "var(--bg-surface)",
               border: "1px solid var(--border)",
             }}
           >
-            <p className="mb-2 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
-              <span style={{ color: "var(--accent)", opacity: 0.7 }}>$ </span>
-              ls projects/
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              Uzupełnij <code>projects[]</code> w <code>src/config/data.ts</code>.
             </p>
-            <p className="font-mono text-sm" style={{ color: "var(--text-muted)" }}>
-              directory is empty
-            </p>
-            <p className="mt-1 font-mono text-xs" style={{ color: "var(--text-subtle)" }}>
-              Uzupełnij <code>projects[]</code> w <code>src/config/data.ts</code>
-            </p>
-          </motion.div>
-        )}
-
-        {/* Project grid */}
-        {projects.length > 0 && (
-          <div className="grid gap-6 lg:grid-cols-2">
-            {projects.map((project, i) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={i + 1}
-                total={total}
-                delay={i * 0.08}
-              />
-            ))}
           </div>
+        ) : (
+          <ProjectSwitcher projects={projects} />
         )}
       </div>
     </section>

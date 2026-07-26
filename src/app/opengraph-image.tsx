@@ -28,7 +28,7 @@ export default function Image() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "72px 80px",
-          backgroundColor: "#050505",
+          backgroundColor: "#09090b",
           backgroundImage: `radial-gradient(720px circle at 84% 50%, rgba(0,212,255,0.20) 0%, transparent 55%)`,
           color: "#F1F5F9",
           fontFamily: "sans-serif",

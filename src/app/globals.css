@@ -5,23 +5,30 @@
 /* ─── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg-base:     #050505;
-  --bg-surface:  #0f0f0f;
-  --bg-elevated: #171717;
+  --bg-base:     #09090b;
+  --bg-surface:  #111116;
+  --bg-elevated: #18181f;
 
   /* Borders */
   --border:       rgba(255, 255, 255, 0.08);
   --border-hover: rgba(0, 212, 255, 0.30);
 
-  /* Accent — neon blue */
+  /* Accent — primary (neon cyan) */
   --accent:      #00d4ff;
   --accent-dim:  #38bdf8;
   --accent-glow: rgba(0, 212, 255, 0.15);
 
+  /* Accent — secondary (emerald), subtle second tone */
+  --accent-2:      #34d399;
+  --accent-2-glow: rgba(52, 211, 153, 0.15);
+
+  /* Gradient sygnaturowy (aurora cyan→emerald) — jedno źródło prawdy */
+  --gradient-aurora: linear-gradient(135deg, #00d4ff, #34d399);
+
   /* Text */
   --text:        #f1f5f9;
-  --text-muted:  #64748b;
-  --text-subtle: #334155;
+  --text-muted:  #7c8a9c; /* WCAG AA: 5.4–5.7:1 na tłach v2 (poprz. #64748b ≈ 4.2:1) */
+  --text-subtle: #334155; /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
 
   /* Fonts (injected by Next.js layout) */
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
@@ -33,6 +40,19 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* ─── Widoczny focus dla klawiatury (WCAG 2.4.7) ─────────────────
+   Globalny ring dla WSZYSTKICH interaktywnych elementów. :focus-visible
+   (nie :focus) pokazuje go tylko przy nawigacji klawiaturą — klik myszą
+   go nie wywołuje, więc wygląd dla myszy się nie zmienia. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.16);
+}
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 html {
@@ -67,7 +87,7 @@ body::before {
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.025;
+  opacity: 0.03;
   pointer-events: none;
   z-index: 1;
 }
@@ -82,7 +102,7 @@ body::before {
 ::-webkit-scrollbar        { width: 5px; }
 ::-webkit-scrollbar-track  { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb  { background: var(--text-subtle); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* ─── Accessibility: Reduced Motion ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -93,6 +113,11 @@ body::before {
     scroll-behavior: auto !important;
   }
   body { cursor: auto; }
+}
+
+/* ─── Cursor Spotlight (tylko desktop) ──────────────────────── */
+@media (hover: none) {
+  .cursor-spotlight { display: none; }
 }
 
 /* ─── Ambient Beam ───────────────────────────────────────────── */
@@ -106,20 +131,32 @@ body::after {
   height: 100vh;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(
-    ellipse 60% 50% at 50% 30%,
-    rgba(0, 212, 255, 0.06) 0%,
-    transparent 60%
-  );
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 30%,
+      rgba(0, 212, 255, 0.06) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 55% 45% at 62% 22%,
+      rgba(52, 211, 153, 0.04) 0%,
+      transparent 55%
+    );
 }
 @media (max-width: 640px) {
   body::after {
     width: 120vw;
-    background: radial-gradient(
-      ellipse 80% 40% at 50% 20%,
-      rgba(0, 212, 255, 0.05) 0%,
-      transparent 55%
-    );
+    background:
+      radial-gradient(
+        ellipse 80% 40% at 50% 20%,
+        rgba(0, 212, 255, 0.05) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse 70% 35% at 60% 15%,
+        rgba(52, 211, 153, 0.035) 0%,
+        transparent 50%
+      );
   }
 }
 
@@ -149,6 +186,61 @@ body::after {
   .nav-cta-shimmer { animation: none; }
 }
 
+/* ─── Navbar kinetic link swap (desktop, tylko hover-capable) ─── */
+.nav-swap {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  height: 1.5em;
+  line-height: 1.5;
+  vertical-align: bottom;
+}
+.nav-swap > span {
+  display: block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-swap > span.nav-swap__two {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+@media (hover: hover) {
+  .nav-link:hover .nav-swap > span {
+    transform: translateY(-100%);
+  }
+}
+/* Parytet dla klawiatury — ring z globalnej reguły :focus-visible,
+   tu dokładamy tylko kinetyczny swap etykiety (jak na hover) */
+.nav-link:focus-visible .nav-swap > span {
+  transform: translateY(-100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-swap > span {
+    transition: none;
+  }
+}
+
+/* Aktywny link — pulsująca cyanowa poświata (za tekstem, poza clipem swapa) */
+.nav-glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 240%;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+  animation: nav-glow-pulse 2.2s ease-in-out infinite;
+}
+@keyframes nav-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-glow { animation: none; opacity: 0.6; }
+}
+
 /* ─── Section anchor pulse ───────────────────────────────────── */
 @keyframes anchor-pulse {
   0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
@@ -159,6 +251,39 @@ body::after {
 }
 @media (prefers-reduced-motion: reduce) {
   .anchor-pulse { animation: none; }
+}
+
+/* ─── Tech Stack — animowany obrys aurory (Aurora Rim) ───────── */
+@property --tech-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes tech-rim-spin {
+  to { --tech-angle: 360deg; }
+}
+.tech-rim {
+  padding: 1px;
+  background: conic-gradient(
+    from var(--tech-angle),
+    rgba(0, 212, 255, 0.9),
+    rgba(52, 211, 153, 0.9),
+    rgba(0, 212, 255, 0.12),
+    rgba(0, 212, 255, 0.9)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: tech-rim-spin 6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* obrys zostaje (statyczny gradient), ale bez obrotu */
+  .tech-rim { animation: none; }
 }
 
 /* ─── ScrollTrigger section-child entrance ───────────────────── */
@@ -210,6 +335,31 @@ body::after {
   font-family: system-ui, sans-serif;
 }
 .cv-print-btn:hover { background: #333; }
+
+/* Przełącznik języka PL / EN — tylko w przeglądarce */
+.cv-lang-switch {
+  position: fixed;
+  top: 0.85rem;
+  left: 1rem;
+  z-index: 50;
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.cv-lang-switch a {
+  padding: 4px 11px;
+  font: 600 12px system-ui, sans-serif;
+  color: #555;
+  text-decoration: none;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+.cv-lang-switch a:hover { color: #111; }
+.cv-lang-switch a.is-active { background: #111; color: #fff; }
 
 /* Obszar dokumentu */
 .cv-page {
@@ -373,10 +523,69 @@ body::after {
   color: #666;
 }
 
+/* Doświadczenie */
+.cv-experience {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.cv-exp-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.75rem;
+  margin-bottom: 0.2rem;
+}
+.cv-exp-role {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #111;
+}
+.cv-exp-org {
+  font-size: 10pt;
+  color: #444;
+}
+.cv-exp-period {
+  font-size: 9pt;
+  color: #777;
+  margin-left: auto;
+}
+.cv-exp-desc {
+  margin: 0 0 0.3rem;
+  font-size: 10pt;
+  color: #333;
+}
+.cv-exp-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 10pt;
+  color: #222;
+}
+.cv-exp-list li {
+  margin-bottom: 0.15rem;
+}
+
+/* Języki */
+.cv-lang-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 10pt;
+  color: #222;
+}
+.cv-lang-name {
+  font-weight: 600;
+  color: #111;
+}
+
 /* ─── @media print — ukryj przycisk, ustaw marginesy ──────────── */
 @media print {
   html { color-scheme: light !important; }
   .cv-print-btn-wrapper { display: none; }
+  .cv-lang-switch { display: none; }
   body { background: #ffffff !important; }
   .cv-page {
     max-width: 100%;
@@ -396,6 +605,11 @@ body::after {
   }
   a { color: #1a56a0 !important; }
   .cv-section-heading { page-break-after: avoid; break-after: avoid; }
+  /* Jedna kolumna umiejętności w druku — poprawny reading order dla ATS */
+  .cv-skills-grid,
+  .cv-skills-secondary { grid-template-columns: 1fr !important; }
+  .cv-skills-secondary { margin-top: 1.6rem !important; }
+  .cv-exp-item { page-break-inside: avoid; break-inside: avoid; }
   .cv-projects { display: block; }
   .cv-project { page-break-inside: avoid; break-inside: avoid; }
   .cv-section-break-before {
