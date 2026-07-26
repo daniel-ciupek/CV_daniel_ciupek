@@ -283,28 +283,11 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 
 ## 11. Design Tokens
 
-> **Uwaga — migracja palety (redesign 2026, issue #4):** trwa zmiana systemu wizualnego na gałęzi
-> `feature/design-tokens`. Dopóki nie zapadnie decyzja o mergu do `main`, dokumentujemy **obie** palety.
-> - **v1 (legacy)** — obecna produkcja na `main`. Punkt powrotu, gdyby v2 się nie sprawdziła.
-> - **v2 (redesign)** — nowa paleta na `Dev` / feature-branchach. Kandydat do docelowego mergu.
->
+> **Paleta v2 — produkcja (redesign 2026, issue #4–#47, utrwalona na `main`).**
+> v1 (legacy #050505/#0F0F0F) wycofana — v2 jest jedyną obowiązującą paletą.
 > Realne źródło wartości: `src/app/globals.css` (`:root`) + `tailwind.config.ts`. Ten plik ma je odzwierciedlać.
 
-### Tła i akcenty — v1 (legacy / `main`)
-
-```
-/* Tła */
---bg-base:      #050505   /* główne tło strony */
---bg-surface:   #0F0F0F   /* karty, panele */
---bg-elevated:  #171717   /* dropdown, modal */
-
-/* Akcent — tylko cyan */
---accent:       #00D4FF
---accent-dim:   #38BDF8
---accent-glow:  rgba(0, 212, 255, 0.15)
-```
-
-### Tła i akcenty — v2 (redesign / `Dev`)
+### Tła i akcenty
 
 ```
 /* Tła — ciemniejszy zinc */
@@ -312,15 +295,17 @@ public/MyImage/             # Jedyne miejsce assetów — Next.js serwuje z /pub
 --bg-surface:   #111116   /* karty, panele */
 --bg-elevated:  #18181F   /* dropdown, modal */
 
-/* Akcent główny — cyan (bez zmian) */
+/* Akcent główny — cyan (BOHATER UI) */
 --accent:       #00D4FF
 --accent-dim:   #38BDF8
 --accent-glow:  rgba(0, 212, 255, 0.15)
 
-/* Akcent drugi — emerald (subtelny, NOWY w v2) */
+/* Akcent drugi — emerald: WYŁĄCZNIE w aurorze/gradiencie/ruchomym świetle, nigdy jako samodzielny kolor UI */
 --accent-2:      #34D399
---accent-2-dim:  #10B981
 --accent-2-glow: rgba(52, 211, 153, 0.15)
+
+/* Gradient sygnaturowy (aurora cyan→emerald) — jedno źródło prawdy */
+--gradient-aurora: linear-gradient(135deg, #00d4ff, #34d399)
 ```
 
 ### Wspólne dla obu palet (bez zmian)
