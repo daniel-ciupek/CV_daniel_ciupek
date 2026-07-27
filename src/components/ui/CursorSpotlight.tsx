@@ -21,7 +21,7 @@ export default function CursorSpotlight() {
   // Strona /cv-print (ATS/druk) musi być wolna od efektów — patrz CLAUDE.md §7.
   // trailingSlash:true → ścieżka to "/cv-print/", normalizujemy końcowy slash.
   const pathname = usePathname();
-  const isPrint = pathname.replace(/\/$/, "") === "/cv-print";
+  const isPrint = pathname.replace(/\/$/, "").startsWith("/cv-print");
 
   // Start poza ekranem — poświata jest niewidoczna do pierwszego ruchu myszy.
   const x = useMotionValue(-9999);
