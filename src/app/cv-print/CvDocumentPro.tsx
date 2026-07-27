@@ -100,6 +100,8 @@ export default function CvDocumentPro({ lang }: { lang: Lang }) {
   const projDesc = (x: Project) => dash((en ? x.description_en ?? x.description : x.description) ?? "");
   const catLabel = (c: string) => (en ? CAT_EN[c] ?? c : c);
   const shortRepo = (url: string) => url.replace(/^https?:\/\//, "");
+  // Krótki zapis repo w projektach (bez „github.com/") — mieści się w jednej linii
+  const repoShort = (url: string) => url.replace(/^https?:\/\/(www\.)?github\.com\//, "");
   const fmtH = (n: number) => (en ? String(n) : String(n).replace(".", ","));
 
   const featured = FEATURED_TITLES.map(byTitle).filter((x): x is Project => Boolean(x));
@@ -267,7 +269,7 @@ export default function CvDocumentPro({ lang }: { lang: Lang }) {
                   {dash(x.title)}
                   {PRODUCTION.has(x.title) && <span className="cv2-badge">{t.deployed}</span>}
                 </span>
-                {x.github && <span className="cv2-proj-link">{shortRepo(x.github)} ↗</span>}
+                {x.github && <span className="cv2-proj-link">{repoShort(x.github)} ↗</span>}
               </div>
               <p className="cv2-proj-imp">{projDesc(x)}</p>
               <div className="cv2-proj-stack">{x.stack.slice(0, 6).join(" · ")}</div>
@@ -277,7 +279,7 @@ export default function CvDocumentPro({ lang }: { lang: Lang }) {
             <div key={x.title} className="cv2-proj cv2-proj-compact">
               <div className="cv2-proj-row">
                 <span className="cv2-proj-ttl">{dash(x.title)}</span>
-                {x.github && <span className="cv2-proj-link">{shortRepo(x.github)} ↗</span>}
+                {x.github && <span className="cv2-proj-link">{repoShort(x.github)} ↗</span>}
               </div>
               <p className="cv2-proj-imp">{projDesc(x)}</p>
               <div className="cv2-proj-stack">{x.stack.slice(0, 6).join(" · ")}</div>
