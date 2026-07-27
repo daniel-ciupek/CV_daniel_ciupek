@@ -149,10 +149,10 @@ export default function CvDocumentPro({ lang }: { lang: Lang }) {
           {p.website && <div className="cv2-krow cv2-mono">{shortRepo(p.website)}</div>}
         </section>
 
-        <section className="cv2-sb-sect">
+        <section className="cv2-sb-sect cv2-sb-stack">
           <div className="cv2-sb-label">{t.stack}</div>
           {stackGroups.map((g) => (
-            <div key={g.category}>
+            <div key={g.category} className="cv2-catgroup">
               <div className="cv2-cat">{catLabel(g.category)}</div>
               <div className="cv2-chips">
                 {g.items.map((it) => (

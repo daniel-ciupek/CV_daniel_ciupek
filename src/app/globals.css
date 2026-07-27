@@ -427,7 +427,7 @@ body::after {
 .cv2-aside {
   background: var(--cv2-sb-bg);
   color: var(--cv2-sb-text);
-  padding: 34px 22px 28px;
+  padding: 32px 18px 26px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -450,8 +450,8 @@ body::after {
   font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cv2-accent);
 }
 .cv2-sb-label::after { content: ""; flex: 1; height: 1px; background: var(--cv2-sb-divider); }
-.cv2-krow { font-size: 11px; color: var(--cv2-sb-text); word-break: break-word; }
-.cv2-mono { font-family: var(--cv2-mono); font-size: 10.5px; color: var(--cv2-chip-text); }
+.cv2-krow { font-size: 11px; color: var(--cv2-sb-text); word-break: break-word; overflow-wrap: anywhere; }
+.cv2-mono { font-family: var(--cv2-mono); font-size: 10.5px; color: var(--cv2-chip-text); overflow-wrap: anywhere; }
 .cv2-cat { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cv2-sb-muted); margin: 2px 0 6px; }
 .cv2-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
 .cv2-chip {
@@ -467,7 +467,7 @@ body::after {
 .cv2-gdpr { margin-top: auto; font-size: 8.5px; line-height: 1.4; color: var(--cv2-gdpr); }
 
 /* ── Main ── */
-.cv2-main { padding: 36px 32px 30px; display: flex; flex-direction: column; gap: 18px; }
+.cv2-main { padding: 34px 26px 28px; display: flex; flex-direction: column; gap: 18px; }
 .cv2-name { font-size: 35px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.02; color: var(--cv2-ink); text-transform: uppercase; margin: 0; }
 .cv2-aurora { width: 44px; height: 3px; border-radius: 2px; margin: 9px 0 11px; background: linear-gradient(90deg, #0891b2, #34d399); }
 .cv2-roletags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 11px; }
@@ -500,7 +500,7 @@ body::after {
 .cv2-proj-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .cv2-proj-ttl { font-size: 13px; font-weight: 700; color: var(--cv2-ink); display: flex; align-items: center; gap: 8px; }
 .cv2-badge { font-size: 8.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #0e7490; background: rgba(14, 116, 144, 0.1); border: 1px solid rgba(14, 116, 144, 0.24); padding: 2px 7px; border-radius: 999px; }
-.cv2-proj-link { font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-accent); white-space: nowrap; }
+.cv2-proj-link { font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-accent); overflow-wrap: anywhere; }
 .cv2-proj-imp { font-size: 11.5px; line-height: 1.4; color: var(--cv2-ink2); margin: 3px 0 4px; }
 .cv2-proj-compact .cv2-proj-imp { margin: 2px 0; font-size: 11px; }
 .cv2-proj-stack { font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-muted); }
@@ -519,7 +519,23 @@ body::after {
     min-height: 0;
     margin: 0;
     box-shadow: none;
+    overflow: visible; /* nie obcinaj treści w druku — długi tekst i tak się zawija */
   }
+  /* Nie tnij tych bloków na granicy stron 1↔2 — przeskocz je w całości */
+  .cv2-photo-wrap,
+  .cv2-sb-sect,
+  .cv2-lang,
+  .cv2-catgroup,
+  .cv2-exp,
+  .cv2-stats,
+  .cv2-proj,
+  .cv2-cgroup {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* Sekcja „Stack" jest duża — może się złamać MIĘDZY kategoriami (nie w środku kategorii) */
+  .cv2-sb-stack { break-inside: auto; page-break-inside: auto; }
+  .cv2-sect-h { break-after: avoid; page-break-after: avoid; }
 }
 
 /* ── Ekran mobilny — sztywne A4 nie mieści się; przekładamy na jedną kolumnę
