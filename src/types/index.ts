@@ -11,6 +11,12 @@ export interface Personal {
   tagline: string;
   /** Krótki opis (~150 zn.) do meta description / OG — bio jest za długie dla SEO */
   seoDescription: string;
+  /** Skrócone podsumowanie zawodowe do CV designerskiego (/cv-print/pro) — bio jest za długie */
+  cvSummary?: string;
+  cvSummary_en?: string;
+  /** Klauzula RODO do stopki CV */
+  gdpr?: string;
+  gdpr_en?: string;
   email: string;
   phone: string;
   github: string;

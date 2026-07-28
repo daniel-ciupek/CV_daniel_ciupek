@@ -12,7 +12,15 @@ const data: SiteData = {
       "łączący Laravela, Inertię, Vue 3 i Reacta z DevOps — Docker, GitLab CI/CD i automatyzację.",
     seoDescription:
       "Full Stack Developer — Laravel, Vue 3, PostgreSQL, Docker. Buduję produkcyjne aplikacje webowe. 14 certyfikatów, 250+ h szkoleń.",
-    bio: "Full Stack Developer w ekosystemie Laravela — Laravel, Vue 3, Inertia.js, PostgreSQL i Docker. Buduję kompletne aplikacje webowe, od backendu po reaktywny frontend i konteneryzację, sprawnie wykorzystując narzędzia AI jako wsparcie warsztatu. Interesuję się również automatyzacją i CI/CD — buduję pipeline'y w GitLab CI/CD i GitHub Actions, dbając o powtarzalne wdrożenia i jakość kodu. W portfolio m.in. wdrożony produkcyjnie system do zarządzania pracą zespołu oraz aplikacja SaaS z płatnościami online (Stripe), dwuskładnikowym logowaniem (2FA) i analityką w czasie rzeczywistym. Szukam zespołu, w którym rozwinę się przy komercyjnych projektach.",
+    bio: "Full Stack Developer w ekosystemie Laravela — Laravel, Vue 3, Inertia.js, PostgreSQL i Docker. Buduję kompletne aplikacje webowe, od backendu po reaktywny frontend i konteneryzację. Biegle wykorzystuję AI w wytwarzaniu oprogramowania — jako prompt engineer projektuję i optymalizuję prompty oraz orkiestruję wyspecjalizowane agenty AI, powierzając im konkretne zadania, co przyspiesza pracę i podnosi jakość kodu. Interesuję się również automatyzacją i CI/CD — buduję pipeline'y w GitLab CI/CD i GitHub Actions, dbając o powtarzalne wdrożenia i jakość kodu. W portfolio m.in. wdrożony produkcyjnie system do zarządzania pracą zespołu oraz aplikacja SaaS z płatnościami online (Stripe), dwuskładnikowym logowaniem (2FA) i analityką w czasie rzeczywistym. Szukam zespołu, w którym rozwinę się przy komercyjnych projektach.",
+    cvSummary:
+      "Full Stack Developer w ekosystemie Laravela (Laravel, Vue 3, Inertia.js, PostgreSQL, Docker) z naciskiem na jakość kodu i CI/CD. Buduję kompletne aplikacje webowe - od backendu po reaktywny frontend i konteneryzację. Biegle wykorzystuję AI w wytwarzaniu oprogramowania - jako prompt engineer projektuję i optymalizuję prompty oraz orkiestruję wyspecjalizowane agenty AI, powierzając im konkretne zadania, co przyspiesza pracę i podnosi jakość kodu.",
+    cvSummary_en:
+      "Full Stack Developer in the Laravel ecosystem (Laravel, Vue 3, Inertia.js, PostgreSQL, Docker) with a focus on code quality and CI/CD. I build complete web applications - from the backend through a reactive frontend to containerisation. I work with AI at an advanced level - as a prompt engineer I design and optimise prompts and orchestrate specialised AI agents, delegating specific tasks to speed up delivery and raise code quality.",
+    gdpr:
+      "Wyrażam zgodę na przetwarzanie moich danych osobowych zawartych w CV na potrzeby procesu rekrutacji, zgodnie z RODO (Rozporządzenie UE 2016/679).",
+    gdpr_en:
+      "I consent to the processing of my personal data contained in this CV for the purposes of the recruitment process, in accordance with GDPR (EU Regulation 2016/679).",
     email: "dciupek0@gmail.com",
     phone: "+48 798277925",
     github: "https://github.com/daniel-ciupek",
@@ -33,7 +41,7 @@ const data: SiteData = {
     ],
     location_en: "Poland · remote / hybrid",
     bio_en:
-      "Full Stack Developer specialising in the Laravel ecosystem — Laravel, Vue 3, Inertia.js, PostgreSQL and Docker. I build complete web applications, from the backend through a reactive frontend to containerisation, using AI tools effectively to support my workflow. I'm also focused on automation and CI/CD — I build pipelines in GitLab CI/CD and GitHub Actions, caring about repeatable deployments and code quality. My portfolio includes a production-deployed team-workflow management system and a SaaS application with online payments (Stripe), two-factor authentication (2FA) and real-time analytics. I'm looking for a team where I can grow through commercial projects.",
+      "Full Stack Developer specialising in the Laravel ecosystem — Laravel, Vue 3, Inertia.js, PostgreSQL and Docker. I build complete web applications, from the backend through a reactive frontend to containerisation. I work with AI at an advanced level — as a prompt engineer I design and optimise prompts and orchestrate specialised AI agents, delegating specific tasks to speed up delivery and raise code quality. I'm also focused on automation and CI/CD — I build pipelines in GitLab CI/CD and GitHub Actions, caring about repeatable deployments and code quality. My portfolio includes a production-deployed team-workflow management system and a SaaS application with online payments (Stripe), two-factor authentication (2FA) and real-time analytics. I'm looking for a team where I can grow through commercial projects.",
   },
 
   // ─── Umiejętności ──────────────────────────────────────────────
@@ -85,6 +93,7 @@ const data: SiteData = {
   experience: [
     {
       role: "Staż — Full Stack Developer",
+      period: "2026",
       description:
         "Praca w zespole developerskim przy rzeczywistych zadaniach projektowych — z naciskiem na współpracę, komunikację i wspólne standardy kodu.",
       highlights: [
