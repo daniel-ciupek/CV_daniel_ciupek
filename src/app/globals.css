@@ -388,7 +388,9 @@ body::after {
   display: grid;
   grid-template-columns: 35% 65%;
   background: #ffffff;
-  font-family: "Inter", system-ui, sans-serif;
+  /* Font DZIEDZICZONY z wrappera cv-print/layout.tsx (self-hosted next/font Inter).
+     NIE nadpisuj dosłownym "Inter" — literalna nazwa nie łączy się z hashem next/font
+     i powodowała fallback do fontu systemowego (SF Pro/Segoe = wyższy → sidebar tnie). */
   font-size: 13px;
   line-height: 1.45;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
@@ -427,15 +429,15 @@ body::after {
 .cv2-aside {
   background: var(--cv2-sb-bg);
   color: var(--cv2-sb-text);
-  padding: 26px 18px 22px;
+  padding: 22px 18px 18px;
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 10px;
 }
-.cv2-photo-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cv2-photo-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .cv2-photo-img {
-  width: 118px;
-  height: 118px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   object-fit: cover;
   object-position: 50% 8%;
@@ -444,7 +446,7 @@ body::after {
 .cv2-avail { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; color: var(--cv2-sb-muted); text-align: center; }
 .cv2-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cv2-avail); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.22); }
 
-.cv2-sb-sect { display: flex; flex-direction: column; gap: 9px; }
+.cv2-sb-sect { display: flex; flex-direction: column; gap: 7px; }
 .cv2-sb-label {
   display: flex; align-items: center; gap: 8px;
   font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cv2-accent);
@@ -452,19 +454,19 @@ body::after {
 .cv2-sb-label::after { content: ""; flex: 1; height: 1px; background: var(--cv2-sb-divider); }
 .cv2-krow { font-size: 11px; color: var(--cv2-sb-text); word-break: break-word; overflow-wrap: anywhere; }
 .cv2-mono { font-family: var(--cv2-mono); font-size: 10.5px; color: var(--cv2-chip-text); overflow-wrap: anywhere; }
-.cv2-cat { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cv2-sb-muted); margin: 2px 0 6px; }
-.cv2-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+.cv2-cat { font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cv2-sb-muted); margin: 1px 0 3px; }
+.cv2-chips { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 3px; }
 .cv2-chip {
-  font-family: var(--cv2-mono); font-size: 10px; line-height: 1; padding: 4px 8px; border-radius: 6px;
+  font-family: var(--cv2-mono); font-size: 9.5px; line-height: 1; padding: 3px 7px; border-radius: 6px;
   background: var(--cv2-chip-bg); border: 1px solid var(--cv2-chip-border); color: var(--cv2-chip-text);
 }
-.cv2-lang { margin-bottom: 11px; }
+.cv2-lang { margin-bottom: 7px; }
 .cv2-lang-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
 .cv2-lang-nm { font-size: 12px; font-weight: 600; color: var(--cv2-sb-text); }
 .cv2-lang-lv { font-size: 10px; color: var(--cv2-sb-muted); }
 .cv2-bar-track { height: 4px; border-radius: 999px; background: var(--cv2-lang-track); overflow: hidden; }
 .cv2-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, #0e7490, #34d399); }
-.cv2-gdpr { margin-top: auto; font-size: 8.5px; line-height: 1.4; color: var(--cv2-gdpr); }
+.cv2-gdpr { margin-top: auto; font-size: 8px; line-height: 1.35; color: var(--cv2-gdpr); }
 
 /* ── Main ── */
 .cv2-main { padding: 28px 26px 24px; display: flex; flex-direction: column; gap: 12px; }
