@@ -264,23 +264,27 @@ export default function CvDocumentPro({ lang }: { lang: Lang }) {
           </div>
           {featured.map((x) => (
             <div key={x.title} className="cv2-proj">
-              <div className="cv2-proj-row">
-                <span className="cv2-proj-ttl">
-                  {dash(x.title)}
-                  {PRODUCTION.has(x.title) && <span className="cv2-badge">{t.deployed}</span>}
-                </span>
-                {x.github && <span className="cv2-proj-link">{repoShort(x.github)} ↗</span>}
-              </div>
+              <span className="cv2-proj-ttl">
+                {dash(x.title)}
+                {PRODUCTION.has(x.title) && <span className="cv2-badge">{t.deployed}</span>}
+              </span>
+              {x.github && (
+                <a className="cv2-proj-link" href={x.github}>
+                  {repoShort(x.github)} ↗
+                </a>
+              )}
               <p className="cv2-proj-imp">{projDesc(x)}</p>
               <div className="cv2-proj-stack">{x.stack.slice(0, 6).join(" · ")}</div>
             </div>
           ))}
           {compact.map((x) => (
             <div key={x.title} className="cv2-proj cv2-proj-compact">
-              <div className="cv2-proj-row">
-                <span className="cv2-proj-ttl">{dash(x.title)}</span>
-                {x.github && <span className="cv2-proj-link">{repoShort(x.github)} ↗</span>}
-              </div>
+              <span className="cv2-proj-ttl">{dash(x.title)}</span>
+              {x.github && (
+                <a className="cv2-proj-link" href={x.github}>
+                  {repoShort(x.github)} ↗
+                </a>
+              )}
               <p className="cv2-proj-imp">{projDesc(x)}</p>
               <div className="cv2-proj-stack">{x.stack.slice(0, 6).join(" · ")}</div>
             </div>

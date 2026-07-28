@@ -497,11 +497,11 @@ body::after {
 .cv2-proj { padding: 4px 0; border-bottom: 1px solid var(--cv2-hairline); break-inside: avoid; }
 .cv2-proj:last-child { border-bottom: 0; }
 .cv2-proj-compact { padding: 5px 0; }
-.cv2-proj-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.cv2-proj-ttl { font-size: 13px; font-weight: 700; color: var(--cv2-ink); display: flex; align-items: center; gap: 8px; }
+.cv2-proj-ttl { font-size: 13px; font-weight: 700; color: var(--cv2-ink); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .cv2-badge { font-size: 8.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #0e7490; background: rgba(14, 116, 144, 0.1); border: 1px solid rgba(14, 116, 144, 0.24); padding: 2px 7px; border-radius: 999px; }
-.cv2-proj-link { font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-accent); overflow-wrap: break-word; }
-.cv2-proj-imp { font-size: 11px; line-height: 1.4; color: var(--cv2-ink2); margin: 2px 0 3px; }
+/* Link repo — osobna linia pod nazwą projektu (nie w tej samej linii co tytuł) */
+.cv2-proj-link { display: block; font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-accent); text-decoration: none; margin: 2px 0 0; overflow-wrap: break-word; }
+.cv2-proj-imp { font-size: 11px; line-height: 1.4; color: var(--cv2-ink2); margin: 3px 0 3px; }
 .cv2-proj-compact .cv2-proj-imp { margin: 2px 0; font-size: 11px; }
 .cv2-proj-stack { font-family: var(--cv2-mono); font-size: 9.5px; color: var(--cv2-muted); }
 
@@ -512,15 +512,27 @@ body::after {
 .cv2-cert svg { flex: 0 0 auto; margin-top: 2px; color: var(--cv2-accent); }
 .cv2-h { font-family: var(--cv2-mono); color: var(--cv2-muted); }
 
-/* ── Druk ── zostaje A4 dwukolumnowo (grid 35/65 z bazy) */
+/* ── Druk ──────────────────────────────────────────────────────────
+   CSS grid NIE łamie się wiarygodnie między stronami (jeden wysoki wiersz
+   → Chrome ignoruje break-inside na projektach i tnie je w pół).
+   Dlatego w druku porzucamy grid: sidebar = float, kolor panelu malowany
+   jako pasek tła na .cv2-page (powtarza się na obu stronach). W zwykłym
+   przepływie blokowym break-inside: avoid DZIAŁA — bloki nie pękają. */
 @media print {
   .cv2-page {
+    display: block;
     width: 100%;
     min-height: 0;
     margin: 0;
     box-shadow: none;
     overflow: visible; /* nie obcinaj treści w druku — długi tekst i tak się zawija */
+    /* Pasek koloru sidebara na całej wysokości (obie strony) */
+    background: linear-gradient(to right, var(--cv2-sb-bg) 0 35%, #ffffff 35% 100%);
   }
+  /* float działa na kontenerze flex → zachowujemy gap między sekcjami sidebara.
+     Przy shrink-to-fit margin-top:auto na RODO rozwiązuje się do 0 (siada pod językami). */
+  .cv2-aside { float: left; width: 35%; }
+  .cv2-main { margin-left: 35%; }
   /* Nie tnij tych bloków na granicy stron 1↔2 — przeskocz je w całości */
   .cv2-photo-wrap,
   .cv2-sb-sect,
@@ -529,6 +541,7 @@ body::after {
   .cv2-exp,
   .cv2-stats,
   .cv2-proj,
+  .cv2-certgrid,
   .cv2-cgroup {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -553,8 +566,7 @@ body::after {
   .cv2-stats { grid-template-columns: repeat(2, 1fr); }
   .cv2-certgrid { grid-template-columns: 1fr; }
   .cv2-name { font-size: 30px; }
-  /* Nagłówek projektu: tytuł i długi link repo w pionie, link może się zawijać */
-  .cv2-proj-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+  /* Wąski ekran: długi link repo może się zawijać bez przycinania */
   .cv2-proj-link { white-space: normal; overflow-wrap: anywhere; }
   .cv2-proj-ttl { min-width: 0; }
 }
