@@ -10,7 +10,7 @@ export default function PageLoader() {
   const reduce = usePrefersReducedMotion();
   const pathname = usePathname();
   // trailingSlash: true w next.config → ścieżka może mieć końcowy "/"
-  const isPrint = pathname.replace(/\/$/, "") === "/cv-print";
+  const isPrint = pathname.replace(/\/$/, "").startsWith("/cv-print");
   const [visible, setVisible] = useState(true);
   const [particles, setParticles] = useState<
     { left: number; top: number; size: number; delay: number }[]
