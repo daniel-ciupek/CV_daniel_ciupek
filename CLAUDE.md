@@ -204,29 +204,32 @@ Strona musi działać poprawnie na wszystkich urządzeniach.
 
 ---
 
-## 7. Strategia PDF / ATS (`/cv-print`)
+## 7. Strategia PDF (`/cv-print`) — CV designerskie, dwukolumnowe
 
-Widok `/cv-print` to dokument gotowy do druku i parsowania przez systemy ATS rekruterów.
-Stanowi **całkowite przeciwieństwo** strony głównej.
+> **Zmiana kierunku (issue #62, na `main` od 07.2026):** wycofano stary,
+> jednokolumnowy dokument „ATS-plain". Produkcyjne `/cv-print` to teraz
+> **designerskie CV dwukolumnowe** (kolorowy sidebar + kolumna główna),
+> gotowe do druku i zapisu do PDF. Świadomie akceptujemy kompromis: układ nie
+> jest już czysto-ATS, ale cała treść to **selektowalny tekst** (nie obrazki),
+> więc pozostaje rozsądnie parsowalna. Wersja PL: `/cv-print`, EN: `/cv-print/en`.
 
-### Kolejność sekcji w PDF
-```
-1. Dane kontaktowe (imię, tytuł, email, telefon, GitHub, LinkedIn)
-2. About / Podsumowanie zawodowe
-3. Tech Stack (pogrupowany wg kategorii)
-4. Projects
-5. Certifications
-```
+### Pliki
+- Dokument: `src/app/cv-print/CvDocumentPro.tsx` (wspólny PL/EN, namespace `.cv2-*`)
+- Style + reguły druku: blok `.cv2-*` w `src/app/globals.css`
+- Czcionka: `src/app/cv-print/layout.tsx` ładuje self-hostowany **Inter** (`next/font`)
 
-### Zasady ATS (krytyczne)
-- Tło: **czysta biel** `#FFFFFF`, tekst: `#111111`
-- **Zakaz:** animacji, efektów 3D, glassmorphism, ciemnych teł, ikon-obrazków
-- **Zakaz:** tabel do prezentacji umiejętności — używaj zwykłych list (`<ul>`)
-- **Zakaz:** układu wielokolumnowego — tylko single column
-- Czcionka: **Inter**, body `11pt`, nagłówki sekcji `14pt`, imię `22pt`
-- Marginesy: `1.5cm` ze wszystkich stron
-- Certyfikaty: lista tekstowa `Nazwa kursu — Udemy — DD.MM.YYYY`
-- Dane z tego samego `data.ts` co strona główna
+### Układ
+- **Sidebar (jasny panel):** zdjęcie + status, Kontakt, Linki, Stack (chipy wg kategorii), AI & narzędzia, Języki (paski), klauzula RODO
+- **Kolumna główna:** imię + role tags + podsumowanie, kafle statystyk, Doświadczenie, Projekty, Certyfikaty (grupy tematyczne)
+- Treść **wyłącznie z `data.ts`** (m.in. `personal.cvSummary`, `experience[]`, `gdpr`). Myślniki długie `—/–` → pojedynczy łącznik `-`.
+
+### Zasady druku / PDF (krytyczne — nie regresować)
+- `@page cv2 { size: A4; margin: 0 }` + `.cv2-page { page: cv2 }` — nie kolidować z innymi `@page`
+- Kolory wymuszane `print-color-adjust: exact`; wariant jasny (bezpieczny w druku)
+- **Paginacja:** w `@media print` porzucamy grid → sidebar `float` + kolor panelu jako **pasek tła** (`linear-gradient`) na `.cv2-page`, który powtarza się na obu stronach. W przepływie blokowym `break-inside: avoid` działa → bloki (projekty, grupy certów) nie pękają. Grid **nie** łamie się wiarygodnie między stronami — nie wracać do niego w druku.
+- **Sidebar musi mieścić się na 1 stronie** (float wyższy niż strona jest cięty jak grid) — trzymać zapas ~150–200px
+- **Font deterministyczny:** `.cv2-page` **dziedziczy** Inter z wrappera — NIE nadpisywać `font-family: "Inter"` dosłownie (literalna nazwa nie łączy się z hashem `next/font` → fallback do fontu systemowego → różna wysokość i psucie paginacji per urządzenie)
+- Weryfikacja realnego PDF (bez zgadywania): `google-chrome --headless --print-to-pdf` na buildzie + `pdftoppm` do PNG
 
 ---
 
