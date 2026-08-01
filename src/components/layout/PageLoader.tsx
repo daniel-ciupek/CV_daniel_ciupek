@@ -61,7 +61,7 @@ export default function PageLoader() {
               style={{
                 width: "240%",
                 height: "240%",
-                background: "radial-gradient(circle, rgba(0,212,255,0.16), transparent 62%)",
+                background: "radial-gradient(circle, rgba(168,85,247,0.18), transparent 62%)",
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}
@@ -84,7 +84,7 @@ export default function PageLoader() {
                     width: p.size,
                     height: p.size,
                     background: "var(--accent)",
-                    boxShadow: "0 0 6px rgba(0,212,255,0.8)",
+                    boxShadow: "0 0 6px rgba(196,181,253,0.8)",
                   }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 0.7, 0], y: [0, -8, 0] }}
@@ -113,7 +113,7 @@ export default function PageLoader() {
                 opacity: { duration: 0.1 },
               }}
               style={{
-                filter: "drop-shadow(0 0 8px rgba(0,212,255,0.6))",
+                filter: "drop-shadow(0 0 8px rgba(168,85,247,0.6))",
               }}
             />
             {/* Letter C */}
@@ -134,7 +134,7 @@ export default function PageLoader() {
                 opacity: { duration: 0.1, delay: 0.4 },
               }}
               style={{
-                filter: "drop-shadow(0 0 8px rgba(0,212,255,0.6))",
+                filter: "drop-shadow(0 0 8px rgba(168,85,247,0.6))",
               }}
             />
             </svg>
