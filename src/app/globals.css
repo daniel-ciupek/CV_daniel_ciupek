@@ -482,6 +482,71 @@ body::before {
   .anchor-pulse { animation: none; }
 }
 
+/* ═══ V3 About „O mnie" (#68) — foil pull-quote, chipy, bento z aurora-rim ═══ */
+/* Pasek pull-quote — aurora + poświata */
+.about-bar {
+  background: linear-gradient(180deg, var(--accent-2), var(--accent) 50%, var(--holo-indigo));
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.5);
+}
+/* „Full Stack Developer" w folii — rodzina fioletu (holo-cyan zostaje sheenem krawędzi, nigdy tekstem) */
+.about-foil {
+  background: linear-gradient(100deg, #e879f9, #c4b5fd 45%, #818cf8 78%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: about-foil 6s linear infinite;
+}
+@keyframes about-foil { to { background-position: 200% center; } }
+/* Bio — pogrubione słowa-klucze (accent-bright, jak w koncepcie) */
+.about-bio strong { color: var(--accent-bright); font-weight: 600; }
+/* Liczby — gradient tekst→accent-bright (kontrast AA) */
+.about-num {
+  background: linear-gradient(135deg, #f5f3ff 0%, var(--accent-bright) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Chip obszaru — glass + hover border/lift */
+.about-chip {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.06), rgba(196, 181, 253, 0.02));
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
+}
+.about-chip:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.1), rgba(196, 181, 253, 0.03));
+}
+/* Kafel licznika — wirujący aurora-rim na hover (echo Tech Stacku); holo-cyan tylko na krawędzi */
+@property --about-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.about-tile { position: relative; overflow: hidden; }
+.about-tile:hover { border-color: var(--border-hover); }
+.about-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--about-a, 0deg),
+    var(--accent-2), var(--holo-indigo), var(--holo-cyan), var(--accent-2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.about-tile:hover::after { opacity: 0.9; animation: about-rim 6s linear infinite; }
+@keyframes about-rim { to { --about-a: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .about-foil { animation: none; }
+  .about-chip:hover { transform: none; }
+  .about-tile:hover::after { animation: none; }
+}
+
 /* ─── Tech Stack — animowany obrys aurory (Aurora Rim) ───────── */
 @property --tech-angle {
   syntax: "<angle>";
