@@ -547,6 +547,36 @@ body::before {
   .about-tile:hover::after { animation: none; }
 }
 
+/* ═══ V3 Certifications „Certyfikaty" (#69) — karuzela-cylinder 3D ═══ */
+/* Godziny na karcie w folii (rodzina fioletu) */
+.cert-foil-text {
+  background: linear-gradient(100deg, #e879f9, #c4b5fd 45%, #818cf8 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Poświata violet+fuchsia pod aktywną (frontową) kartą — opacity sterowane inline */
+.cert-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  pointer-events: none;
+  box-shadow: 0 0 30px 2px rgba(168, 85, 247, 0.35), 0 0 72px rgba(232, 121, 249, 0.12);
+}
+/* Foliowy obrys aktywnej karty (conic przez maskę) — opacity sterowane inline */
+.cert-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(from 210deg, #e879f9, #c084fc, #818cf8, #22d3ee, #e879f9);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
 /* ─── Tech Stack — animowany obrys aurory (Aurora Rim) ───────── */
 @property --tech-angle {
   syntax: "<angle>";
