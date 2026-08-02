@@ -68,12 +68,14 @@
 html {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
   color-scheme: dark;
+  background-color: var(--bg-base); /* baza (canvas) — .site-backdrop rysuje holo światło nad nią */
 }
 
 body {
-  background-color: var(--bg-base);
+  background-color: transparent; /* przezroczyste, by globalny .site-backdrop (z-index:-11) był widoczny */
   color: var(--text);
   font-family: var(--font-sans);
+  position: relative; /* kontekst dla .site-backdrop (absolute inset:0 = pełna wysokość dokumentu) */
   min-height: 100dvh;
   overflow-x: hidden;
   cursor: default;
@@ -134,43 +136,50 @@ body::before {
   .cursor-spotlight { display: none; }
 }
 
-/* ─── Ambient Beam ───────────────────────────────────────────── */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1200px, 90vw);
-  height: 100vh;
+/* ─── Globalne tło holograficzne ─────────────────────────────────
+   Warstwa za CAŁĄ treścią, PRZEWIJAJĄCA SIĘ z dokumentem (absolute na
+   całą wysokość <body>). Miękkie światła rozłożone w dół strony —
+   serpentyna świateł w rodzinie Hero — więc poświata Hero PŁYNNIE
+   kontynuuje się niżej, bez ciemnego koryta ani odcięcia.
+   Nakładające się elipsy = brak ciemnych pasów między sekcjami.
+   Kierunkowe (przy bokach) → ciemniejszy środek chroni czytelność treści.
+   Czyste gradienty: jeden paint, zero kosztu, bezpieczne dla reduced-motion.
+   Hero zachowuje własny, animowany backdrop jako „szczyt" intensywności.
+   z-index:-11 → PONIŻEJ CursorSpotlight (fixed, -z-10), by kryjące tło
+   nie zasłoniło poświaty kursora; treść (z-auto/dodatnie) jest nad obiema. */
+.site-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -11;
   pointer-events: none;
-  z-index: 0;
   background:
-    radial-gradient(
-      ellipse 60% 50% at 50% 30%,
-      rgba(232, 121, 249, 0.07) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 55% 45% at 62% 22%,
-      rgba(129, 140, 248, 0.05) 0%,
-      transparent 55%
-    );
+    /* Kontynuacja jasnego blasku Hero (prawa strona przy avatarze) —
+       schodzi płynnie w głąb sekcji „O mnie", bez odcięcia na granicy */
+    radial-gradient(ellipse 70% 24% at 20% 4%,  rgba(232, 121, 249, 0.14), transparent 62%),
+    radial-gradient(ellipse 66% 26% at 84% 12%, rgba(129, 140, 248, 0.16), transparent 60%),
+    radial-gradient(ellipse 60% 24% at 90% 20%, rgba(168, 85, 247, 0.14),  transparent 61%),
+    /* Dalej: serpentyna świateł w dół całej strony */
+    radial-gradient(ellipse 72% 22% at 28% 27%, rgba(168, 85, 247, 0.12),  transparent 63%),
+    radial-gradient(ellipse 70% 22% at 80% 40%, rgba(129, 140, 248, 0.11), transparent 63%),
+    radial-gradient(ellipse 72% 22% at 26% 52%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    radial-gradient(ellipse 70% 22% at 80% 64%, rgba(232, 121, 249, 0.10), transparent 63%),
+    radial-gradient(ellipse 72% 22% at 26% 76%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    radial-gradient(ellipse 74% 24% at 78% 92%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    #08070d;
 }
 @media (max-width: 640px) {
-  body::after {
-    width: 120vw;
+  /* Węższy ekran → światła bliżej środka, delikatnie mocniejsze */
+  .site-backdrop {
     background:
-      radial-gradient(
-        ellipse 80% 40% at 50% 20%,
-        rgba(232, 121, 249, 0.06) 0%,
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 70% 35% at 60% 15%,
-        rgba(129, 140, 248, 0.04) 0%,
-        transparent 50%
-      );
+      radial-gradient(ellipse 100% 15% at 30% 4%,  rgba(232, 121, 249, 0.13), transparent 62%),
+      radial-gradient(ellipse 100% 16% at 70% 13%, rgba(129, 140, 248, 0.15), transparent 60%),
+      radial-gradient(ellipse 100% 15% at 58% 21%, rgba(168, 85, 247, 0.13),  transparent 61%),
+      radial-gradient(ellipse 105% 15% at 30% 33%, rgba(168, 85, 247, 0.11),  transparent 63%),
+      radial-gradient(ellipse 105% 15% at 74% 46%, rgba(129, 140, 248, 0.10), transparent 63%),
+      radial-gradient(ellipse 105% 15% at 30% 59%, rgba(232, 121, 249, 0.10), transparent 63%),
+      radial-gradient(ellipse 105% 15% at 74% 72%, rgba(168, 85, 247, 0.11),  transparent 63%),
+      radial-gradient(ellipse 108% 16% at 40% 90%, rgba(129, 140, 248, 0.10), transparent 63%),
+      #08070d;
   }
 }
 
@@ -198,7 +207,14 @@ body::after {
 }
 
 /* ── Hero backdrop: mesh blobs → folia (conic) → beam → grain ── */
-.hero-backdrop { z-index: 0; isolation: isolate; }
+/* Dolna maska: jaśniejsza warstwa Hero roztapia się w globalnym tle
+   zamiast urywać ostrą krawędzią sekcji (płynne przejście, nie odcięcie). */
+.hero-backdrop {
+  z-index: 0;
+  isolation: isolate;
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+}
 .hero-blob { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
 .hero-blob--1 { width: 52%; height: 64%; left: -8%;  top: -16%;    background: rgba(232, 121, 249, 0.15); animation: hero-drift-1 20s ease-in-out infinite; }
 .hero-blob--2 { width: 46%; height: 58%; right: -10%; top: 8%;     background: rgba(129, 140, 248, 0.13); animation: hero-drift-2 24s ease-in-out infinite; }
@@ -388,7 +404,7 @@ body::after {
   background-image: linear-gradient(
     110deg,
     transparent 30%,
-    rgba(0, 212, 255, 0.18) 50%,
+    rgba(196, 181, 253, 0.20) 50%,
     transparent 70%
   );
   background-size: 200% 100%;
@@ -433,7 +449,7 @@ body::after {
   }
 }
 
-/* Aktywny link — pulsująca cyanowa poświata (za tekstem, poza clipem swapa) */
+/* Aktywny link — pulsująca holo-fioletowa poświata (za tekstem, poza clipem swapa) */
 .nav-glow {
   position: absolute;
   left: 50%;
@@ -442,7 +458,7 @@ body::after {
   height: 240%;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.4) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.42) 0%, transparent 70%);
   pointer-events: none;
   animation: nav-glow-pulse 2.2s ease-in-out infinite;
 }
@@ -456,8 +472,8 @@ body::after {
 
 /* ─── Section anchor pulse ───────────────────────────────────── */
 @keyframes anchor-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
-  100% { box-shadow: 0 0 0 24px rgba(0, 212, 255, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.35); }
+  100% { box-shadow: 0 0 0 24px rgba(168, 85, 247, 0); }
 }
 .anchor-pulse {
   animation: anchor-pulse 600ms ease-out;
