@@ -65,8 +65,8 @@ function NavLink({
         <span className="nav-swap">
           <span
             style={{
-              color: isActive ? "var(--accent)" : "var(--text-muted)",
-              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+              color: isActive ? "var(--accent-bright)" : "var(--text-muted)",
+              textShadow: isActive ? "0 0 10px rgba(168, 85, 247, 0.5)" : undefined,
             }}
           >
             {link.label}
@@ -75,8 +75,8 @@ function NavLink({
             className="nav-swap__two"
             aria-hidden
             style={{
-              color: "var(--accent)",
-              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+              color: "var(--accent-bright)",
+              textShadow: isActive ? "0 0 10px rgba(168, 85, 247, 0.5)" : undefined,
             }}
           >
             {link.label}
@@ -130,7 +130,7 @@ export default function Navbar() {
       }`}
       style={
         scrolled
-          ? { backgroundColor: "rgba(9, 9, 11, 0.72)", borderColor: "var(--border)" }
+          ? { backgroundColor: "rgba(8, 7, 13, 0.72)", borderColor: "var(--border)" }
           : {}
       }
     >
@@ -180,9 +180,9 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           clamp={10}
-          className="relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(0,212,255,0.28)] md:inline-flex md:items-center"
+          className="relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(168,85,247,0.32)] md:inline-flex md:items-center"
           style={{
-            color: "var(--accent)",
+            color: "var(--accent-bright)",
             border: "1px solid transparent",
             background: AURORA_BORDER,
           }}
@@ -222,7 +222,7 @@ export default function Navbar() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden border-t md:hidden"
             style={{
-              backgroundColor: "rgba(9, 9, 11, 0.85)",
+              backgroundColor: "rgba(8, 7, 13, 0.85)",
               borderColor: "var(--border)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
@@ -264,7 +264,7 @@ export default function Navbar() {
                   onClick={handleNavClick}
                   className="block rounded-full py-2 text-center text-sm font-medium"
                   style={{
-                    color: "var(--accent)",
+                    color: "var(--accent-bright)",
                     border: "1px solid transparent",
                     background: AURORA_BORDER,
                   }}

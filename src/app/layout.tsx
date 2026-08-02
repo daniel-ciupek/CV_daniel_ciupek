@@ -76,6 +76,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
         suppressHydrationWarning
       >
+        <div className="site-backdrop" aria-hidden />
         <CursorSpotlight />
         <LenisProvider>
           <ScrollAnimations />
