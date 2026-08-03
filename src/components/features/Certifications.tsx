@@ -41,6 +41,7 @@ const CAT_COLOR: Record<string, string> = {
 type Certificate = (typeof data.certificates)[number];
 const certs = data.certificates;
 const N = certs.length;
+const TOTAL_HOURS = Math.round(certs.reduce((sum, c) => sum + c.hours, 0));
 const STEP = 360 / N;              // kąt między kartami
 const DRAG_SENS = 0.12;            // stopni obrotu na 1px przeciągnięcia (łagodne)
 const AUTO_MS = 3600;              // ms między auto-przełączeniem karty (skokowo)
@@ -225,7 +226,7 @@ function CertList({
 }) {
   return (
     <div className="mt-12">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-baseline justify-between gap-3">
         <span
           className="text-[11px] font-medium uppercase tracking-[0.18em]"
           style={{ color: "var(--text-muted)" }}
@@ -233,21 +234,24 @@ function CertList({
           Wszystkie certyfikaty
         </span>
         <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
-          {N} pozycji
+          {N} pozycji · ≈{TOTAL_HOURS} h nauki
         </span>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2">
         {certs.map((cert, i) => {
           const isActive = i === activeIndex;
+          const category = catOf(cert);
+          const catColor = CAT_COLOR[category] ?? "var(--accent)";
           return (
             <button
               key={cert.key}
               onClick={() => onOpen(i)}
-              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-200 sm:items-center"
+              aria-label={`Certyfikat: ${cert.title} — ${category}, ${cert.hours} h, ${cert.date}`}
+              className="group relative flex items-center gap-3 overflow-hidden rounded-xl py-2.5 pl-4 pr-3 text-left transition-colors duration-200"
               style={{
-                background: isActive ? "rgba(168,85,247,0.08)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${isActive ? "rgba(168,85,247,0.35)" : "var(--border)"}`,
+                background: isActive ? "rgba(168,85,247,0.09)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${isActive ? "rgba(168,85,247,0.38)" : "var(--border)"}`,
               }}
               onMouseEnter={(e) => {
                 if (!isActive) e.currentTarget.style.borderColor = "var(--border-hover)";
@@ -262,42 +266,47 @@ function CertList({
                 if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
               }}
             >
+              {/* Pasek kategorii przy krawędzi (dekoracja — hue tylko tutaj i w kropce) */}
               <span
-                className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: isActive ? "var(--accent)" : "var(--text-muted)" }}
+                aria-hidden
+                className="absolute inset-y-0 left-0 w-[3px]"
+                style={{ background: `linear-gradient(180deg, ${catColor}, ${catColor}55)` }}
+              />
+              <span
+                className="w-6 shrink-0 font-mono text-[11px] tabular-nums"
+                style={{ color: isActive ? "var(--accent-bright)" : "var(--text-muted)" }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span
-                className="shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
-                style={{
-                  background: "rgba(168,85,247,0.10)",
-                  border: "1px solid rgba(168,85,247,0.22)",
-                  color: "var(--accent-bright)",
-                  minWidth: 60,
-                  textAlign: "center",
-                }}
-              >
-                {catOf(cert)}
-              </span>
-              <span
-                className="min-w-0 flex-1 break-words text-[13px] leading-snug sm:truncate"
-                style={{
-                  color: isActive ? "var(--text)" : "var(--text-muted)",
-                  fontWeight: isActive ? 600 : 400,
-                }}
-              >
-                {cert.title}
-              </span>
-              <span
-                className="hidden shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {cert.hours}h
+              <span className="min-w-0 flex-1">
+                <span
+                  className="block truncate text-[13px] leading-snug"
+                  style={{
+                    color: isActive ? "var(--text)" : "var(--text-muted)",
+                    fontWeight: isActive ? 600 : 400,
+                  }}
+                >
+                  {cert.title}
+                </span>
+                <span
+                  className="mt-1 flex items-center gap-1.5 font-mono text-[10px]"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  <span
+                    aria-hidden
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: catColor, boxShadow: `0 0 6px ${catColor}` }}
+                  />
+                  {category}
+                  <span aria-hidden style={{ opacity: 0.5 }}>·</span>
+                  {cert.hours} h
+                  <span aria-hidden style={{ opacity: 0.5 }}>·</span>
+                  {cert.date}
+                </span>
               </span>
               <Maximize2
                 size={13}
-                className="hidden shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
+                className="shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 style={{ color: "var(--accent)" }}
               />
             </button>
