@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import type { TechSkill } from "@/types";
 
@@ -23,6 +23,8 @@ export default function TechModal({ skill, onClose }: Props) {
   const cardRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
+  // Unikalny id tytułu — modal bywa na stronie w kilku egzemplarzach (Hero + Umiejętności).
+  const titleId = useId();
   const open = skill !== null;
 
   // Treść trzymana przez czas animacji wygaszania (skill może już być null)
@@ -88,7 +90,7 @@ export default function TechModal({ skill, onClose }: Props) {
         className="tech-modal-card"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="tech-modal-title"
+        aria-labelledby={titleId}
       >
         <button
           ref={closeRef}
@@ -107,7 +109,7 @@ export default function TechModal({ skill, onClose }: Props) {
               </div>
               <div>
                 <div className="tech-modal-kicker">Umiejętność / technologia</div>
-                <h3 id="tech-modal-title">{shown.name}</h3>
+                <h3 id={titleId}>{shown.name}</h3>
               </div>
             </div>
             <p className="tech-modal-body">{shown.description}</p>

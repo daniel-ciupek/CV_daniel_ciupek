@@ -9,7 +9,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import AvatarMorph from "@/components/ui/AvatarMorph";
 import HeroBackdrop from "@/components/features/hero/HeroBackdrop";
 import TechCarousel from "@/components/features/hero/TechCarousel";
-import TechModal from "@/components/features/hero/TechModal";
+import TechModal from "@/components/ui/TechModal";
 import type { TechSkill } from "@/types";
 
 // PageLoader trwa ~1600ms, scramble startuje ~300ms po zakończeniu
