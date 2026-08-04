@@ -388,7 +388,7 @@ body::before {
 .hero-cta-secondary:hover svg { transform: translateX(2px); }
 
 /* Podpowiedź pod karuzelą */
-.hero-tip { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--text-subtle); }
+.hero-tip { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); }
 
 /* Reduced-motion: pełna estetyka, zero pętli */
 @media (prefers-reduced-motion: reduce) {
