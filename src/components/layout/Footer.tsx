@@ -45,8 +45,8 @@ function SocialPill({ href, label, icon: Icon }: SocialDef) {
       style={{
         background: "var(--bg-elevated)",
         border: `1px solid ${hover ? "var(--border-hover)" : "var(--border)"}`,
-        color: hover ? "var(--accent)" : "var(--text-muted)",
-        boxShadow: hover ? "0 0 18px rgba(0,212,255,0.15)" : "none",
+        color: hover ? "var(--accent-bright)" : "var(--text-muted)",
+        boxShadow: hover ? "0 0 18px rgba(168,85,247,0.15)" : "none",
         transform: hover ? "translateY(-1px)" : "none",
       }}
     >
@@ -71,8 +71,8 @@ function GoToTop() {
       className="relative inline-flex h-[42px] w-[42px] items-center justify-center rounded-full"
       style={{
         background: "var(--bg-elevated)",
-        color: "var(--accent)",
-        boxShadow: hover ? "0 10px 26px -10px rgba(0,212,255,0.5)" : "none",
+        color: "var(--accent-bright)",
+        boxShadow: hover ? "0 10px 26px -10px rgba(168,85,247,0.5)" : "none",
         transition: "box-shadow 0.3s",
       }}
     >
