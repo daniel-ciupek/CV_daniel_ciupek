@@ -19,8 +19,6 @@ const navLinks = [
 const sectionIds = navLinks.map((l) => l.href.slice(1));
 
 // Gradient border (aurora) w konwencji padding-box/border-box
-const AURORA_BORDER =
-  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, var(--gradient-aurora) border-box";
 
 // ─── Desktopowy link nawigacji: magnetyczny + kinetyczny swap etykiety ──────────
 // Magnetyzm gaśnie przy reduced-motion; na dotyku nie odpala się (brak mousemove).
@@ -180,15 +178,9 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           clamp={10}
-          className="relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(168,85,247,0.32)] md:inline-flex md:items-center"
-          style={{
-            color: "var(--accent-bright)",
-            border: "1px solid transparent",
-            background: AURORA_BORDER,
-          }}
+          className="cta-ghost hidden rounded-full px-4 py-2 text-sm font-medium md:inline-flex md:items-center"
         >
-          <span aria-hidden className="nav-cta-shimmer pointer-events-none absolute inset-0" />
-          <span className="relative">Pobierz CV</span>
+          Pobierz CV
         </MagneticButton>
 
         {/* Mobile hamburger */}
@@ -262,12 +254,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleNavClick}
-                  className="block rounded-full py-2 text-center text-sm font-medium"
-                  style={{
-                    color: "var(--accent-bright)",
-                    border: "1px solid transparent",
-                    background: AURORA_BORDER,
-                  }}
+                  className="cta-ghost block rounded-full py-2 text-center text-sm font-medium"
                 >
                   Pobierz CV
                 </a>

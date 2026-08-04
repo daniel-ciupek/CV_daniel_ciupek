@@ -369,50 +369,31 @@ body::before {
   transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hero-cta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-.hero-cta-primary {
-  font-weight: 700;
-  background:
-    linear-gradient(var(--bg-elevated), var(--bg-elevated)) padding-box,
-    linear-gradient(120deg, var(--accent-2), #6366f1) border-box;
-  border: 1.5px solid transparent;
+/* Główne CTA — „Ghost z poświatą" (spójne: Hero, Navbar, Kontakt) */
+.cta-ghost {
+  color: var(--accent-bright);
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid var(--border-hover);
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.28), 0 10px 34px -8px rgba(168, 85, 247, 0.30);
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s, color 0.3s;
 }
-.hero-cta-primary .label {
-  background: linear-gradient(120deg, #f0abfc, #c4b5fd 50%, #818cf8);
-  -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;
+.cta-ghost:hover {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 32px rgba(168, 85, 247, 0.45), 0 12px 42px -8px rgba(168, 85, 247, 0.45);
 }
-.hero-cta-primary:hover { box-shadow: 0 14px 36px -14px rgba(168, 85, 247, 0.75); }
 .hero-cta-secondary { color: var(--text); background: rgba(255, 255, 255, 0.035); border: 1px solid var(--border); }
 .hero-cta-secondary svg { width: 16px; height: 16px; color: var(--accent-bright); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
 .hero-cta-secondary:hover { border-color: var(--border-hover); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .hero-cta-secondary:hover svg { transform: translateX(2px); }
 
 /* Podpowiedź pod karuzelą */
-.hero-tip { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--text-subtle); }
+.hero-tip { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); }
 
 /* Reduced-motion: pełna estetyka, zero pętli */
 @media (prefers-reduced-motion: reduce) {
   .hero-foil { --foil-rot: -24deg; }
   .hero-beam { display: none; }
-}
-
-/* ─── Navbar CTA shimmer ─────────────────────────────────────── */
-@keyframes nav-cta-shimmer {
-  0%, 100% { background-position: -200% 0; }
-  50%      { background-position: 200% 0; }
-}
-.nav-cta-shimmer {
-  background-image: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(196, 181, 253, 0.20) 50%,
-    transparent 70%
-  );
-  background-size: 200% 100%;
-  background-repeat: no-repeat;
-  animation: nav-cta-shimmer 4s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav-cta-shimmer { animation: none; }
 }
 
 /* ─── Navbar kinetic link swap (desktop, tylko hover-capable) ─── */

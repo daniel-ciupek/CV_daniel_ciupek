@@ -171,8 +171,8 @@ export default function Hero() {
             animate="visible"
             className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
           >
-            <MagneticButton href="#projects" className="hero-cta hero-cta-primary">
-              <span className="label">Zobacz projekty</span>
+            <MagneticButton href="#projects" className="hero-cta cta-ghost">
+              Zobacz projekty
             </MagneticButton>
 
             <MagneticButton

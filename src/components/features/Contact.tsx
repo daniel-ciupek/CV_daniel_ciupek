@@ -25,8 +25,6 @@ const SOCIALS: SocialDef[] = [
 ];
 
 const AURORA = "var(--gradient-aurora)";
-const AURORA_BORDER =
-  "linear-gradient(var(--bg-elevated), var(--bg-elevated)) padding-box, var(--gradient-aurora) border-box";
 
 // ─── Status Dot ──────────────────────────────────────────────────────────────────
 
@@ -377,8 +375,7 @@ export default function Contact() {
 
                 <a
                   href={`mailto:${email}`}
-                  className="relative mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold transition-shadow duration-300 hover:shadow-[0_0_36px_rgba(168,85,247,0.4)]"
-                  style={{ color: "var(--accent-bright)", border: "1px solid transparent", background: AURORA_BORDER }}
+                  className="cta-ghost relative mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold"
                 >
                   <Mail size={16} />
                   Napisz wiadomość
