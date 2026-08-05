@@ -55,7 +55,7 @@ function NavLink({
         onMouseMove={handleMove}
         onMouseLeave={() => setPos({ x: 0, y: 0 })}
         animate={{ x: pos.x, y: pos.y }}
-        transition={{ type: "spring", stiffness: 180, damping: 16, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20, mass: 0.5 }}
         className="nav-link relative block py-2 text-sm"
         style={{ willChange: "transform" }}
       >

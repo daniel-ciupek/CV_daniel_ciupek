@@ -112,43 +112,48 @@ function ContactRow({
 }) {
   return (
     <div
-      className="flex items-center gap-3 rounded-xl px-4 py-3 transition-colors duration-200"
+      className="rounded-xl px-4 py-3 transition-colors duration-200"
       style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)" }}
       onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--border-hover)")}
       onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}
     >
-      <span
-        className="w-14 flex-none font-mono text-[9.5px] uppercase tracking-[0.14em]"
-        style={{ color: "var(--text-subtle)" }}
-      >
-        {label}
-      </span>
+      {/* Label + przyciski w jednej linii, WARTOŚĆ pełną szerokością pod spodem —
+          wartość nie dzieli wiersza z przyciskami, więc pełny e-mail/telefon
+          mieści się na każdej szerokości (fix ucinania na mobile/tablecie). */}
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <span
+          className="font-mono text-[9.5px] uppercase tracking-[0.16em]"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {label}
+        </span>
+        <span className="flex flex-none items-center gap-1.5">
+          <CopyIconButton value={value} what={what} />
+          <a
+            href={href}
+            aria-label={action}
+            className="inline-grid h-9 w-9 flex-none place-items-center rounded-lg transition-colors duration-200"
+            style={{ border: "1px solid var(--border)", color: "var(--text-muted)", background: "var(--bg-elevated)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--accent-bright)";
+              e.currentTarget.style.borderColor = "var(--border-hover)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-muted)";
+              e.currentTarget.style.borderColor = "var(--border)";
+            }}
+          >
+            <Icon size={15} />
+          </a>
+        </span>
+      </div>
       <a
         href={href}
-        className="min-w-0 flex-1 truncate font-mono text-[16px] transition-colors duration-200 hover:underline md:text-[18px]"
+        className="block truncate font-mono text-[16px] transition-colors duration-200 hover:underline md:text-[18px]"
         style={{ color: "var(--accent-bright)" }}
       >
         {value}
       </a>
-      <span className="flex flex-none items-center gap-1.5">
-        <CopyIconButton value={value} what={what} />
-        <a
-          href={href}
-          aria-label={action}
-          className="inline-grid h-9 w-9 flex-none place-items-center rounded-lg transition-colors duration-200"
-          style={{ border: "1px solid var(--border)", color: "var(--text-muted)", background: "var(--bg-elevated)" }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--accent-bright)";
-            e.currentTarget.style.borderColor = "var(--border-hover)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "var(--text-muted)";
-            e.currentTarget.style.borderColor = "var(--border)";
-          }}
-        >
-          <Icon size={15} />
-        </a>
-      </span>
     </div>
   );
 }
@@ -237,16 +242,16 @@ export default function Contact() {
         }
       `}</style>
 
-      <section id="contact" aria-labelledby="contact-heading" className="relative px-6 py-20 md:py-28">
+      <section id="contact" aria-labelledby="contact-heading" className="relative px-6 py-16 md:py-20">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader index="05" total="05" title="KONTAKT" headingId="contact-heading" />
+          <SectionHeader index="05" total="05" title="KONTAKT" subtitle="Napisz do mnie" headingId="contact-heading" />
 
           {/* Glass panel */}
           <motion.div
             initial={reduced ? {} : { opacity: 0, y: 32, scale: 0.98 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             onMouseMove={handleCardMove}
             onMouseEnter={() => setLit(true)}
             onMouseLeave={() => setLit(false)}
@@ -300,28 +305,20 @@ export default function Contact() {
               }}
             />
 
-            {/* Split: lewa „pitch" | prawa „konsola kontaktu" */}
-            <div className="relative grid gap-8 md:grid-cols-[0.9fr_1.1fr] md:items-center md:gap-10">
+            {/* Split: lewa „pitch" | prawa „konsola kontaktu".
+                2 kolumny dopiero od lg — na tablecie (md) stack na pełną szerokość,
+                by długie słowo nagłówka nie ściskało konsoli i nie ucinało e-maila. */}
+            <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10">
               {/* Lewa — pitch */}
               <div>
                 <StatusDot />
 
                 <p
-                  className="mt-5 text-balance text-3xl font-bold leading-[1.05] tracking-tight md:text-[2.75rem]"
+                  className="mt-5 text-balance font-display text-3xl font-bold leading-[1.05] tracking-tight md:text-[2.75rem]"
                   style={{ color: "var(--text)" }}
                 >
                   {leadWords}{" "}
-                  <span
-                    style={{
-                      background: AURORA,
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      color: "transparent",
-                    }}
-                  >
-                    {lastWord}
-                  </span>
+                  <span className="text-foil">{lastWord}</span>
                 </p>
 
                 <p className="mt-3 max-w-md text-base md:text-[17px]" style={{ color: "var(--text-muted)" }}>
@@ -348,10 +345,10 @@ export default function Contact() {
                 {!reduced && <span aria-hidden className="contact-beam" />}
 
                 <p
-                  className="relative mb-3 font-mono text-[10px] uppercase tracking-[0.14em]"
+                  className="relative mb-3 font-mono text-[10px] uppercase tracking-[0.16em]"
                   style={{ color: "var(--text-muted)" }}
                 >
-                  {"// bezpośredni kontakt"}
+                  Bezpośredni kontakt
                 </p>
 
                 <div className="relative flex flex-col gap-2.5">

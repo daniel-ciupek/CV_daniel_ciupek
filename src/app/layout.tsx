@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import LenisProvider from "@/components/layout/LenisProvider";
+import MotionProvider from "@/components/layout/MotionProvider";
 import ScrollAnimations from "@/components/layout/ScrollAnimations";
 import PageLoader from "@/components/layout/PageLoader";
 import CursorSpotlight from "@/components/ui/CursorSpotlight";
@@ -77,12 +78,14 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <div className="site-backdrop" aria-hidden />
-        <CursorSpotlight />
-        <LenisProvider>
-          <ScrollAnimations />
-          <PageLoader />
-          {children}
-        </LenisProvider>
+        <MotionProvider>
+          <CursorSpotlight />
+          <LenisProvider>
+            <ScrollAnimations />
+            <PageLoader />
+            {children}
+          </LenisProvider>
+        </MotionProvider>
       </body>
     </html>
   );

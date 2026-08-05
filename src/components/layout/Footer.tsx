@@ -95,16 +95,10 @@ export default function Footer() {
 
   return (
     <footer className="px-6 pb-8 pt-9" style={{ borderTop: "1px solid var(--border)" }}>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         {/* Szklany panel z aurora-obrysem */}
         <div
-          className="relative flex flex-col items-center justify-between gap-5 overflow-hidden rounded-2xl px-6 py-5 sm:flex-row"
-          style={{
-            background: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid var(--border)",
-          }}
+          className="glass relative flex flex-col items-center justify-between gap-5 overflow-hidden rounded-2xl px-6 py-5 sm:flex-row"
         >
           {/* Obrys aurory */}
           <span
@@ -117,16 +111,8 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <span
               aria-hidden
-              style={{
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                fontSize: 24,
-                background: AURORA,
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                color: "transparent",
-              }}
+              className="text-foil"
+              style={{ fontWeight: 800, letterSpacing: "-0.03em", fontSize: 24 }}
             >
               DC
             </span>

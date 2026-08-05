@@ -7,6 +7,7 @@ import data from "@/config/data";
 import { useScrambleText } from "@/hooks/useScrambleText";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import AvatarMorph from "@/components/ui/AvatarMorph";
+import MagneticButton from "@/components/ui/MagneticButton";
 import HeroBackdrop from "@/components/features/hero/HeroBackdrop";
 import TechCarousel from "@/components/features/hero/TechCarousel";
 import TechModal from "@/components/ui/TechModal";
@@ -14,10 +15,6 @@ import type { TechSkill } from "@/types";
 
 // PageLoader trwa ~1600ms, scramble startuje ~300ms po zakończeniu
 const SCRAMBLE_DELAY_MS = 1900;
-
-// Przyciąganie magnetyczne CTA
-const MAGNET_STRENGTH = 0.28;
-const MAGNET_CLAMP = 14;
 
 // Język ruchu B „Holo Chrome": ease [0.16,1,0.3,1], wejścia opacity+y+blur, stagger 70ms
 const fadeUp: Variants = {
@@ -29,46 +26,6 @@ const fadeUp: Variants = {
     transition: { delay: i * 0.07, duration: 0.7, ease: [0.16, 1, 0.3, 1] },
   }),
 };
-
-// ─── Magnetyczny przycisk CTA (pill) ──────────────────────────────
-function MagneticButton({
-  href,
-  children,
-  className,
-  onClick,
-}: {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-  onClick?: () => void;
-}) {
-  const reduced = usePrefersReducedMotion();
-  const [pos, setPos] = useState({ x: 0, y: 0 });
-
-  const clamp = (v: number) => Math.max(-MAGNET_CLAMP, Math.min(MAGNET_CLAMP, v));
-
-  const handleMove = (e: React.MouseEvent) => {
-    if (reduced) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const dx = e.clientX - (rect.left + rect.width / 2);
-    const dy = e.clientY - (rect.top + rect.height / 2);
-    setPos({ x: clamp(dx * MAGNET_STRENGTH), y: clamp(dy * MAGNET_STRENGTH) });
-  };
-
-  return (
-    <motion.a
-      href={href}
-      onClick={onClick}
-      onMouseMove={handleMove}
-      onMouseLeave={() => setPos({ x: 0, y: 0 })}
-      animate={{ x: pos.x, y: pos.y }}
-      transition={{ type: "spring", stiffness: 260, damping: 20, mass: 0.5 }}
-      className={className}
-    >
-      {children}
-    </motion.a>
-  );
-}
 
 export default function Hero() {
   const reduced = usePrefersReducedMotion();
