@@ -87,15 +87,8 @@ function FallbackPreview({ title, big = false }: { title: string; big?: boolean 
       }}
     >
       <span
-        className={`font-mono font-bold tracking-tight ${big ? "text-5xl sm:text-6xl" : "text-lg"}`}
-        style={{
-          background: "var(--gradient-aurora)",
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          color: "transparent",
-          opacity: 0.9,
-        }}
+        className={`text-foil font-mono font-bold tracking-tight ${big ? "text-5xl sm:text-6xl" : "text-lg"}`}
+        style={{ opacity: 0.9 }}
       >
         {monogram(title)}
       </span>
@@ -178,8 +171,16 @@ function ProjectLinks({ project }: { project: Project }) {
           href={project.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-opacity duration-200 hover:opacity-90"
-          style={{ background: "var(--accent)", color: "var(--bg-base)" }}
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200"
+          style={{ border: "1px solid var(--border-hover)", color: "var(--accent-bright)", background: "rgba(168,85,247,0.08)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--accent)";
+            e.currentTarget.style.background = "rgba(168,85,247,0.14)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.background = "rgba(168,85,247,0.08)";
+          }}
         >
           <ExternalLink size={14} />
           Live
@@ -269,14 +270,7 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
         id="project-detail"
         role="tabpanel"
         aria-labelledby={`project-tab-${selected}`}
-        className="overflow-hidden rounded-2xl"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid var(--border)",
-        }}
+        className="glass overflow-hidden rounded-2xl"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -284,7 +278,7 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
             initial={reduced ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: reduced ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reduced ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="grid md:grid-cols-[1.4fr_1fr]">
               {/* Podgląd — lewa kolumna (na mobile na górze) */}
@@ -379,7 +373,7 @@ export default function Projects() {
       />
 
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="04" total="05" title="PROJEKTY" headingId="projects-heading" />
+        <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="Wybrane realizacje" headingId="projects-heading" />
 
         {projects.length === 0 ? (
           <div

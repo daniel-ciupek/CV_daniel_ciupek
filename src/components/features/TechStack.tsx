@@ -12,7 +12,7 @@ export default function TechStack() {
         style={{ background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }}
       />
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="03" total="05" title="UMIEJĘTNOŚCI" headingId="skills-heading" />
+        <SectionHeader index="03" total="05" title="UMIEJĘTNOŚCI" subtitle="Technologie i narzędzia" headingId="skills-heading" />
         <TechStackGrid />
       </div>
     </section>

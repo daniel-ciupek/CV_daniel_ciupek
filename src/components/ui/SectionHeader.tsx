@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface SectionHeaderProps {
   index: string;
@@ -19,19 +20,24 @@ export default function SectionHeader({
   subtitle,
   headingId,
 }: SectionHeaderProps) {
+  const reduce = usePrefersReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{
+        opacity: reduce ? 1 : 0,
+        y: reduce ? 0 : 24,
+        filter: reduce ? "blur(0px)" : "blur(7px)",
+      }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduce ? 0 : 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="mb-12 flex flex-col gap-3 md:mb-16"
     >
       {/* Eyebrow — numer sekcji + linia */}
       <div className="flex items-center gap-3">
         <span
           className="text-xs font-semibold tabular-nums tracking-[0.25em]"
-          style={{ color: "var(--accent)" }}
+          style={{ color: "var(--accent-bright)" }}
         >
           {index} / {total}
         </span>
@@ -48,7 +54,7 @@ export default function SectionHeader({
       {/* Tytuł */}
       <h2
         id={headingId}
-        className="text-2xl font-bold tracking-tight md:text-3xl"
+        className="font-display text-2xl font-bold tracking-tight md:text-3xl"
         style={{ color: "var(--text)" }}
       >
         {title}
