@@ -463,7 +463,8 @@ const data: SiteData = {
   certificates: [
     {
       key: "cert_js",
-      file: "/MyImage/CertyfikatJavaScript.jpg",
+      file: "/MyImage/CertyfikatJavaScript.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatJavaScript.webp",
       title: "Vanilla JavaScript od podstaw",
       title_en: "Vanilla JavaScript from Scratch",
       platform: "Udemy",
@@ -472,7 +473,8 @@ const data: SiteData = {
     },
     {
       key: "cert_php",
-      file: "/MyImage/CertyfikatPHP.jpg",
+      file: "/MyImage/CertyfikatPHP.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatPHP.webp",
       title: "Kurs programowanie PHP i MySQL",
       title_en: "PHP & MySQL Programming Course",
       platform: "Udemy",
@@ -481,7 +483,8 @@ const data: SiteData = {
     },
     {
       key: "cert_mysql",
-      file: "/MyImage/CertyfikatMySql.jpg",
+      file: "/MyImage/CertyfikatMySql.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatMySql.webp",
       title: "Kurs SQL od podstaw | MySQL",
       title_en: "SQL from Scratch | MySQL",
       platform: "Udemy",
@@ -490,7 +493,8 @@ const data: SiteData = {
     },
     {
       key: "cert_postgres",
-      file: "/MyImage/CertyfikatPostgreSQL.jpg",
+      file: "/MyImage/CertyfikatPostgreSQL.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatPostgreSQL.webp",
       title: "Kurs PostgreSQL",
       title_en: "PostgreSQL Course",
       platform: "Udemy",
@@ -499,7 +503,8 @@ const data: SiteData = {
     },
     {
       key: "cert_laravel",
-      file: "/MyImage/CertyfikatLaravel12&Vue3.jpg",
+      file: "/MyImage/CertyfikatLaravel12&Vue3.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatLaravel12&Vue3.webp",
       title: "Laravel 12 & Vue 3 fullstack Mastery",
       platform: "Udemy",
       hours: 37.5,
@@ -507,7 +512,8 @@ const data: SiteData = {
     },
     {
       key: "cert_docker",
-      file: "/MyImage/CertyfikatDocker.jpg",
+      file: "/MyImage/CertyfikatDocker.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatDocker.webp",
       title: "Docker od podstaw",
       title_en: "Docker from Scratch",
       platform: "Udemy",
@@ -516,7 +522,8 @@ const data: SiteData = {
     },
     {
       key: "cert_postman",
-      file: "/MyImage/CertyfikatPostmanTestAPI.jpg",
+      file: "/MyImage/CertyfikatPostmanTestAPI.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatPostmanTestAPI.webp",
       title: "Postman od podstaw – testowanie REST API",
       title_en: "Postman from Scratch – REST API Testing",
       platform: "Udemy",
@@ -525,7 +532,8 @@ const data: SiteData = {
     },
     {
       key: "cert_english",
-      file: "/MyImage/CertyfikatAngielskiIT.jpg",
+      file: "/MyImage/CertyfikatAngielskiIT.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatAngielskiIT.webp",
       title: "Angielski w IT. Kompletny Kurs Konwersacyjny",
       title_en: "English for IT. Complete Conversational Course",
       platform: "Udemy",
@@ -534,7 +542,8 @@ const data: SiteData = {
     },
     {
       key: "cert_ai",
-      file: "/MyImage/CertyfikatAIProgramisty.jpg",
+      file: "/MyImage/CertyfikatAIProgramisty.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatAIProgramisty.webp",
       title: "AI dla programistów: ChatGPT od A do Z",
       title_en: "AI for Developers: ChatGPT from A to Z",
       platform: "Udemy",
@@ -543,7 +552,8 @@ const data: SiteData = {
     },
     {
       key: "cert_claude",
-      file: "/MyImage/CertyfikatClaudeCode.jpg",
+      file: "/MyImage/CertyfikatClaudeCode.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatClaudeCode.webp",
       title: "Claude Code w pigułce",
       title_en: "Claude Code in a Nutshell",
       platform: "Udemy",
@@ -552,7 +562,8 @@ const data: SiteData = {
     },
     {
       key: "cert_ai_coding",
-      file: "/MyImage/CertyfikatAiCodingWithClaudeAndCursor.jpg",
+      file: "/MyImage/CertyfikatAiCodingWithClaudeAndCursor.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatAiCodingWithClaudeAndCursor.webp",
       title: "The Complete AI Coding Course (2025) – Cursor, Claude Code",
       platform: "Udemy",
       hours: 12,
@@ -560,7 +571,8 @@ const data: SiteData = {
     },
     {
       key: "cert_python",
-      file: "/MyImage/CertyfikatPython.jpg",
+      file: "/MyImage/CertyfikatPython.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatPython.webp",
       title: "[2026] Kurs Python 3 od Podstaw do Mastera",
       title_en: "[2026] Python 3 Course — from Basics to Master",
       platform: "Udemy",
@@ -569,7 +581,8 @@ const data: SiteData = {
     },
     {
       key: "cert_aws",
-      file: "/MyImage/CertyfikatAWS.jpg",
+      file: "/MyImage/CertyfikatAWS.webp",
+      thumb: "/MyImage/cert-sm/CertyfikatAWS.webp",
       title: "AWS Certified Cloud Practitioner",
       platform: "Udemy",
       hours: 5.5,
@@ -577,7 +590,8 @@ const data: SiteData = {
     },
     {
       key: "cert_gitlab",
-      file: "/MyImage/GitLabCICD.jpg",
+      file: "/MyImage/GitLabCICD.webp",
+      thumb: "/MyImage/cert-sm/GitLabCICD.webp",
       title: "Kurs GitLab CI/CD od podstaw",
       title_en: "GitLab CI/CD from Scratch",
       platform: "Udemy",

@@ -122,7 +122,7 @@ function RingCard({
           {/* Twarz — miniatura realnego certyfikatu + chip kodu */}
           <div className="relative flex-1 overflow-hidden">
             <Image
-              src={cert.file}
+              src={cert.thumb}
               alt=""
               fill
               draggable={false}
@@ -566,7 +566,7 @@ function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
           style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
         >
           <div className="relative aspect-[1.414/1] w-full overflow-hidden">
-            <Image src={cert.file} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
+            <Image src={cert.thumb} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
             <span
               className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
               style={{ background: "rgba(8,7,13,0.6)", border: "1px solid rgba(168,85,247,0.35)", color: "var(--accent-bright)" }}
