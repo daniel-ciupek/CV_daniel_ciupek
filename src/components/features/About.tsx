@@ -20,7 +20,7 @@ const FOCUS_AREAS = [
 const BIO_HIGHLIGHTS = [
   "Full Stack Developer w ekosystemie Laravela",
   "prompt engineer",
-  "CI/CD",
+  "automatyzacją i CI/CD",
 ];
 
 /** Dzieli bio i pogrubia zdefiniowane frazy; tekst bio pozostaje w data.ts */
