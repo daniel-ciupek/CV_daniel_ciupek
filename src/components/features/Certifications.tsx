@@ -106,8 +106,7 @@ function RingCard({
         WebkitBackfaceVisibility: "hidden",
       }}
       onClick={onClick}
-      role="button"
-      aria-label={`Certyfikat: ${cert.title} — ${cert.hours}h${cert.date ? `, ${cert.date}` : ""}`}
+      aria-hidden
     >
       <motion.div className="relative h-full w-full" style={{ opacity, scale }}>
         {/* Ciemna karta holo — pieczęć + kod; pełny skan tylko w lightboxie */}
@@ -122,7 +121,7 @@ function RingCard({
           {/* Twarz — miniatura realnego certyfikatu + chip kodu */}
           <div className="relative flex-1 overflow-hidden">
             <Image
-              src={cert.file}
+              src={cert.thumb}
               alt=""
               fill
               draggable={false}
@@ -247,7 +246,6 @@ function CertList({
             <button
               key={cert.key}
               onClick={() => onOpen(i)}
-              aria-label={`Certyfikat: ${cert.title} — ${category}, ${cert.hours} h, ${cert.date}`}
               className="group relative flex items-center gap-3 overflow-hidden rounded-xl py-2.5 pl-4 pr-3 text-left transition-colors duration-200"
               style={{
                 background: isActive ? "rgba(168,85,247,0.09)" : "rgba(255,255,255,0.02)",
@@ -273,6 +271,7 @@ function CertList({
                 style={{ background: `linear-gradient(180deg, ${catColor}, ${catColor}55)` }}
               />
               <span
+                aria-hidden
                 className="w-6 shrink-0 font-mono text-[11px] tabular-nums"
                 style={{ color: isActive ? "var(--accent-bright)" : "var(--text-muted)" }}
               >
@@ -305,6 +304,7 @@ function CertList({
                 </span>
               </span>
               <Maximize2
+                aria-hidden
                 size={13}
                 className="shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 style={{ color: "var(--accent)" }}
@@ -509,19 +509,25 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
           <ChevronLeft size={16} />
         </button>
 
-        <div className="flex max-w-[220px] flex-wrap items-center justify-center gap-1.5">
+        <div className="flex max-w-[300px] flex-wrap items-center justify-center gap-0.5">
           {certs.map((_, i) => (
             <button
               key={i}
               onClick={() => goToIndex(i)}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: i === activeIndex ? 20 : 6,
-                height: 6,
-                background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
-              }}
+              className="grid h-6 w-6 place-items-center rounded-full"
               aria-label={`Przejdź do certyfikatu ${i + 1}`}
-            />
+            >
+              {/* Wizualna kropka mała, ale hit-area 24×24 (WCAG 2.5.8) */}
+              <span
+                aria-hidden
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === activeIndex ? 20 : 6,
+                  height: 6,
+                  background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
+                }}
+              />
+            </button>
           ))}
         </div>
 
@@ -566,7 +572,7 @@ function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
           style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
         >
           <div className="relative aspect-[1.414/1] w-full overflow-hidden">
-            <Image src={cert.file} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
+            <Image src={cert.thumb} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
             <span
               className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
               style={{ background: "rgba(8,7,13,0.6)", border: "1px solid rgba(168,85,247,0.35)", color: "var(--accent-bright)" }}

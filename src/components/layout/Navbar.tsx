@@ -137,7 +137,7 @@ export default function Navbar() {
         {/* Logo — monogram z gradientem aurora */}
         <a
           href="#"
-          aria-label={`${data.personal.name} — początek strony`}
+          aria-label={`${initials} — ${data.personal.name}, początek strony`}
           className="group relative inline-flex items-center transition-transform duration-200 hover:-translate-y-px"
         >
           <span

@@ -87,7 +87,10 @@ export interface Project {
 
 export interface Certificate {
   key: string;
+  /** Pełny skan (webp ~1400px) — używany w lightboxie */
   file: string;
+  /** Miniatura (webp ~460px) — używana w karuzeli/gridzie (lekki eager-load) */
+  thumb: string;
   title: string;
   platform: string;
   hours: number;

@@ -214,7 +214,6 @@ function Thumb({
       tabIndex={active ? 0 : -1}
       onClick={() => onSelect(index)}
       className="group w-32 flex-shrink-0 rounded-lg text-left sm:w-36"
-      style={{ opacity: active ? 1 : 0.55, transition: "opacity 0.2s" }}
     >
       <div
         className="relative aspect-[16/10] overflow-hidden rounded-lg"
@@ -228,7 +227,12 @@ function Thumb({
             : { border: "1px solid var(--border)" }
         }
       >
-        <div className="relative h-full w-full overflow-hidden rounded-[6px]">
+        {/* Przygaszenie tylko na miniaturze (nie na przycisku) — inaczej etykieta
+            tekstowa spadała poniżej kontrastu AA (WCAG 1.4.3). */}
+        <div
+          className="relative h-full w-full overflow-hidden rounded-[6px] transition-opacity duration-200"
+          style={{ opacity: active ? 1 : 0.55 }}
+        >
           <ThumbPreview project={project} />
         </div>
       </div>
