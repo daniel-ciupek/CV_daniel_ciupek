@@ -199,6 +199,75 @@ magnetyzm, głębia) i **nie wracaj do terminala**, chyba że użytkownik wyraź
 
 ---
 
+## 7b. V3 — NOWY KIERUNEK EKSPLORACYJNY (AKTYWNY — nadrzędny wobec §6–§7)
+
+> **Kontekst gałęzi (model pracy):** pracujemy na branchu **`V3`**, który jest **gałęzią
+> integracyjną** (rolę taką pełnił wcześniej `Dev`). Wersja **`V2`** (obecna produkcja — obsydian
+> cyan+emerald z §6) jest **zamrożona** jako bezpieczny punkt powrotu. Każdą **sekcję / issue**
+> realizujemy na **osobnym pobocznym branchu odbitym z `V3`**, a gotowe, zatwierdzone zmiany
+> **mergujemy z powrotem do `V3`**. Na V3 **eksperymentujemy odważnie** — nic nie jest „nietykalne"
+> poza a11y/wydajnością (§8) i widokiem `/cv-print` (§9, poza zakresem V3). Gdy pracujesz nad V3,
+> **§6–§7 to tylko baseline „skąd wychodzimy", NIE cel.**
+
+**Zwrot kreatywny (życzenie właściciela):**
+- **Zupełnie nowa tożsamość kolorystyczna — fioletowa / violet.** Odejście od cyan+emerald.
+  Ciekawy fiolet z **gradacjami / gradientami** (violet→magenta / violet→indigo / electric purple).
+- **Futuryzm** — nowoczesne, „z przyszłości": futurystyczne kształty (organiczne blob-y, geometryczne
+  fasety, siatki/mesh, glow, chromatyczne aberacje), głębia, poczucie zaawansowanej technologii.
+- **Mocna interaktywność i dużo animacji** — to priorytet nr 1 właściciela. Więcej ruchu niż w V2,
+  ale nadal z **taktem i choreografią** (§2–§3): signature moments dopracowane, nie chaos. Scroll-driven
+  motion, cursor-reactive, WebGL/shadery tam, gdzie dają realne „wow" (lazy + fallback).
+- **Zakres:** cała strona główna (Hero → About → Tech Stack → Projects → Certifications → Contact →
+  Footer). `/cv-print` **poza zakresem** (zostaje wersja designerska z V2).
+- **Grafika/assety:** preferuj generowane w kodzie (Canvas/WebGL/SVG/CSS/shadery) dla wydajności i
+  statycznego exportu; statyczne obrazy (np. z Gemini) tylko oszczędnie jako tekstury/tła, lokalnie.
+
+### WYBRANY KIERUNEK (2026-07-31): **B — „HOLO CHROME"** — Faza 1 zamknięta
+
+> Właściciel wybrał **kierunek B**. To jest obowiązujący system wizualny V3. Projektuj każdą sekcję
+> w tym języku (Faza 2 — spec sekcja po sekcji). Faworyt agenta (A+holo) odrzucony — idziemy w
+> pełną holografię, świadomie akceptując wyższe ryzyko i wymóg dyscypliny a11y.
+
+**Tokeny B (źródło prawdy do utrwalenia w `globals.css` + `tailwind.config.ts`):**
+```
+--bg-base:#08070D  --bg-surface:#100E1A  --bg-elevated:#191527
+--accent:#A855F7        /* electric purple — fille/linie/glow */
+--accent-bright:#C4B5FD /* TEKST i małe labelki (≈8:1) */
+--accent-2:#E879F9      /* fuchsia — górny stop folii */
+--holo-cyan:#22D3EE     /* TYLKO sheen krawędzi — NIGDY tekst */
+--holo-indigo:#818CF8
+--text:#F5F3FF  --text-muted:#A29DB8 (≈5.3:1)  --text-subtle:#443E5C
+--border:rgba(196,181,253,0.12)  --border-hover:rgba(168,85,247,0.45)
+/* folia (conic):  conic-gradient(from 0deg,#E879F9,#C084FC,#818CF8,#22D3EE,#E879F9) */
+/* linear sygn.:   linear-gradient(120deg,#E879F9 0%,#A855F7 40%,#6366F1 70%,#22D3EE 100%) */
+```
+
+**Język ruchu B:** easing `cubic-bezier(0.16,1,0.3,1)` (ostre expo); wejścia `0.55–0.7s`,
+`y:24 + scale .97→1`, stagger `60–80ms`; springy `spring{stiffness:260,damping:20}`.
+**Signature moments:** (1) hue-shift folii pod kursorem (MotionValue → conic `rotate`/`background-position`);
+(2) aberracja chromatyczna nagłówka — RGB-split 0→2px przy velocity (2 duplikaty w `#E879F9`/`#22D3EE`,
+`mix-blend-mode:screen`); (3) pryzmatyczny beam-sweep ~6s.
+**Tło/kształt:** bazowo CSS (conic-folia + `background-position`); aberracja tanio warstwowo (bez SVG
+filtra), „premium" wariant przez SVG `feDisplacementMap` tylko 1 element/hover/desktop; opcjonalny R3F
+iridescent shader tylko na Hero (lazy, fallback CSS-folia).
+**Typografia:** body Geist bez zmian; **opcjonalnie** display = Space Grotesk na Hero/nagłówki (do
+decyzji — nie blokuje; iryzacja i tak niesie wow).
+
+**ŻELAZNE GUARDRAILS a11y B (nienaruszalne — patrz §8):**
+- Tekst i ikony **zawsze na kryjącym `glass-solid`**, **nigdy** bezpośrednio na tęczy/folii.
+- Body wyłącznie `--text` / `--accent-bright`. `--accent`/`--accent-2` tylko fille/duży tekst/UI.
+- `--holo-cyan #22D3EE` **wyłącznie** sheen na krawędziach — **nigdy** jako kolor tekstu.
+- Każdy signature moment MUSI mieć wariant `prefers-reduced-motion` (folia statyczna 1 kadr, zero
+  hue-cycle, zero RGB-split) oraz sensowny odpowiednik na `pointer: coarse`.
+
+**Faza 2 — kolejność sekcji (osobne issue + poboczny branch z `V3` każda):**
+`System designu (tokeny+tło) → Hero (showpiece) → About → Certifications → TechStack → Projects →
+Contact → Footer`. Dla każdej dostarcz gotowy do wdrożenia spec wg §10 Faza 2 (layout desktop+mobile,
+dokładne wartości, motion, reduced-motion/touch, biblioteka, pseudokod, a11y). Nie wyprzedzaj —
+jedna sekcja na raz, po wdrożeniu i akceptacji następna.
+
+---
+
 ## 8. Dostępność i wydajność (nienaruszalne)
 
 - **`prefers-reduced-motion: reduce`** → wyłącz WSZYSTKIE pętle/parallax/3D/tilt/scroll-scrub;
