@@ -303,6 +303,28 @@ body::after {
   }
 }
 
+/* ─── Page loader — zejście napędzane CSS (niezależne od hydratacji JS) ──
+   Nakładka jest w statycznym HTML (SSR); animacja startuje przy PIERWSZYM paincie,
+   więc splash znika o stałej porze (~1,35 s) nawet gdy hydratacja na wolnym CPU
+   się opóźnia — brak wizualnej „zwiechy". pointer-events:none → nigdy nie blokuje
+   scrolla ani kliknięć. React usuwa węzeł z DOM dopiero po zakończeniu animacji. */
+.page-loader {
+  animation: page-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.85s forwards;
+}
+@keyframes page-loader-out {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced-motion: żadnego splashu — ukryty natychmiast, nawet przed hydratacją. */
+  .page-loader {
+    display: none;
+  }
+}
+
 /* ─── Print / CV Mode ────────────────────────────────────────── */
 @media print {
   body {
