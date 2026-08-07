@@ -14,8 +14,8 @@ import {
 import { FaAws } from "react-icons/fa";
 import type { IconType } from "react-icons";
 
-// PageLoader trwa ~1600ms, scramble startuje ~300ms po zakończeniu
-const SCRAMBLE_DELAY_MS = 1900;
+// PageLoader schodzi ~650ms po starcie; scramble startuje tuż po odsłonięciu Hero
+const SCRAMBLE_DELAY_MS = 700;
 
 // Przyciąganie magnetyczne CTA (re-use logiki MagneticIcon z Contact.tsx)
 const MAGNET_STRENGTH = 0.3;
@@ -394,7 +394,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <motion.div
