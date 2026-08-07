@@ -118,14 +118,23 @@ function RingCard({
               "linear-gradient(180deg, rgba(196,181,253,0.05), rgba(196,181,253,0.015)), var(--glass-solid)",
           }}
         >
-          {/* Twarz — miniatura realnego certyfikatu + chip kodu */}
-          <div className="relative flex-1 overflow-hidden">
+          {/* Twarz — miniatura realnego certyfikatu + chip kodu.
+              Placeholder (subtelny fioletowy gradient) widoczny tylko do czasu
+              namalowania obrazka — object-cover zakrywa go po załadowaniu. */}
+          <div
+            className="relative flex-1 overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(168,85,247,0.14), rgba(129,140,248,0.08) 60%, rgba(196,181,253,0.05))",
+            }}
+          >
             <Image
               src={cert.thumb}
               alt=""
               fill
               draggable={false}
               sizes="300px"
+              loading="eager"
               className="select-none object-cover"
               style={{ objectPosition: "center 28%", userSelect: "none", WebkitUserSelect: "none" }}
             />
@@ -571,8 +580,14 @@ function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
           className="group overflow-hidden rounded-2xl text-left transition-colors duration-200"
           style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
         >
-          <div className="relative aspect-[1.414/1] w-full overflow-hidden">
-            <Image src={cert.thumb} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
+          <div
+            className="relative aspect-[1.414/1] w-full overflow-hidden"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(168,85,247,0.14), rgba(129,140,248,0.08) 60%, rgba(196,181,253,0.05))",
+            }}
+          >
+            <Image src={cert.thumb} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" loading="eager" className="object-cover" />
             <span
               className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
               style={{ background: "rgba(8,7,13,0.6)", border: "1px solid rgba(168,85,247,0.35)", color: "var(--accent-bright)" }}
