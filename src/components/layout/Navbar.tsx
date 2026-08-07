@@ -19,8 +19,6 @@ const navLinks = [
 const sectionIds = navLinks.map((l) => l.href.slice(1));
 
 // Gradient border (aurora) w konwencji padding-box/border-box
-const AURORA_BORDER =
-  "linear-gradient(var(--bg-base), var(--bg-base)) padding-box, var(--gradient-aurora) border-box";
 
 // ─── Desktopowy link nawigacji: magnetyczny + kinetyczny swap etykiety ──────────
 // Magnetyzm gaśnie przy reduced-motion; na dotyku nie odpala się (brak mousemove).
@@ -57,7 +55,7 @@ function NavLink({
         onMouseMove={handleMove}
         onMouseLeave={() => setPos({ x: 0, y: 0 })}
         animate={{ x: pos.x, y: pos.y }}
-        transition={{ type: "spring", stiffness: 180, damping: 16, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20, mass: 0.5 }}
         className="nav-link relative block py-2 text-sm"
         style={{ willChange: "transform" }}
       >
@@ -65,8 +63,8 @@ function NavLink({
         <span className="nav-swap">
           <span
             style={{
-              color: isActive ? "var(--accent)" : "var(--text-muted)",
-              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+              color: isActive ? "var(--accent-bright)" : "var(--text-muted)",
+              textShadow: isActive ? "0 0 10px rgba(168, 85, 247, 0.5)" : undefined,
             }}
           >
             {link.label}
@@ -75,8 +73,8 @@ function NavLink({
             className="nav-swap__two"
             aria-hidden
             style={{
-              color: "var(--accent)",
-              textShadow: isActive ? "0 0 10px rgba(0, 212, 255, 0.5)" : undefined,
+              color: "var(--accent-bright)",
+              textShadow: isActive ? "0 0 10px rgba(168, 85, 247, 0.5)" : undefined,
             }}
           >
             {link.label}
@@ -130,7 +128,7 @@ export default function Navbar() {
       }`}
       style={
         scrolled
-          ? { backgroundColor: "rgba(9, 9, 11, 0.72)", borderColor: "var(--border)" }
+          ? { backgroundColor: "rgba(8, 7, 13, 0.72)", borderColor: "var(--border)" }
           : {}
       }
     >
@@ -139,7 +137,7 @@ export default function Navbar() {
         {/* Logo — monogram z gradientem aurora */}
         <a
           href="#"
-          aria-label={`${data.personal.name} — początek strony`}
+          aria-label={`${initials} — ${data.personal.name}, początek strony`}
           className="group relative inline-flex items-center transition-transform duration-200 hover:-translate-y-px"
         >
           <span
@@ -180,15 +178,9 @@ export default function Navbar() {
           target="_blank"
           rel="noopener noreferrer"
           clamp={10}
-          className="relative hidden overflow-hidden rounded-full px-4 py-2 text-sm font-medium transition-shadow duration-200 hover:shadow-[0_0_22px_rgba(0,212,255,0.28)] md:inline-flex md:items-center"
-          style={{
-            color: "var(--accent)",
-            border: "1px solid transparent",
-            background: AURORA_BORDER,
-          }}
+          className="cta-ghost hidden rounded-full px-4 py-2 text-sm font-medium md:inline-flex md:items-center"
         >
-          <span aria-hidden className="nav-cta-shimmer pointer-events-none absolute inset-0" />
-          <span className="relative">Pobierz CV</span>
+          Pobierz CV
         </MagneticButton>
 
         {/* Mobile hamburger */}
@@ -222,7 +214,7 @@ export default function Navbar() {
             transition={{ duration: 0.25, ease: "easeInOut" }}
             className="overflow-hidden border-t md:hidden"
             style={{
-              backgroundColor: "rgba(9, 9, 11, 0.85)",
+              backgroundColor: "rgba(8, 7, 13, 0.85)",
               borderColor: "var(--border)",
               backdropFilter: "blur(20px)",
               WebkitBackdropFilter: "blur(20px)",
@@ -262,12 +254,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleNavClick}
-                  className="block rounded-full py-2 text-center text-sm font-medium"
-                  style={{
-                    color: "var(--accent)",
-                    border: "1px solid transparent",
-                    background: AURORA_BORDER,
-                  }}
+                  className="cta-ghost block rounded-full py-2 text-center text-sm font-medium"
                 >
                   Pobierz CV
                 </a>

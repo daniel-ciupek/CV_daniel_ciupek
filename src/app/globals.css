@@ -2,37 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Design Tokens ─────────────────────────────────────────── */
+/* ─── Design Tokens — V3 „Holo Chrome" (obsydian violet) ─────── */
 :root {
   /* Backgrounds */
-  --bg-base:     #09090b;
-  --bg-surface:  #111116;
-  --bg-elevated: #18181f;
+  --bg-base:     #08070d;
+  --bg-surface:  #100e1a;
+  --bg-elevated: #191527;
 
   /* Borders */
-  --border:       rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(0, 212, 255, 0.30);
+  --border:       rgba(196, 181, 253, 0.12);
+  --border-hover: rgba(168, 85, 247, 0.45);
 
-  /* Accent — primary (neon cyan) */
-  --accent:      #00d4ff;
-  --accent-dim:  #38bdf8;
-  --accent-glow: rgba(0, 212, 255, 0.15);
+  /* Accent — primary (violet): fille / linie / glow / duży tekst + UI */
+  --accent:        #a855f7;
+  --accent-bright: #c4b5fd; /* tekst i małe labelki (~10:1) */
+  --accent-dim:    #c084fc;
+  --accent-glow:   rgba(168, 85, 247, 0.18);
 
-  /* Accent — secondary (emerald), subtle second tone */
-  --accent-2:      #34d399;
-  --accent-2-glow: rgba(52, 211, 153, 0.15);
+  /* Accent — secondary (fuchsia): górny stop folii, nigdy solo-tekst */
+  --accent-2:      #e879f9;
+  --accent-2-glow: rgba(232, 121, 249, 0.15);
 
-  /* Gradient sygnaturowy (aurora cyan→emerald) — jedno źródło prawdy */
-  --gradient-aurora: linear-gradient(135deg, #00d4ff, #34d399);
+  /* Holo — WYŁĄCZNIE sheen krawędzi / dekoracja, NIGDY tekst */
+  --holo-cyan:   #22d3ee;
+  --holo-indigo: #818cf8;
+
+  /* Gradienty sygnaturowe — jedno źródło prawdy */
+  --gradient-foil:   conic-gradient(from 0deg, #e879f9, #c084fc, #818cf8, #22d3ee, #e879f9);
+  --gradient-aurora: linear-gradient(120deg, #e879f9 0%, #a855f7 40%, #6366f1 70%, #22d3ee 100%);
 
   /* Text */
-  --text:        #f1f5f9;
-  --text-muted:  #7c8a9c; /* WCAG AA: 5.4–5.7:1 na tłach v2 (poprz. #64748b ≈ 4.2:1) */
-  --text-subtle: #334155; /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
+  --text:        #f5f3ff;
+  --text-muted:  #a29db8; /* WCAG AA nad glass-solid */
+  --text-subtle: #443e5c; /* tylko dekoracja: strzałka scroll, uchwyt scrollbara */
+
+  /* Glass — kryjący wariant (tekst nigdy na gołej folii) */
+  --glass-solid: rgba(16, 14, 26, 0.82);
 
   /* Fonts (injected by Next.js layout) */
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans:    var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono:    var(--font-geist-mono), monospace;
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans), system-ui, sans-serif;
 }
 
 /* ─── Base Reset ─────────────────────────────────────────────── */
@@ -49,7 +59,7 @@
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.16);
+  box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.20);
 }
 :focus:not(:focus-visible) {
   outline: none;
@@ -58,12 +68,14 @@
 html {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
   color-scheme: dark;
+  background-color: var(--bg-base); /* baza (canvas) — .site-backdrop rysuje holo światło nad nią */
 }
 
 body {
-  background-color: var(--bg-base);
+  background-color: transparent; /* przezroczyste, by globalny .site-backdrop (z-index:-11) był widoczny */
   color: var(--text);
   font-family: var(--font-sans);
+  position: relative; /* kontekst dla .site-backdrop (absolute inset:0 = pełna wysokość dokumentu) */
   min-height: 100dvh;
   overflow-x: hidden;
   cursor: default;
@@ -95,7 +107,7 @@ body::before {
 /* ─── Selection ─────────────────────────────────────────────── */
 ::selection {
   background-color: var(--accent-glow);
-  color: var(--accent);
+  color: var(--accent-bright);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────── */
@@ -124,43 +136,50 @@ body::before {
   .cursor-spotlight { display: none; }
 }
 
-/* ─── Ambient Beam ───────────────────────────────────────────── */
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1200px, 90vw);
-  height: 100vh;
+/* ─── Globalne tło holograficzne ─────────────────────────────────
+   Warstwa za CAŁĄ treścią, PRZEWIJAJĄCA SIĘ z dokumentem (absolute na
+   całą wysokość <body>). Miękkie światła rozłożone w dół strony —
+   serpentyna świateł w rodzinie Hero — więc poświata Hero PŁYNNIE
+   kontynuuje się niżej, bez ciemnego koryta ani odcięcia.
+   Nakładające się elipsy = brak ciemnych pasów między sekcjami.
+   Kierunkowe (przy bokach) → ciemniejszy środek chroni czytelność treści.
+   Czyste gradienty: jeden paint, zero kosztu, bezpieczne dla reduced-motion.
+   Hero zachowuje własny, animowany backdrop jako „szczyt" intensywności.
+   z-index:-11 → PONIŻEJ CursorSpotlight (fixed, -z-10), by kryjące tło
+   nie zasłoniło poświaty kursora; treść (z-auto/dodatnie) jest nad obiema. */
+.site-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -11;
   pointer-events: none;
-  z-index: 0;
   background:
-    radial-gradient(
-      ellipse 60% 50% at 50% 30%,
-      rgba(0, 212, 255, 0.06) 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 55% 45% at 62% 22%,
-      rgba(52, 211, 153, 0.04) 0%,
-      transparent 55%
-    );
+    /* Kontynuacja jasnego blasku Hero (prawa strona przy avatarze) —
+       schodzi płynnie w głąb sekcji „O mnie", bez odcięcia na granicy */
+    radial-gradient(ellipse 70% 24% at 20% 4%,  rgba(232, 121, 249, 0.14), transparent 62%),
+    radial-gradient(ellipse 66% 26% at 84% 12%, rgba(129, 140, 248, 0.16), transparent 60%),
+    radial-gradient(ellipse 60% 24% at 90% 20%, rgba(168, 85, 247, 0.14),  transparent 61%),
+    /* Dalej: serpentyna świateł w dół całej strony */
+    radial-gradient(ellipse 72% 22% at 28% 27%, rgba(168, 85, 247, 0.12),  transparent 63%),
+    radial-gradient(ellipse 70% 22% at 80% 40%, rgba(129, 140, 248, 0.11), transparent 63%),
+    radial-gradient(ellipse 72% 22% at 26% 52%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    radial-gradient(ellipse 70% 22% at 80% 64%, rgba(232, 121, 249, 0.10), transparent 63%),
+    radial-gradient(ellipse 72% 22% at 26% 76%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    radial-gradient(ellipse 74% 24% at 78% 92%, rgba(168, 85, 247, 0.11),  transparent 63%),
+    #08070d;
 }
 @media (max-width: 640px) {
-  body::after {
-    width: 120vw;
+  /* Węższy ekran → światła bliżej środka, delikatnie mocniejsze */
+  .site-backdrop {
     background:
-      radial-gradient(
-        ellipse 80% 40% at 50% 20%,
-        rgba(0, 212, 255, 0.05) 0%,
-        transparent 55%
-      ),
-      radial-gradient(
-        ellipse 70% 35% at 60% 15%,
-        rgba(52, 211, 153, 0.035) 0%,
-        transparent 50%
-      );
+      radial-gradient(ellipse 100% 15% at 30% 4%,  rgba(232, 121, 249, 0.13), transparent 62%),
+      radial-gradient(ellipse 100% 16% at 70% 13%, rgba(129, 140, 248, 0.15), transparent 60%),
+      radial-gradient(ellipse 100% 15% at 58% 21%, rgba(168, 85, 247, 0.13),  transparent 61%),
+      radial-gradient(ellipse 105% 15% at 30% 33%, rgba(168, 85, 247, 0.11),  transparent 63%),
+      radial-gradient(ellipse 105% 15% at 74% 46%, rgba(129, 140, 248, 0.10), transparent 63%),
+      radial-gradient(ellipse 105% 15% at 30% 59%, rgba(232, 121, 249, 0.10), transparent 63%),
+      radial-gradient(ellipse 105% 15% at 74% 72%, rgba(168, 85, 247, 0.11),  transparent 63%),
+      radial-gradient(ellipse 108% 16% at 40% 90%, rgba(129, 140, 248, 0.10), transparent 63%),
+      #08070d;
   }
 }
 
@@ -170,24 +189,222 @@ body::after {
   50%      { border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%; }
 }
 
-/* ─── Navbar CTA shimmer ─────────────────────────────────────── */
-@keyframes nav-cta-shimmer {
-  0%, 100% { background-position: -200% 0; }
-  50%      { background-position: 200% 0; }
+/* ═══════════════════════════════════════════════════════════════
+   V3 „Holo Chrome" — Hero (fundament #66)
+   Źródło prawdy wyglądu: artifact v3-hero-final (zatwierdzony).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Kryjące szkło — tekst nigdy na gołej folii (warunek a11y) */
+.glass-solid {
+  background:
+    linear-gradient(180deg, rgba(196, 181, 253, 0.05), rgba(196, 181, 253, 0.015)),
+    var(--glass-solid);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 40px rgba(8, 7, 13, 0.6);
 }
-.nav-cta-shimmer {
-  background-image: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(0, 212, 255, 0.18) 50%,
-    transparent 70%
-  );
-  background-size: 200% 100%;
-  background-repeat: no-repeat;
-  animation: nav-cta-shimmer 4s ease-in-out infinite;
+
+/* Przezroczyste szkło — nad ciemnym tłem (karty Projektów, panel Footera).
+   Lustro .glass-solid, ale bez kryjącej warstwy — wspólny fioletowy highlight i blur. */
+.glass {
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.05), rgba(196, 181, 253, 0.015));
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 40px rgba(8, 7, 13, 0.6);
 }
+
+/* ── Hero backdrop: mesh blobs → folia (conic) → beam → grain ── */
+/* Dolna maska: jaśniejsza warstwa Hero roztapia się w globalnym tle
+   zamiast urywać ostrą krawędzią sekcji (płynne przejście, nie odcięcie). */
+.hero-backdrop {
+  z-index: 0;
+  isolation: isolate;
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent 100%);
+}
+.hero-blob { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
+.hero-blob--1 { width: 52%; height: 64%; left: -8%;  top: -16%;    background: rgba(232, 121, 249, 0.15); animation: hero-drift-1 20s ease-in-out infinite; }
+.hero-blob--2 { width: 46%; height: 58%; right: -10%; top: 8%;     background: rgba(129, 140, 248, 0.13); animation: hero-drift-2 24s ease-in-out infinite; }
+.hero-blob--3 { width: 54%; height: 56%; left: 24%;  bottom: -22%; background: rgba(168, 85, 247, 0.11);  animation: hero-drift-3 22s ease-in-out infinite; }
+@keyframes hero-drift-1 { 50% { transform: translate(26px, -18px) scale(1.08); } }
+@keyframes hero-drift-2 { 50% { transform: translate(-24px, 20px) scale(1.12); } }
+@keyframes hero-drift-3 { 50% { transform: translate(16px, 18px) scale(1.06); } }
+
+.hero-foil {
+  position: absolute;
+  width: 170vmax; height: 170vmax;
+  top: 36%; left: 50%;
+  transform: translate(-50%, -50%) rotate(var(--foil-rot, 0deg));
+  transform-origin: 50% 50%;
+  background: var(--gradient-foil);
+  filter: blur(84px) saturate(1.02);
+  mix-blend-mode: screen;
+  opacity: 0.15;
+  will-change: transform;
+  -webkit-mask: radial-gradient(ellipse 56% 52% at 44% 42%, #000 0%, #000 26%, transparent 72%);
+  mask: radial-gradient(ellipse 56% 52% at 44% 42%, #000 0%, #000 26%, transparent 72%);
+}
+.hero-beam {
+  position: absolute; top: -20%; left: 0; width: 22%; height: 140%;
+  background: var(--gradient-aurora);
+  filter: blur(32px);
+  mix-blend-mode: screen;
+  transform: rotate(14deg);
+  opacity: 0;
+  animation: hero-beam 7.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation-delay: 1.2s;
+}
+@keyframes hero-beam {
+  0%        { transform: translateX(-45vw) rotate(14deg); opacity: 0; }
+  42%       { opacity: 0.45; }
+  60%, 100% { transform: translateX(150%)  rotate(14deg); opacity: 0; }
+}
+.hero-grain {
+  position: absolute; inset: 0; opacity: 0.04; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+/* Legibility scrim pod kolumną tekstu */
+.hero-scrim {
+  position: absolute; inset: 10% auto 10% 4%; width: 58%;
+  pointer-events: none; filter: blur(48px); z-index: 1;
+  background: radial-gradient(ellipse 72% 82% at 26% 50%, rgba(8, 7, 13, 0.62), transparent 72%);
+}
+
+/* ── Eyebrow (kick) — shimmer ── */
+.hero-kick {
+  font-family: var(--font-mono);
+  letter-spacing: 0.25em; text-transform: uppercase;
+  background: linear-gradient(100deg, var(--accent-bright) 32%, #fff 50%, var(--accent-bright) 68%);
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: hero-kick-shimmer 5s linear infinite;
+}
+@keyframes hero-kick-shimmer { to { background-position: 200% center; } }
+
+/* ── Nazwa — holograficzny gradient ── */
+.hero-name { position: relative; filter: drop-shadow(0 2px 22px rgba(168, 85, 247, 0.4)); }
+.hero-name-base {
+  background: linear-gradient(105deg, #ffffff 0%, #f5d0fe 20%, #e9d5ff 42%, #c4b5fd 60%, #a5b4fc 80%, #f0abfc 100%);
+  background-size: 230% auto;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: hero-holo 8s linear infinite;
+}
+@keyframes hero-holo { to { background-position: 230% center; } }
+
+/* ── Tech carousel (natywny scroll + auto-marquee) ── */
+.tech-carousel {
+  position: relative; overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none; -ms-overflow-style: none;
+  -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.tech-carousel::-webkit-scrollbar { display: none; }
+.tech-track { display: flex; gap: 6px; width: max-content; }
+.tech-skill {
+  flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  width: 94px; padding: 12px 6px;
+  background: none; border: none; cursor: pointer; color: inherit;
+  border-radius: 12px; transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-skill .ic {
+  width: 48px; height: 48px; object-fit: contain;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 2px 8px rgba(168, 85, 247, 0.4));
+}
+.tech-skill .lb {
+  font-family: var(--font-mono); font-size: 11.5px; font-weight: 600;
+  color: var(--text-muted); letter-spacing: 0.01em; white-space: nowrap;
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-skill:hover .ic, .tech-skill:focus-visible .ic {
+  transform: translateY(-4px) scale(1.1);
+  filter: drop-shadow(0 6px 16px rgba(168, 85, 247, 0.75)) brightness(1.12);
+}
+.tech-skill:hover .lb, .tech-skill:focus-visible .lb { color: var(--text); }
+.tech-skill:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; }
+
+/* ── Modal opisu umiejętności ── */
+.tech-modal {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-modal[data-open="true"] { opacity: 1; pointer-events: auto; }
+.tech-modal-backdrop { position: absolute; inset: 0; background: rgba(4, 3, 8, 0.72); backdrop-filter: blur(6px); }
+.tech-modal-card {
+  position: relative; width: min(480px, 100%);
+  border-radius: 20px; padding: 26px 26px 24px;
+  background: linear-gradient(180deg, rgba(24, 20, 38, 0.96), rgba(14, 12, 22, 0.98));
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(196, 181, 253, 0.14);
+  transform: translateY(14px) scale(0.97); opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-modal[data-open="true"] .tech-modal-card { transform: none; opacity: 1; }
+.tech-modal-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: 20px; padding: 1.5px;
+  background: linear-gradient(140deg, var(--accent-2), var(--holo-indigo) 55%, var(--holo-cyan));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  pointer-events: none; opacity: 0.6;
+}
+.tech-modal-close {
+  position: absolute; top: 14px; right: 14px; width: 32px; height: 32px;
+  border-radius: 50%; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1;
+  transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tech-modal-close:hover { color: #fff; border-color: var(--border-hover); }
+.tech-modal-head { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.tech-modal-icon {
+  width: 62px; height: 62px; flex: 0 0 auto; border-radius: 14px; display: grid; place-items: center;
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.1), rgba(196, 181, 253, 0.03));
+  border: 1px solid var(--border);
+}
+.tech-modal-icon img { width: 42px; height: 42px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.5)); }
+.tech-modal-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent-bright); }
+.tech-modal-card h3 { font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); margin-top: 3px; }
+.tech-modal-body { font-size: 14px; line-height: 1.55; color: var(--text-muted); margin-bottom: 14px; }
+.tech-modal-points { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+.tech-modal-points li { position: relative; padding-left: 16px; font-size: 12.5px; color: var(--text); }
+.tech-modal-points li::before { content: ""; position: absolute; left: 0; top: 7px; width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-2), var(--holo-indigo)); }
+
+/* ── CTA ── */
+.hero-cta {
+  position: relative; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 640;
+  padding: 13px 26px; border-radius: 999px; border: none; will-change: transform;
+  display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+  transition: box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* focus-visible: dziedziczy globalny fioletowy ring (spójny z Navbarem/Kontaktem) */
+/* Główne CTA — „Ghost z poświatą" (spójne: Hero, Navbar, Kontakt) */
+.cta-ghost {
+  color: var(--accent-bright);
+  background: rgba(168, 85, 247, 0.05);
+  border: 1px solid var(--border-hover);
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.28), 0 10px 34px -8px rgba(168, 85, 247, 0.30);
+  transition: background 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, box-shadow 0.3s, color 0.3s;
+}
+.cta-ghost:hover {
+  background: rgba(168, 85, 247, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 32px rgba(168, 85, 247, 0.45), 0 12px 42px -8px rgba(168, 85, 247, 0.45);
+}
+.hero-cta-secondary { color: var(--text); background: rgba(255, 255, 255, 0.035); border: 1px solid var(--border); }
+.hero-cta-secondary svg { width: 16px; height: 16px; color: var(--accent-bright); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.hero-cta-secondary:hover { border-color: var(--border-hover); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.hero-cta-secondary:hover svg { transform: translateX(2px); }
+
+/* Podpowiedź pod karuzelą */
+.hero-tip { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: var(--text-muted); }
+
+/* Reduced-motion: pełna estetyka, zero pętli */
 @media (prefers-reduced-motion: reduce) {
-  .nav-cta-shimmer { animation: none; }
+  .hero-foil { --foil-rot: -24deg; }
+  .hero-beam { display: none; }
 }
 
 /* ─── Navbar kinetic link swap (desktop, tylko hover-capable) ─── */
@@ -201,7 +418,7 @@ body::after {
 }
 .nav-swap > span {
   display: block;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-swap > span.nav-swap__two {
   position: absolute;
@@ -224,7 +441,7 @@ body::after {
   }
 }
 
-/* Aktywny link — pulsująca cyanowa poświata (za tekstem, poza clipem swapa) */
+/* Aktywny link — pulsująca holo-fioletowa poświata (za tekstem, poza clipem swapa) */
 .nav-glow {
   position: absolute;
   left: 50%;
@@ -233,7 +450,7 @@ body::after {
   height: 240%;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.4) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.42) 0%, transparent 70%);
   pointer-events: none;
   animation: nav-glow-pulse 2.2s ease-in-out infinite;
 }
@@ -247,8 +464,8 @@ body::after {
 
 /* ─── Section anchor pulse ───────────────────────────────────── */
 @keyframes anchor-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
-  100% { box-shadow: 0 0 0 24px rgba(0, 212, 255, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.35); }
+  100% { box-shadow: 0 0 0 24px rgba(168, 85, 247, 0); }
 }
 .anchor-pulse {
   animation: anchor-pulse 600ms ease-out;
@@ -257,37 +474,135 @@ body::after {
   .anchor-pulse { animation: none; }
 }
 
-/* ─── Tech Stack — animowany obrys aurory (Aurora Rim) ───────── */
-@property --tech-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
+/* ═══ V3 About „O mnie" (#68) — foil pull-quote, chipy, bento z aurora-rim ═══ */
+/* Pasek pull-quote — aurora + poświata */
+.about-bar {
+  background: linear-gradient(180deg, var(--accent-2), var(--accent) 50%, var(--holo-indigo));
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.5);
 }
-@keyframes tech-rim-spin {
-  to { --tech-angle: 360deg; }
+/* „Full Stack Developer" w folii — rodzina fioletu (holo-cyan zostaje sheenem krawędzi, nigdy tekstem) */
+.about-foil {
+  background: linear-gradient(100deg, #e879f9, #c4b5fd 45%, #818cf8 78%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: about-foil 6s linear infinite;
 }
-.tech-rim {
+@keyframes about-foil { to { background-position: 200% center; } }
+/* Folia-tekst (statyczna, rodzina fioletu — BEZ holo-cyanu) — wspólna recepta
+   dla glifów wypełnianych folią: ostatnie słowo Kontaktu, monogram „DC" (Footer),
+   monogram-fallback Projektów. Pełną aurorę (z cyanem) zostawiamy tłom/obrysom. */
+.text-foil {
+  background: linear-gradient(100deg, #e879f9, #c4b5fd 45%, #818cf8 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Bio — pogrubione słowa-klucze (accent-bright, jak w koncepcie) */
+.about-bio strong { color: var(--accent-bright); font-weight: 600; }
+/* Liczby — gradient tekst→accent-bright (kontrast AA) */
+.about-num {
+  background: linear-gradient(135deg, #f5f3ff 0%, var(--accent-bright) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Chip obszaru — glass + hover border/lift */
+.about-chip {
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.06), rgba(196, 181, 253, 0.02));
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
+}
+.about-chip:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, rgba(196, 181, 253, 0.1), rgba(196, 181, 253, 0.03));
+}
+/* Kafel licznika — wirujący aurora-rim na hover (echo Tech Stacku); holo-cyan tylko na krawędzi */
+@property --about-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.about-tile { position: relative; overflow: hidden; }
+.about-tile:hover { border-color: var(--border-hover); }
+.about-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
   padding: 1px;
-  background: conic-gradient(
-    from var(--tech-angle),
-    rgba(0, 212, 255, 0.9),
-    rgba(52, 211, 153, 0.9),
-    rgba(0, 212, 255, 0.12),
-    rgba(0, 212, 255, 0.9)
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+  background: conic-gradient(from var(--about-a, 0deg),
+    var(--accent-2), var(--holo-indigo), var(--holo-cyan), var(--accent-2));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  animation: tech-rim-spin 6s linear infinite;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
+.about-tile:hover::after { opacity: 0.9; animation: about-rim 6s linear infinite; }
+@keyframes about-rim { to { --about-a: 360deg; } }
 @media (prefers-reduced-motion: reduce) {
-  /* obrys zostaje (statyczny gradient), ale bez obrotu */
-  .tech-rim { animation: none; }
+  .about-foil { animation: none; }
+  .about-chip:hover { transform: none; }
+  .about-tile:hover::after { animation: none; }
+}
+
+/* ═══ V3 Certifications „Certyfikaty" (#69) — karuzela-cylinder 3D ═══ */
+/* Godziny na karcie w folii (rodzina fioletu) */
+.cert-foil-text {
+  background: linear-gradient(100deg, #e879f9, #c4b5fd 45%, #818cf8 78%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Poświata violet+fuchsia pod aktywną (frontową) kartą — opacity sterowane inline */
+.cert-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  pointer-events: none;
+  box-shadow: 0 0 30px 2px rgba(168, 85, 247, 0.35), 0 0 72px rgba(232, 121, 249, 0.12);
+}
+/* Foliowy obrys aktywnej karty (conic przez maskę) — opacity sterowane inline */
+.cert-rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(from 210deg, #e879f9, #c084fc, #818cf8, #22d3ee, #e879f9);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* ─── Tech Stack — komórki kart premium (V3 Holo) ───────────── */
+.tech-cell {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
+}
+.tech-cell:hover { transform: translateY(-3px); border-color: var(--border-hover); }
+.tech-cell:focus-visible { outline: 2px solid var(--accent-bright); outline-offset: 2px; }
+.tech-cell-label {
+  color: var(--text-muted);
+  transition: color 0.25s;
+  width: 100%;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.2em;
+}
+.tech-cell:hover .tech-cell-label,
+.tech-cell:focus-visible .tech-cell-label { color: var(--text); }
+@media (prefers-reduced-motion: reduce) {
+  .tech-cell { transition: border-color 0.25s; }
+  .tech-cell:hover { transform: none; }
 }
 
 /* ─── ScrollTrigger section-child entrance ───────────────────── */

@@ -32,12 +32,19 @@ const CERT_CATEGORY: Record<string, string> = {
   cert_gitlab:    "DevOps",
 };
 
+// Kolor kropki kategorii (dekoracja — cyan dozwolony jako kropka, nie tekst)
+const CAT_COLOR: Record<string, string> = {
+  Frontend: "#e879f9", Backend: "#a855f7", Bazy: "#818cf8", DevOps: "#22d3ee",
+  AI: "#c084fc", "Języki": "#f0abfc", Cloud: "#60a5fa",
+};
+
 type Certificate = (typeof data.certificates)[number];
 const certs = data.certificates;
 const N = certs.length;
+const TOTAL_HOURS = Math.round(certs.reduce((sum, c) => sum + c.hours, 0));
 const STEP = 360 / N;              // kąt między kartami
 const DRAG_SENS = 0.12;            // stopni obrotu na 1px przeciągnięcia (łagodne)
-const AUTO_SPEED = 4.5;            // stopni/sek auto-obrotu (powoli)
+const AUTO_MS = 3600;              // ms między auto-przełączeniem karty (skokowo)
 
 const catOf = (cert: Certificate) => CERT_CATEGORY[cert.key] ?? "Inne";
 
@@ -74,14 +81,16 @@ function RingCard({
   const eff = useTransform(rotation, (r) => wrapDeg(theta + r));
 
   // Przód znacznie większy niż boki
-  const scale = useTransform(eff, (a) => Math.max(0.46, 1 - (Math.abs(a) / STEP) * 0.3));
-  const opacity = useTransform(eff, (a) => (Math.abs(a) >= 112 ? 0 : 1));
-  // Boki głęboko w cieniu, przód w pełni jasny
-  const darken = useTransform(eff, (a) => Math.min(0.9, (Math.abs(a) / STEP) * 0.68));
+  // Karty ~jednakowej wielkości (jak w artefacie) — głębię robi perspektywa, nie skala
+  const scale = useTransform(eff, (a) => Math.max(0.9, 1 - (Math.abs(a) / STEP) * 0.05));
+  const opacity = useTransform(eff, (a) => (Math.abs(a) >= 128 ? 0 : 1));
+  // Boki przygaszone, przód w pełni jasny
+  const darken = useTransform(eff, (a) => Math.min(0.74, (Math.abs(a) / STEP) * 0.52));
   // Poświata aurory tylko na wprost
   const glow = useTransform(eff, (a) => Math.max(0, 1 - Math.abs(a) / (STEP * 0.6)));
 
   const category = catOf(cert);
+  const catColor = CAT_COLOR[category] ?? "var(--accent)";
 
   return (
     <div
@@ -97,50 +106,89 @@ function RingCard({
         WebkitBackfaceVisibility: "hidden",
       }}
       onClick={onClick}
-      role="button"
-      aria-label={`Certyfikat: ${cert.title}`}
+      aria-hidden
     >
       <motion.div className="relative h-full w-full" style={{ opacity, scale }}>
-        {/* Rama certyfikatu */}
+        {/* Ciemna karta holo — pieczęć + kod; pełny skan tylko w lightboxie */}
         <div
-          className="relative h-full w-full overflow-hidden rounded-2xl"
-          style={{ border: "1px solid var(--border)", background: "var(--bg-elevated)" }}
+          className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl"
+          style={{
+            border: "1px solid var(--border)",
+            background:
+              "linear-gradient(180deg, rgba(196,181,253,0.05), rgba(196,181,253,0.015)), var(--glass-solid)",
+          }}
         >
-          <Image
-            src={cert.file}
-            alt={cert.title}
-            fill
-            draggable={false}
-            sizes="320px"
-            className="select-none object-cover"
-            style={{ userSelect: "none", WebkitUserSelect: "none" }}
-          />
-          {/* Górny scrim — subtelna winieta na górze karty */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-14"
-            style={{ background: "linear-gradient(to bottom, rgba(9,9,11,0.7), transparent)" }}
-          />
-          {/* Badge kategorii — prawy dolny róg (czyste białe tło certyfikatu) */}
-          <span
-            className="absolute bottom-3 right-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider"
-            style={{
-              background: "rgba(9,9,11,0.55)",
-              border: "1px solid rgba(0,212,255,0.35)",
-              color: "var(--accent)",
-            }}
-          >
-            {category}
-          </span>
+          {/* Twarz — miniatura realnego certyfikatu + chip kodu */}
+          <div className="relative flex-1 overflow-hidden">
+            <Image
+              src={cert.thumb}
+              alt=""
+              fill
+              draggable={false}
+              sizes="300px"
+              className="select-none object-cover"
+              style={{ objectPosition: "center 28%", userSelect: "none", WebkitUserSelect: "none" }}
+            />
+            {/* Holo-wash + dolny scrim pod krawędź podpisu */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(120% 80% at 28% 6%, rgba(168,85,247,0.18), transparent 58%), linear-gradient(180deg, transparent 80%, rgba(8,7,13,0.3) 100%)",
+              }}
+            />
+            {/* Kategoria (jak w Umiejętnościach) — chip w prawym DOLNYM rogu (białe tło skanu) */}
+            <span
+              className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] font-medium uppercase tracking-wider"
+              style={{
+                background: "rgba(8,7,13,0.66)",
+                border: "1px solid rgba(168,85,247,0.40)",
+                color: "var(--accent-bright)",
+              }}
+            >
+              <span
+                aria-hidden
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: catColor, boxShadow: `0 0 6px ${catColor}` }}
+              />
+              {category}
+            </span>
+          </div>
+
+          {/* Podpis — tytuł + godziny + rok */}
+          <div className="px-3.5 py-3" style={{ borderTop: "1px solid var(--border)" }}>
+            <p
+              className="text-[12.5px] font-semibold leading-snug"
+              style={{
+                color: "var(--text)",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                minHeight: "2.5em",
+              }}
+            >
+              {cert.title}
+            </p>
+            <div className="mt-2 flex items-baseline justify-between">
+              <span className="cert-foil-text font-display text-lg font-semibold tabular-nums">
+                {cert.hours}h
+              </span>
+              <span className="font-mono text-[11px]" style={{ color: "var(--text-muted)" }}>
+                {cert.date ?? ""}
+              </span>
+            </div>
+          </div>
 
           {/* Cień kart bocznych */}
           <motion.div
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{ background: "#000", opacity: darken }}
+            style={{ background: "#050409", opacity: darken }}
           />
 
-          {/* Smuga-skan na aktywnej karcie */}
+          {/* Smuga-skan (folia) na aktywnej karcie */}
           {isActive && (
             <motion.div
               key={`sweep-${i}`}
@@ -149,7 +197,7 @@ function RingCard({
               style={{
                 height: "55%",
                 background:
-                  "linear-gradient(180deg, transparent 0%, rgba(0,212,255,0.16) 42%, rgba(52,211,153,0.12) 58%, transparent 100%)",
+                  "linear-gradient(180deg, transparent 0%, rgba(196,181,253,0.18) 42%, rgba(129,140,248,0.14) 58%, transparent 100%)",
               }}
               initial={{ y: "-60%", opacity: 0 }}
               animate={{ y: "170%", opacity: [0, 1, 1, 0] }}
@@ -158,16 +206,9 @@ function RingCard({
           )}
         </div>
 
-        {/* Poświata aurory — rama przedniej karty */}
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-2xl"
-          style={{
-            opacity: glow,
-            border: "1px solid rgba(0,212,255,0.85)",
-            boxShadow: "0 0 26px 1px rgba(0,212,255,0.32), 0 0 70px rgba(52,211,153,0.14)",
-          }}
-        />
+        {/* Poświata + foliowy obrys — tylko na frontowej karcie (sterowane `glow`) */}
+        <motion.div aria-hidden className="cert-glow" style={{ opacity: glow }} />
+        <motion.div aria-hidden className="cert-rim" style={{ opacity: glow }} />
       </motion.div>
     </div>
   );
@@ -184,7 +225,7 @@ function CertList({
 }) {
   return (
     <div className="mt-12">
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-baseline justify-between gap-3">
         <span
           className="text-[11px] font-medium uppercase tracking-[0.18em]"
           style={{ color: "var(--text-muted)" }}
@@ -192,21 +233,23 @@ function CertList({
           Wszystkie certyfikaty
         </span>
         <span className="font-mono text-[11px] tabular-nums" style={{ color: "var(--text-muted)" }}>
-          {N} pozycji
+          {N} pozycji · ≈{TOTAL_HOURS} h nauki
         </span>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2">
         {certs.map((cert, i) => {
           const isActive = i === activeIndex;
+          const category = catOf(cert);
+          const catColor = CAT_COLOR[category] ?? "var(--accent)";
           return (
             <button
               key={cert.key}
               onClick={() => onOpen(i)}
-              className="group flex items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors duration-200 sm:items-center"
+              className="group relative flex items-center gap-3 overflow-hidden rounded-xl py-2.5 pl-4 pr-3 text-left transition-colors duration-200"
               style={{
-                background: isActive ? "rgba(0,212,255,0.06)" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${isActive ? "rgba(0,212,255,0.30)" : "var(--border)"}`,
+                background: isActive ? "rgba(168,85,247,0.09)" : "rgba(255,255,255,0.02)",
+                border: `1px solid ${isActive ? "rgba(168,85,247,0.38)" : "var(--border)"}`,
               }}
               onMouseEnter={(e) => {
                 if (!isActive) e.currentTarget.style.borderColor = "var(--border-hover)";
@@ -221,42 +264,49 @@ function CertList({
                 if (!isActive) e.currentTarget.style.borderColor = "var(--border)";
               }}
             >
+              {/* Pasek kategorii przy krawędzi (dekoracja — hue tylko tutaj i w kropce) */}
               <span
-                className="hidden w-6 shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: isActive ? "var(--accent)" : "var(--text-muted)" }}
+                aria-hidden
+                className="absolute inset-y-0 left-0 w-[3px]"
+                style={{ background: `linear-gradient(180deg, ${catColor}, ${catColor}55)` }}
+              />
+              <span
+                aria-hidden
+                className="w-6 shrink-0 font-mono text-[11px] tabular-nums"
+                style={{ color: isActive ? "var(--accent-bright)" : "var(--text-muted)" }}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span
-                className="shrink-0 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
-                style={{
-                  background: "rgba(0,212,255,0.08)",
-                  border: "1px solid rgba(0,212,255,0.20)",
-                  color: "var(--accent)",
-                  minWidth: 60,
-                  textAlign: "center",
-                }}
-              >
-                {catOf(cert)}
-              </span>
-              <span
-                className="min-w-0 flex-1 break-words text-[13px] leading-snug sm:truncate"
-                style={{
-                  color: isActive ? "var(--text)" : "var(--text-muted)",
-                  fontWeight: isActive ? 600 : 400,
-                }}
-              >
-                {cert.title}
-              </span>
-              <span
-                className="hidden shrink-0 font-mono text-[11px] tabular-nums sm:block"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {cert.hours}h
+              <span className="min-w-0 flex-1">
+                <span
+                  className="block truncate text-[13px] leading-snug"
+                  style={{
+                    color: isActive ? "var(--text)" : "var(--text-muted)",
+                    fontWeight: isActive ? 600 : 400,
+                  }}
+                >
+                  {cert.title}
+                </span>
+                <span
+                  className="mt-1 flex items-center gap-1.5 font-mono text-[10px]"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  <span
+                    aria-hidden
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: catColor, boxShadow: `0 0 6px ${catColor}` }}
+                  />
+                  {category}
+                  <span aria-hidden style={{ opacity: 0.5 }}>·</span>
+                  {cert.hours} h
+                  <span aria-hidden style={{ opacity: 0.5 }}>·</span>
+                  {cert.date}
+                </span>
               </span>
               <Maximize2
+                aria-hidden
                 size={13}
-                className="hidden shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:block"
+                className="shrink-0 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                 style={{ color: "var(--accent)" }}
               />
             </button>
@@ -279,17 +329,18 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
   const targetRef = useRef<number | null>(null);
   const activeRef = useRef(0);
   const draggingRef = useRef(false);
+  const hoverRef = useRef(false);
   const draggedRef = useRef(false);
   const capturedRef = useRef(false);
   const startXRef = useRef(0);
   const startRotRef = useRef(0);
 
-  // Wymiary sceny
-  const cardW = Math.min(300, Math.max(190, Math.round(containerWidth * 0.3)));
-  const cardH = Math.round(cardW / 1.414);
-  const radius = Math.round((cardW / 2) / Math.tan(Math.PI / N) * 1.18);
-  const perspective = Math.round(radius * 2.5);
-  const stageH = Math.round(cardH * 2.15);
+  // Wymiary sceny — szersze karty (miniatura + podpis; opisy się nie ucinają)
+  const cardW = Math.min(320, Math.max(210, Math.round(containerWidth * 0.32)));
+  const cardH = Math.round(cardW * 1.12);
+  const radius = Math.round((cardW / 2) / Math.tan(Math.PI / N)) + Math.round(cardW * 0.16);
+  const perspective = Math.round(radius * 2.0);
+  const stageH = Math.round(cardH * 1.55);
 
   useLayoutEffect(() => {
     if (stageRef.current) setContainerWidth(stageRef.current.clientWidth);
@@ -317,8 +368,6 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
       } else {
         rotation.set(r + diff * Math.min(1, dt * 6));
       }
-    } else if (!paused) {
-      rotation.set(rotation.get() - AUTO_SPEED * dt);
     }
     const idx = ((Math.round(-rotation.get() / STEP) % N) + N) % N;
     if (idx !== activeRef.current) {
@@ -338,6 +387,15 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
     const curV = Math.round(-rotation.get() / STEP);
     targetRef.current = -(curV + dir) * STEP;
   }, [rotation]);
+
+  // Auto-przełączanie karta-po-karcie (pauza: hover / drag / lightbox / reduced-motion)
+  useEffect(() => {
+    if (reduced || paused) return;
+    const id = setInterval(() => {
+      if (!hoverRef.current && !draggingRef.current) step(1);
+    }, AUTO_MS);
+    return () => clearInterval(id);
+  }, [reduced, paused, step]);
 
   // Pointer drag (działa też dla touch).
   // Uwaga: przechwytujemy pointer DOPIERO po realnym ruchu (>4px), żeby
@@ -396,12 +454,14 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onMouseEnter={() => { hoverRef.current = true; }}
+        onMouseLeave={() => { hoverRef.current = false; }}
         className="relative mx-auto cursor-grab select-none active:cursor-grabbing"
         style={{ height: stageH, perspective, perspectiveOrigin: "50% 45%", touchAction: "pan-y" }}
       >
         <motion.div
           className="absolute inset-0"
-          style={{ transformStyle: "preserve-3d", rotateY: rotation, willChange: "transform" }}
+          style={{ transformStyle: "preserve-3d", rotateY: rotation, z: -radius, willChange: "transform" }}
         >
           {containerWidth > 0 &&
             certs.map((cert, i) => (
@@ -424,7 +484,7 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-1 mx-auto h-10 w-2/3"
           style={{
-            background: "radial-gradient(ellipse at center, rgba(0,212,255,0.10), transparent 70%)",
+            background: "radial-gradient(ellipse at center, rgba(168,85,247,0.12), transparent 70%)",
             filter: "blur(8px)",
           }}
         />
@@ -449,19 +509,25 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
           <ChevronLeft size={16} />
         </button>
 
-        <div className="flex max-w-[220px] flex-wrap items-center justify-center gap-1.5">
+        <div className="flex max-w-[300px] flex-wrap items-center justify-center gap-0.5">
           {certs.map((_, i) => (
             <button
               key={i}
               onClick={() => goToIndex(i)}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: i === activeIndex ? 20 : 6,
-                height: 6,
-                background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
-              }}
+              className="grid h-6 w-6 place-items-center rounded-full"
               aria-label={`Przejdź do certyfikatu ${i + 1}`}
-            />
+            >
+              {/* Wizualna kropka mała, ale hit-area 24×24 (WCAG 2.5.8) */}
+              <span
+                aria-hidden
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === activeIndex ? 20 : 6,
+                  height: 6,
+                  background: i === activeIndex ? "var(--accent)" : "rgba(255,255,255,0.18)",
+                }}
+              />
+            </button>
           ))}
         </div>
 
@@ -484,7 +550,7 @@ function RingCarousel({ onOpen, paused }: { onOpen: (i: number) => void; paused:
       </div>
 
       <p className="mt-4 text-center font-mono text-[11px]" style={{ color: "var(--text-muted)" }}>
-        Kręci się sam · przeciągnij, by obrócić · kliknij, by powiększyć · {String(activeIndex + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
+        Przełącza się sam · przeciągnij lub strzałki · kliknij, by powiększyć · {String(activeIndex + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
       </p>
 
       {/* Pełna lista certyfikatów — pod karuzelą, czytelna */}
@@ -506,10 +572,10 @@ function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
           style={{ border: "1px solid var(--border)", background: "var(--bg-surface)" }}
         >
           <div className="relative aspect-[1.414/1] w-full overflow-hidden">
-            <Image src={cert.file} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
+            <Image src={cert.thumb} alt={cert.title} fill sizes="(max-width:640px) 45vw, 260px" className="object-cover" />
             <span
               className="absolute left-2 top-2 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
-              style={{ background: "rgba(9,9,11,0.6)", border: "1px solid rgba(0,212,255,0.3)", color: "var(--accent)" }}
+              style={{ background: "rgba(8,7,13,0.6)", border: "1px solid rgba(168,85,247,0.35)", color: "var(--accent-bright)" }}
             >
               {catOf(cert)}
             </span>
@@ -531,7 +597,7 @@ function CertGrid({ onOpen }: { onOpen: (i: number) => void }) {
   );
 }
 
-// ─── Lightbox (jeden akcent — cyan) ─────────────────────────────────────────────
+// ─── Lightbox (Holo violet) ─────────────────────────────────────────────────────
 
 function Lightbox({
   activeIndex,
@@ -546,6 +612,7 @@ function Lightbox({
 }) {
   const cert = certs[activeIndex];
   const total = certs.length;
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -564,6 +631,28 @@ function Lightbox({
     };
   }, [onClose, onPrev, onNext]);
 
+  // Focus-trap + przywrócenie focusu po zamknięciu (WCAG 2.4.3 / 2.1.2)
+  useEffect(() => {
+    const prev = document.activeElement as HTMLElement | null;
+    const buttons = () => Array.from(dialogRef.current?.querySelectorAll<HTMLElement>("button") ?? []);
+    const els = buttons();
+    (els.find((b) => b.getAttribute("aria-label") === "Zamknij podgląd") ?? els[0])?.focus();
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const list = buttons();
+      if (!list.length) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", onTab);
+    return () => {
+      document.removeEventListener("keydown", onTab);
+      prev?.focus?.();
+    };
+  }, []);
+
   return (
     <>
       <motion.div
@@ -572,11 +661,12 @@ function Lightbox({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.22 }}
         className="fixed inset-0 z-[100] cursor-pointer"
-        style={{ background: "rgba(9,9,11,0.82)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
+        style={{ background: "rgba(6,5,11,0.82)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}
         onClick={onClose}
         aria-hidden
       />
       <motion.div
+        ref={dialogRef}
         initial={{ opacity: 0, scale: 0.94, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }}
@@ -607,8 +697,8 @@ function Lightbox({
           className="pointer-events-auto relative w-full max-w-3xl overflow-hidden rounded-2xl"
           style={{
             background: "var(--bg-elevated)",
-            border: "1px solid rgba(0,212,255,0.28)",
-            boxShadow: "0 0 90px rgba(0,212,255,0.14)",
+            border: "1px solid rgba(168,85,247,0.35)",
+            boxShadow: "0 0 90px rgba(168,85,247,0.18)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -658,7 +748,7 @@ function Lightbox({
               <div className="mb-1">
                 <span
                   className="rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider"
-                  style={{ background: "rgba(0,212,255,0.10)", border: "1px solid rgba(0,212,255,0.24)", color: "var(--accent)" }}
+                  style={{ background: "rgba(168,85,247,0.12)", border: "1px solid rgba(168,85,247,0.26)", color: "var(--accent-bright)" }}
                 >
                   {catOf(cert)}
                 </span>
@@ -716,13 +806,13 @@ export default function Certifications() {
   return (
     <>
       <section id="certifications" aria-labelledby="certifications-heading" className="relative overflow-hidden px-6 py-16 md:py-20">
-        {/* Ambient aurora — cyan + szept emerald */}
+        {/* Ambient aurora — violet + szept fuchsia */}
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/4 h-80 w-[42rem] -translate-x-1/2 opacity-[0.06] blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-1/4 h-80 w-[42rem] -translate-x-1/2 opacity-[0.08] blur-3xl"
           style={{
             background:
-              "radial-gradient(60% 100% at 40% 50%, #00d4ff 0%, transparent 70%), radial-gradient(55% 100% at 65% 50%, #34d399 0%, transparent 70%)",
+              "radial-gradient(60% 100% at 40% 50%, #a855f7 0%, transparent 70%), radial-gradient(55% 100% at 65% 50%, #e879f9 0%, transparent 70%)",
           }}
         />
 

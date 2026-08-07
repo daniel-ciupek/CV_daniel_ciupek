@@ -45,8 +45,8 @@ function SocialPill({ href, label, icon: Icon }: SocialDef) {
       style={{
         background: "var(--bg-elevated)",
         border: `1px solid ${hover ? "var(--border-hover)" : "var(--border)"}`,
-        color: hover ? "var(--accent)" : "var(--text-muted)",
-        boxShadow: hover ? "0 0 18px rgba(0,212,255,0.15)" : "none",
+        color: hover ? "var(--accent-bright)" : "var(--text-muted)",
+        boxShadow: hover ? "0 0 18px rgba(168,85,247,0.15)" : "none",
         transform: hover ? "translateY(-1px)" : "none",
       }}
     >
@@ -71,8 +71,8 @@ function GoToTop() {
       className="relative inline-flex h-[42px] w-[42px] items-center justify-center rounded-full"
       style={{
         background: "var(--bg-elevated)",
-        color: "var(--accent)",
-        boxShadow: hover ? "0 10px 26px -10px rgba(0,212,255,0.5)" : "none",
+        color: "var(--accent-bright)",
+        boxShadow: hover ? "0 10px 26px -10px rgba(168,85,247,0.5)" : "none",
         transition: "box-shadow 0.3s",
       }}
     >
@@ -95,16 +95,10 @@ export default function Footer() {
 
   return (
     <footer className="px-6 pb-8 pt-9" style={{ borderTop: "1px solid var(--border)" }}>
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-6xl">
         {/* Szklany panel z aurora-obrysem */}
         <div
-          className="relative flex flex-col items-center justify-between gap-5 overflow-hidden rounded-2xl px-6 py-5 sm:flex-row"
-          style={{
-            background: "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid var(--border)",
-          }}
+          className="glass relative flex flex-col items-center justify-between gap-5 overflow-hidden rounded-2xl px-6 py-5 sm:flex-row"
         >
           {/* Obrys aurory */}
           <span
@@ -117,16 +111,8 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <span
               aria-hidden
-              style={{
-                fontWeight: 800,
-                letterSpacing: "-0.03em",
-                fontSize: 24,
-                background: AURORA,
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                color: "transparent",
-              }}
+              className="text-foil"
+              style={{ fontWeight: 800, letterSpacing: "-0.03em", fontSize: 24 }}
             >
               DC
             </span>

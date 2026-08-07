@@ -52,11 +52,25 @@ function ProjectScreenshots({ images, alt }: { images: string[]; alt: string }) 
             src={src}
             alt={i === 0 ? alt : ""}
             fill
-            sizes="(max-width: 768px) 100vw, 1100px"
+            sizes="(max-width: 768px) 100vw, 640px"
             className="object-cover object-top"
           />
         </motion.div>
       ))}
+      {images.length > 1 && (
+        <div aria-hidden className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
+          {images.map((_, i) => (
+            <span
+              key={i}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{
+                width: i === idx ? 16 : 6,
+                background: i === idx ? "var(--accent-bright)" : "rgba(255,255,255,0.35)",
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -69,19 +83,12 @@ function FallbackPreview({ title, big = false }: { title: string; big?: boolean 
       className="absolute inset-0 grid place-items-center"
       style={{
         background:
-          "radial-gradient(120% 120% at 28% 18%, rgba(0,212,255,0.10), transparent 55%), radial-gradient(120% 120% at 82% 88%, rgba(52,211,153,0.08), transparent 55%), var(--bg-elevated)",
+          "radial-gradient(120% 120% at 28% 18%, rgba(168,85,247,0.16), transparent 55%), radial-gradient(120% 120% at 82% 88%, rgba(232,121,249,0.12), transparent 55%), var(--bg-elevated)",
       }}
     >
       <span
-        className={`font-mono font-bold tracking-tight ${big ? "text-5xl sm:text-6xl" : "text-lg"}`}
-        style={{
-          background: "var(--gradient-aurora)",
-          WebkitBackgroundClip: "text",
-          backgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          color: "transparent",
-          opacity: 0.9,
-        }}
+        className={`text-foil font-mono font-bold tracking-tight ${big ? "text-5xl sm:text-6xl" : "text-lg"}`}
+        style={{ opacity: 0.9 }}
       >
         {monogram(title)}
       </span>
@@ -147,7 +154,7 @@ function ProjectLinks({ project }: { project: Project }) {
           className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors duration-200"
           style={{ border: "1px solid var(--border)", color: "var(--text-muted)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--accent)";
+            e.currentTarget.style.color = "var(--accent-bright)";
             e.currentTarget.style.borderColor = "var(--border-hover)";
           }}
           onMouseLeave={(e) => {
@@ -164,8 +171,16 @@ function ProjectLinks({ project }: { project: Project }) {
           href={project.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-opacity duration-200 hover:opacity-90"
-          style={{ background: "var(--accent)", color: "var(--bg-base)" }}
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200"
+          style={{ border: "1px solid var(--border-hover)", color: "var(--accent-bright)", background: "rgba(168,85,247,0.08)" }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--accent)";
+            e.currentTarget.style.background = "rgba(168,85,247,0.14)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border-hover)";
+            e.currentTarget.style.background = "rgba(168,85,247,0.08)";
+          }}
         >
           <ExternalLink size={14} />
           Live
@@ -199,7 +214,6 @@ function Thumb({
       tabIndex={active ? 0 : -1}
       onClick={() => onSelect(index)}
       className="group w-32 flex-shrink-0 rounded-lg text-left sm:w-36"
-      style={{ opacity: active ? 1 : 0.55, transition: "opacity 0.2s" }}
     >
       <div
         className="relative aspect-[16/10] overflow-hidden rounded-lg"
@@ -207,19 +221,24 @@ function Thumb({
           active
             ? {
                 padding: "1.5px",
-                background: "var(--gradient-aurora)",
-                boxShadow: "0 0 20px rgba(0,212,255,0.22)",
+                background: "var(--gradient-foil)",
+                boxShadow: "0 0 20px rgba(168,85,247,0.30)",
               }
             : { border: "1px solid var(--border)" }
         }
       >
-        <div className="relative h-full w-full overflow-hidden rounded-[6px]">
+        {/* Przygaszenie tylko na miniaturze (nie na przycisku) — inaczej etykieta
+            tekstowa spadała poniżej kontrastu AA (WCAG 1.4.3). */}
+        <div
+          className="relative h-full w-full overflow-hidden rounded-[6px] transition-opacity duration-200"
+          style={{ opacity: active ? 1 : 0.55 }}
+        >
           <ThumbPreview project={project} />
         </div>
       </div>
       <span
         className="mt-2 block truncate text-xs transition-colors duration-200"
-        style={{ color: active ? "var(--accent)" : "var(--text-muted)" }}
+        style={{ color: active ? "var(--accent-bright)" : "var(--text-muted)" }}
       >
         {project.title}
       </span>
@@ -234,6 +253,7 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
   const total = projects.length;
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const project = projects[selected];
+  const shotCount = project.screenshots?.length ?? 0;
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     let next = selected;
@@ -254,14 +274,7 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
         id="project-detail"
         role="tabpanel"
         aria-labelledby={`project-tab-${selected}`}
-        className="overflow-hidden rounded-2xl"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          border: "1px solid var(--border)",
-        }}
+        className="glass overflow-hidden rounded-2xl"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -269,38 +282,42 @@ function ProjectSwitcher({ projects }: { projects: readonly Project[] }) {
             initial={reduced ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
-            transition={{ duration: reduced ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: reduced ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div
-              className="relative h-[220px] w-full overflow-hidden sm:h-[300px] md:h-[380px]"
-              style={{ borderBottom: "1px solid var(--border)" }}
-            >
-              <DetailPreview project={project} />
-            </div>
+            <div className="grid md:grid-cols-[1.4fr_1fr]">
+              {/* Podgląd — lewa kolumna (na mobile na górze) */}
+              <div
+                className="relative aspect-[16/10] w-full overflow-hidden border-b md:aspect-auto md:min-h-[340px] md:border-b-0 md:border-r"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <DetailPreview project={project} />
+              </div>
 
-            <div className="p-6 md:p-8">
-              {selected === 0 && (
-                <span
-                  className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
-                  style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+              {/* Treść — prawa kolumna */}
+              <div className="p-6 md:self-center md:p-8">
+                {shotCount > 0 && (
+                  <span
+                    className="mb-3 inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider"
+                    style={{ background: "var(--accent-glow)", color: "var(--accent-bright)" }}
+                  >
+                    Wyróżniony · {shotCount} zrzutów
+                  </span>
+                )}
+                <h3
+                  className="mb-2 text-xl font-semibold md:text-2xl"
+                  style={{ color: "var(--text)" }}
                 >
-                  Wyróżniony projekt
-                </span>
-              )}
-              <h3
-                className="mb-2 text-xl font-semibold md:text-2xl"
-                style={{ color: "var(--text)" }}
-              >
-                {project.title}
-              </h3>
-              <p
-                className="mb-5 max-w-3xl text-sm leading-relaxed md:text-[15px]"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {project.description}
-              </p>
-              <StackPills stack={project.stack} />
-              <ProjectLinks project={project} />
+                  {project.title}
+                </h3>
+                <p
+                  className="mb-5 text-sm leading-relaxed md:text-[15px]"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  {project.description}
+                </p>
+                <StackPills stack={project.stack} />
+                <ProjectLinks project={project} />
+              </div>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -355,12 +372,12 @@ export default function Projects() {
     <section id="projects" aria-labelledby="projects-heading" className="relative px-6 py-16 md:py-20">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-0 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-5 blur-3xl"
-        style={{ background: "radial-gradient(circle, #00d4ff 0%, transparent 70%)" }}
+        className="pointer-events-none absolute left-0 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full opacity-[0.07] blur-3xl"
+        style={{ background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }}
       />
 
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="04" total="05" title="PROJEKTY" headingId="projects-heading" />
+        <SectionHeader index="04" total="05" title="PROJEKTY" subtitle="Wybrane realizacje" headingId="projects-heading" />
 
         {projects.length === 0 ? (
           <div

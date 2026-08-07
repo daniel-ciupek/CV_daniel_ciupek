@@ -9,6 +9,8 @@ export interface Personal {
   bio: string;
   /** Krótkie hasło do pull-quote w sekcji "O mnie" — kontynuacja po akcentowanym `title` */
   tagline: string;
+  /** Samodzielne, dobitne hasło pod nazwą w Hero (V3) */
+  heroTagline: string;
   /** Krótki opis (~150 zn.) do meta description / OG — bio jest za długie dla SEO */
   seoDescription: string;
   /** Skrócone podsumowanie zawodowe do CV designerskiego (/cv-print/pro) — bio jest za długie */
@@ -57,6 +59,19 @@ export interface SkillCategory {
   items: string[];
 }
 
+/** Umiejętność w formie bogatej — karuzela ikon w Hero (V3) + modal opisu */
+export interface TechSkill {
+  name: string;
+  /** Kategoria (Backend / Frontend / Bazy danych / DevOps & Narzędzia / AI & Narzędzia) */
+  category: string;
+  /** Ścieżka do autorskiej ikony w `public/MyImage/tech/ic-<slug>.png` */
+  icon: string;
+  /** Krótki opis wyświetlany w modalu */
+  description: string;
+  /** Punktowane szczegóły (2 kolumny w modalu) */
+  points: string[];
+}
+
 export interface Project {
   title: string;
   description: string;
@@ -72,7 +87,10 @@ export interface Project {
 
 export interface Certificate {
   key: string;
+  /** Pełny skan (webp ~1400px) — używany w lightboxie */
   file: string;
+  /** Miniatura (webp ~460px) — używana w karuzeli/gridzie (lekki eager-load) */
+  thumb: string;
   title: string;
   platform: string;
   hours: number;
@@ -85,6 +103,8 @@ export interface Certificate {
 export interface SiteData {
   personal: Personal;
   skills: SkillCategory[];
+  /** Bogata reprezentacja stacku — karuzela Hero (V3) */
+  techStack: TechSkill[];
   experience: Experience[];
   projects: Project[];
   certificates: Certificate[];

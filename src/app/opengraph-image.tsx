@@ -8,7 +8,7 @@ export const alt = `${data.personal.name} — ${data.personal.title}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const ACCENT = "#00D4FF";
+const ACCENT_TEXT = "#c4b5fd";   // accent-bright — jedyny text-safe akcent (AA)
 const STACK = ["Laravel", "Vue 3", "PostgreSQL", "Docker"];
 
 const avatar = readFileSync(join(process.cwd(), "public/MyImage/avatarOg.jpg"));
@@ -28,9 +28,9 @@ export default function Image() {
           alignItems: "center",
           justifyContent: "space-between",
           padding: "72px 80px",
-          backgroundColor: "#09090b",
-          backgroundImage: `radial-gradient(720px circle at 84% 50%, rgba(0,212,255,0.20) 0%, transparent 55%)`,
-          color: "#F1F5F9",
+          backgroundColor: "#08070d",
+          backgroundImage: `radial-gradient(720px circle at 84% 50%, rgba(168,85,247,0.22) 0%, transparent 55%)`,
+          color: "#f5f3ff",
           fontFamily: "sans-serif",
         }}
       >
@@ -43,7 +43,7 @@ export default function Image() {
               width: "84px",
               height: "6px",
               borderRadius: "3px",
-              backgroundColor: ACCENT,
+              backgroundImage: "linear-gradient(90deg, #e879f9, #a855f7)",
               marginBottom: "36px",
             }}
           />
@@ -54,7 +54,7 @@ export default function Image() {
           </div>
 
           {/* Tytuł */}
-          <div style={{ fontSize: "44px", fontWeight: 600, color: ACCENT, marginTop: "18px" }}>
+          <div style={{ fontSize: "44px", fontWeight: 600, color: ACCENT_TEXT, marginTop: "18px" }}>
             {data.personal.title}
           </div>
 
@@ -66,7 +66,7 @@ export default function Image() {
                 style={{
                   display: "flex",
                   fontSize: "24px",
-                  color: "#CBD5E1",
+                  color: "#a29db8",
                   padding: "9px 20px",
                   borderRadius: "10px",
                   border: "1px solid rgba(255,255,255,0.12)",
@@ -79,7 +79,7 @@ export default function Image() {
           </div>
 
           {/* Domena */}
-          <div style={{ fontSize: "24px", color: ACCENT, marginTop: "44px" }}>
+          <div style={{ fontSize: "24px", color: ACCENT_TEXT, marginTop: "44px" }}>
             {domain}
           </div>
         </div>
@@ -87,12 +87,13 @@ export default function Image() {
         {/* Prawa kolumna — zdjęcie */}
         <img
           src={avatarSrc}
+          alt=""
           width={384}
           height={384}
           style={{
             borderRadius: "50%",
             objectFit: "cover",
-            border: "4px solid rgba(0,212,255,0.55)",
+            border: "4px solid rgba(168,85,247,0.55)",
           }}
         />
       </div>

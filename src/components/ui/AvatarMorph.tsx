@@ -124,7 +124,7 @@ export default function AvatarMorph({ pro, hacker, alt, size }: Props) {
             scale: 1.15,
             borderRadius: BLOB,
             background:
-              "linear-gradient(135deg, rgba(0,212,255,0.55), rgba(52,211,153,0.55))",
+              "linear-gradient(135deg, rgba(232,121,249,0.55), rgba(129,140,248,0.55))",
             opacity: showHacker ? 0.9 : 0.5,
             transition: "opacity 0.6s ease",
           }}
@@ -136,7 +136,7 @@ export default function AvatarMorph({ pro, hacker, alt, size }: Props) {
           style={{
             borderRadius: BLOB,
             animation: reduced ? undefined : "blobMorph 8s ease-in-out infinite",
-            border: "2px solid rgba(0,212,255,0.25)",
+            border: "2px solid rgba(196,181,253,0.28)",
             transform: "translateZ(40px)",
           }}
         >

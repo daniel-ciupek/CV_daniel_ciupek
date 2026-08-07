@@ -9,21 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent:     "#00d4ff",
-        "accent-dim":  "#38bdf8",
-        "accent-2":     "#34d399",
-        "bg-base":     "#09090b",
-        "bg-surface":  "#111116",
-        "bg-elevated": "#18181f",
+        accent:          "#a855f7",
+        "accent-bright": "#c4b5fd",
+        "accent-dim":    "#c084fc",
+        "accent-2":      "#e879f9",
+        "holo-cyan":     "#22d3ee",
+        "holo-indigo":   "#818cf8",
+        "bg-base":       "#08070d",
+        "bg-surface":    "#100e1a",
+        "bg-elevated":   "#191527",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "monospace"],
+        sans:    ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono:    ["var(--font-geist-mono)", "monospace"],
+        display: ["var(--font-space-grotesk)", "var(--font-geist-sans)", "sans-serif"],
       },
       boxShadow: {
-        accent: "0 0 30px rgba(0, 212, 255, 0.15)",
-        "accent-lg": "0 0 60px rgba(0, 212, 255, 0.20)",
-        "accent-2": "0 0 30px rgba(52, 211, 153, 0.15)",
+        accent: "0 0 30px rgba(168, 85, 247, 0.22)",
+        "accent-lg": "0 0 60px rgba(168, 85, 247, 0.28)",
+        "accent-2": "0 0 30px rgba(232, 121, 249, 0.18)",
       },
       animation: {
         "blob-morph": "blobMorph 8s ease-in-out infinite",
