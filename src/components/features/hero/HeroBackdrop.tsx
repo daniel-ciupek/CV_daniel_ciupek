@@ -15,6 +15,9 @@ export default function HeroBackdrop() {
 
   useEffect(() => {
     if (reduced) return;
+    // Na dotyku folia jest ukryta (CSS: @media pointer:coarse → display:none)
+    // i brak kursora do hue-shiftu — pętla rAF byłaby czystym marnotrawstwem CPU.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     const foil = foilRef.current;
     if (!foil) return;
 

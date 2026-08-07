@@ -274,6 +274,45 @@ body::before {
   background: radial-gradient(ellipse 72% 82% at 26% 50%, rgba(8, 7, 13, 0.62), transparent 72%);
 }
 
+/* ── Mobile/dotyk: uproszczenie kosztownych warstw GPU (wydajność, CLAUDE.md §6) ──
+   Na telefonach/tabletach ograniczamy najdroższe efekty malowania: duże blur,
+   mix-blend-mode i backdrop-filter. Wygląd zostaje bogaty (bloby + gradienty),
+   ale scroll jest płynny. Desktop (pointer: fine) bez zmian. */
+@media (pointer: coarse) {
+  .hero-blob { filter: blur(45px); animation: none; }
+  .hero-foil { display: none; }
+  .hero-beam { display: none; }
+  .hero-grain { display: none; }
+  .hero-scrim { filter: blur(28px); }
+  .glass,
+  .glass-solid {
+    backdrop-filter: blur(6px) saturate(115%);
+    -webkit-backdrop-filter: blur(6px) saturate(115%);
+  }
+}
+
+/* ── Page loader — zejście napędzane CSS (niezależne od hydratacji JS) ──
+   Nakładka jest w statycznym HTML (SSR); animacja startuje przy PIERWSZYM paincie,
+   więc splash znika o stałej porze (~1,35 s) nawet gdy hydratacja na wolnym CPU
+   się opóźnia — brak wizualnej „zwiechy". pointer-events:none → nigdy nie blokuje
+   scrolla ani kliknięć. React usuwa węzeł z DOM dopiero po zakończeniu animacji. */
+.page-loader {
+  animation: page-loader-out 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.85s forwards;
+}
+@keyframes page-loader-out {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced-motion: żadnego splashu — ukryty natychmiast, nawet przed hydratacją. */
+  .page-loader {
+    display: none;
+  }
+}
+
 /* ── Eyebrow (kick) — shimmer ── */
 .hero-kick {
   font-family: var(--font-mono);
