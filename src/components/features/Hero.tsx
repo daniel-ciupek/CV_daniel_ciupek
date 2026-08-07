@@ -2,19 +2,27 @@
 
 import { motion, type Variants } from "framer-motion";
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import data from "@/config/data";
 import { useScrambleText } from "@/hooks/useScrambleText";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import AvatarMorph from "@/components/ui/AvatarMorph";
 import MagneticButton from "@/components/ui/MagneticButton";
-import HeroBackdrop from "@/components/features/hero/HeroBackdrop";
 import TechCarousel from "@/components/features/hero/TechCarousel";
 import TechModal from "@/components/ui/TechModal";
 import type { TechSkill } from "@/types";
 
-// PageLoader trwa ~1600ms, scramble startuje ~300ms po zakończeniu
-const SCRAMBLE_DELAY_MS = 1900;
+// Tło Hero jest czysto dekoracyjne (aria-hidden, absolutne) — ładujemy je po
+// pierwszym paincie, by nie obciążać startowej hydratacji na słabszych urządzeniach.
+// Brak CLS: warstwa jest position:absolute i nie wpływa na układ treści.
+const HeroBackdrop = dynamic(
+  () => import("@/components/features/hero/HeroBackdrop"),
+  { ssr: false }
+);
+
+// PageLoader schodzi ~650ms po starcie; scramble startuje tuż po odsłonięciu Hero
+const SCRAMBLE_DELAY_MS = 700;
 
 // Język ruchu B „Holo Chrome": ease [0.16,1,0.3,1], wejścia opacity+y+blur, stagger 70ms
 const fadeUp: Variants = {
@@ -163,7 +171,7 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
         className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2"
       >
         <motion.div
