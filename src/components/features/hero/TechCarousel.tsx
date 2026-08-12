@@ -14,10 +14,11 @@ interface Props {
 
 /**
  * Pozioma karuzela autorskich ikon stacku. Natywny kontener przewijalny
- * (ukryty pasek) — auto-marquee steruje `scrollLeft` w rAF, więc:
- *  • pauzuje WYŁĄCZNIE na hover kursorem (pointer) — po zamknięciu modala
- *    focus wraca na ikonę, ale ruch trwa; zatrzymuje się dopiero na najechanie,
- *  • podczas pauzy można przewijać ręcznie/palcem (pozycja się synchronizuje),
+ * (ukryty pasek) — auto-marquee steruje `scrollLeft` w rAF (wszystkie urządzenia):
+ *  • mysz: pauza na hover kursorem,
+ *  • dotyk: pauza na czas gestu (touchstart), a po puszczeniu palca — krótka
+ *    zwłoka na inercję i wznowienie auto-obrotu OD przeciągniętej pozycji
+ *    (nie cofa się do punktu sprzed gestu),
  *  • przy reduced-motion zostaje statyczny, wciąż przewijalny pasek.
  * Drugi (zduplikowany) zestaw daje bezszwową pętlę i jest wyłączony z Tab/AT.
  */
@@ -26,6 +27,7 @@ export default function TechCarousel({ skills, onSelect }: Props) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
   const posRef = useRef(0);
+  const resumeTimer = useRef<number | null>(null);
 
   const doubled = [...skills, ...skills];
 
@@ -50,24 +52,53 @@ export default function TechCarousel({ skills, onSelect }: Props) {
       raf = requestAnimationFrame(step);
     };
     raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (resumeTimer.current !== null) clearTimeout(resumeTimer.current);
+    };
   }, [reduced]);
 
-  const pause = () => {
+  // Auto-obrót działa na wszystkich urządzeniach. Interakcja go pauzuje, a po
+  // zakończeniu wznawia OD bieżącej (przeciągniętej) pozycji — nie cofa się.
+  const clearResume = () => {
+    if (resumeTimer.current !== null) {
+      clearTimeout(resumeTimer.current);
+      resumeTimer.current = null;
+    }
+  };
+  const pauseNow = () => {
+    clearResume();
     pausedRef.current = true;
   };
-  const resume = () => {
+  const resumeNow = () => {
     const el = scrollerRef.current;
-    if (el) posRef.current = el.scrollLeft;
+    if (el) posRef.current = el.scrollLeft; // kontynuuj od miejsca, gdzie jest teraz
     pausedRef.current = false;
+  };
+  // Po puszczeniu palca dajemy chwilę na wybrzmienie inercji natywnego scrolla,
+  // dopiero potem auto-obrót podejmuje ruch od pozycji, na której się zatrzymał.
+  const scheduleResume = () => {
+    clearResume();
+    resumeTimer.current = window.setTimeout(resumeNow, 600);
+  };
+
+  // Mysz (desktop): pauza na hover. Dotyk: pauza na czas gestu, wznowienie po nim.
+  const onPointerEnter = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") pauseNow();
+  };
+  const onPointerLeave = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") resumeNow();
   };
 
   return (
     <div
       ref={scrollerRef}
       className="tech-carousel"
-      onPointerEnter={pause}
-      onPointerLeave={resume}
+      onPointerEnter={onPointerEnter}
+      onPointerLeave={onPointerLeave}
+      onTouchStart={pauseNow}
+      onTouchEnd={scheduleResume}
+      onTouchCancel={scheduleResume}
       aria-label="Mój stack technologiczny — kliknij ikonę, aby zobaczyć opis"
     >
       <div className="tech-track">
